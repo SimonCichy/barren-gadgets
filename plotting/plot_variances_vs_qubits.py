@@ -12,7 +12,7 @@ file_gad = '../results/data/220402_gadget_circuit_6qubits_50layers_1000samples.d
 
 data_global = np.loadtxt(file_glob)
 data_local = np.loadtxt(file_loc)
-data_gadget = np.loadtxt(file_glob)
+data_gadget = np.loadtxt(file_gad)
 
 layers = data_local[:,0].astype(int)
 qubits = data_local[:,1].astype(int)
