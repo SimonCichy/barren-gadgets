@@ -6,7 +6,7 @@ colours = [['#36226b', '#22236b', '#22656b', '#226b2b', '#606b22', '#6b4d22', '#
            ['#6f45d8', '#4547d8', '#45ccd8', '#45d859', '#c2d845', '#d89d45', '#d85645'],
            ['#977dd8', '#7d7fd8', '#7dd1d8', '#7dd889', '#cbd87d', '#d8b47d', '#d8887d']]
 
-file_gad = '../results/data/220404_gadget_circuit_2qubits_50layers_1000samples.dat'
+file_gad = '../results/data/220404_gadget_circuit_2qubits_50layers_200samples.dat'
 
 
 data_gadget = np.loadtxt(file_gad)
@@ -39,5 +39,6 @@ ax.set_xlabel(r"Number of layers")
 ax.set_ylabel(r"$\langle \partial \theta_{1, 1} E\rangle$ variance")
 ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 ax.legend()
+ax.set_title(r"$n_{comp}=2$")
 
 plt.show()
