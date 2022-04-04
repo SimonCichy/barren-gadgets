@@ -6,7 +6,7 @@ colours = [['#36226b', '#22236b', '#22656b', '#226b2b', '#606b22', '#6b4d22', '#
            ['#6f45d8', '#4547d8', '#45ccd8', '#45d859', '#c2d845', '#d89d45', '#d85645'],
            ['#977dd8', '#7d7fd8', '#7dd1d8', '#7dd889', '#cbd87d', '#d8b47d', '#d8887d']]
 
-num_qubits = np.arange(2, 12)
+num_qubits = np.arange(2, 7)
 k = num_qubits                          # locality
 r = 1                                   # number of terms
 coefficients = np.ones(r)
