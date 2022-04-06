@@ -10,6 +10,7 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
 
     r = 1
     lam = 1
+    # linestyles = ['--', ':', '-', '-.']
 
     for f, file in enumerate(file_list):
         data = np.loadtxt(file)
@@ -50,9 +51,12 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
     if limits != None:
         ax.set_ylim(limits)
 
-    selection = 1 if np.shape(colours)[0] == 3 else 0
+    # selection = 1 if np.shape(colours)[0] == 3 else 0
+    selection = -1
     custom_lines = [Line2D([0], [0], color=colours[selection][nl], lw=2) for nl in range(len(layers_list))]
+                #    [Line2D([0], [0], color='grey', linestyle=linestyles[c], lw=2) for c in range(len(file_list))]
     ax.legend(custom_lines, ['1 layer']+['{} layers'.format(num_layers) for num_layers in layers_list[1:]])
+    # ax.legend(ncol=2)
 
     plt.show()
 
