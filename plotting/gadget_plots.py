@@ -4,7 +4,7 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from matplotlib.lines import Line2D
 
 
-def plot_variances_vs_qubits(file_list, colours, normalize=False):
+def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
 
@@ -46,6 +46,9 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False):
     ax2.set_xlabel(r"N Total Qubits", color = 'grey') 
     ax2.tick_params(axis ='x', labelcolor = 'grey')
     ax2.xaxis.set_major_locator(MultipleLocator(2))
+
+    if limits != None:
+        ax.set_ylim(limits)
 
     selection = 1 if np.shape(colours)[0] == 3 else 0
     custom_lines = [Line2D([0], [0], color=colours[selection][nl], lw=2) for nl in range(len(layers_list))]
