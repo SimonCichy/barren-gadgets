@@ -62,7 +62,7 @@ def gadget2_circuit(params, term, target_qubits):
     total_qubits = np.shape(params)[1]
     computational_qubits = int(total_qubits / 2)
 
-    cat_state_preparation(np.arange(computational_qubits, total_qubits, 1))
+    cat_state_preparation(ancillary_qubits=range(computational_qubits, total_qubits, 1))
 
     hardware_efficient_ansatz(params)
 
@@ -81,7 +81,7 @@ def gadget3_circuit(params, term, target_qubits):
     total_qubits = np.shape(params)[1]
     computational_qubits = int(total_qubits * 2 / 3)
 
-    cat_state_preparation(np.arange(computational_qubits, total_qubits, 1))
+    cat_state_preparation(ancillary_qubits=range(computational_qubits, total_qubits, 1))
 
     hardware_efficient_ansatz(params)
 
@@ -91,7 +91,7 @@ def gadget3_circuit(params, term, target_qubits):
         term = qml.Identity(target_qubits[0]) @ qml.Identity(target_qubits[1]) - qml.PauliZ(target_qubits[0]) @ qml.PauliZ(target_qubits[1])
     elif term == 'coupling':
         # terms of the form Z(c)Z(c)X(a)
-        term = qml.PauliZ(target_qubits[0]) @ qml.PauliZ(target_qubits[1]) @ qml.PauliX(computational_qubits + target_qubits[2])
+        term = qml.PauliZ(target_qubits[0]) @ qml.PauliZ(target_qubits[1]) @ qml.PauliX(computational_qubits+target_qubits[2])
     return qml.expval(term)
 
 
@@ -107,11 +107,11 @@ def cost_function(qnode, params, circuit_type, num_qubits=0, lam=1):
         # acting on the ancillary qubits only
         for first_qubit in range(computational_qubits, total_qubits):
             for second_qubit in range(first_qubit+1, total_qubits):
-                expval_terms.append(qnode(params, 'ancillary', [first_qubit, second_qubit]))
+                expval_terms.append(qnode(params, term='ancillary', target_qubits=[first_qubit, second_qubit]))
         # creating the perturbation part of the Hamiltonian
         # acting on both ancillary and target qubits with the same index
         for qubit in range(computational_qubits):
-            expval_terms.append(qnode(params, 'coupling', [qubit]))
+            expval_terms.append(qnode(params, term='coupling', target_qubits=[qubit]))
         
         return np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
     elif circuit_type == gadget3_circuit:
@@ -125,14 +125,13 @@ def cost_function(qnode, params, circuit_type, num_qubits=0, lam=1):
         # creating the "unperturbed Hamiltonian"
         # acting on the ancillary qubits only
         for first_qubit in range(computational_qubits, total_qubits):
-            for second_qubit in range(first_qubit+1, computational_qubits+ancillary_qubits):
-                expval_terms.append(qnode(params, 'ancillary', [first_qubit, second_qubit]))
-                print(expval_terms[-1])
+            for second_qubit in range(first_qubit+1, total_qubits):
+                expval_terms.append(qnode(params, term='ancillary', target_qubits=[first_qubit, second_qubit]))
         # creating the perturbation part of the Hamiltonian
         # acting on both ancillary and target qubits
         for qubit in range(ancillary_qubits):
-            expval_terms.append(qnode(params, 'coupling', [2 * qubit, 2 * qubit + 1, qubit]))
-            print(expval_terms[-1])
+            target_qubits = [2*qubit, 2*qubit+1, qubit]
+            expval_terms.append(qnode(params, term='coupling', target_qubits=target_qubits))
         
         return np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
     else:
