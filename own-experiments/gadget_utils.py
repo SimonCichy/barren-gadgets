@@ -150,5 +150,3 @@ def cat_state_preparation(ancillary_qubits):
 
 
 
-
-
