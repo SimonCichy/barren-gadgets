@@ -115,7 +115,7 @@ def cost_function(qnode, params, circuit_type, num_qubits=0, lam=1):
         for qubit in range(computational_qubits):
             expval_terms.append(qnode(params, term='coupling', target_qubits=[qubit]))
         
-        return np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
+        return 0.5 * np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
     elif circuit_type == gadget3_circuit:
         assert num_qubits != 0
         assert num_qubits % 2 == 0, "3-local gadget decomposition only implemented for even qubit numbers"
@@ -135,7 +135,7 @@ def cost_function(qnode, params, circuit_type, num_qubits=0, lam=1):
             target_qubits = [2*qubit, 2*qubit+1, qubit]
             expval_terms.append(qnode(params, term='coupling', target_qubits=target_qubits))
         
-        return np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
+        return 0.5 * np.sum(expval_terms[:-num_qubits]) + lam * np.sum(expval_terms[-num_qubits:])
     else:
         return qnode(params)                # the cost function is the expectation value
 
