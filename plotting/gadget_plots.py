@@ -60,6 +60,7 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
 
     plt.show()
 
+
 def plot_variances_vs_layers(file_list, colours, normalize=False):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
@@ -95,3 +96,31 @@ def plot_variances_vs_layers(file_list, colours, normalize=False):
         ax.set_title(r"$n_{comp}=$"+"{}".format(n))
 
         plt.show()
+
+
+
+def plot_training(file_list, colours, limits=None):
+    fig, ax = plt.subplots()
+    # ax2 = ax.twiny() 
+    legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
+               r'$\langle \psi_{HE}| H^{gad} |\psi_{HE} \rangle$',
+               r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$',
+               r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$']
+
+    for f, file in enumerate(file_list):
+        data = np.loadtxt(file)
+        iterations = data[:,0].astype(int)
+        cost_values = data[:,1:]
+
+        for observable in range(np.shape(cost_values)[1]):
+            ax.plot(iterations, cost_values[:, observable], c=colours[f][observable], label=legends[observable])
+    
+    # ax.set_ylim([2.5e-3, 2.2e-1])
+    ax.set_xlabel(r"Number of iterations")
+    ax.set_ylabel(r"Cost function")
+    ax.legend()
+
+    if limits != None:
+        ax.set_ylim(limits)
+
+    plt.show()
