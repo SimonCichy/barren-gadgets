@@ -4,7 +4,7 @@ from pennylane import numpy as np
 np.random.seed(42)
 
 
-def hardware_efficient_ansatz(params):
+def hardware_efficient_ansatz(params, gate_sequence=None):
     """A random variational quantum circuit based on the hardware efficient ansatz. 
     There are no measurements and it is to be used within the global or local circuits
 
@@ -20,9 +20,11 @@ def hardware_efficient_ansatz(params):
     num_layers = np.shape(params)[0]        # np.shape(params) = (num_layers, num_qubits)
     num_qubits = np.shape(params)[1]
     
-    # Generating the gate sequence from randomly applying RX, RY or RZ with the corresponding rotation angle
-    gate_set = [qml.RX, qml.RY, qml.RZ]
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits)] for _ in range(num_layers)]
+    if gate_sequence == None:
+        # Generating the gate sequence from randomly applying RX, RY or RZ with the corresponding rotation angle
+        gate_set = [qml.RX, qml.RY, qml.RZ]
+        random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits)] for _ in range(num_layers)]
+        gate_sequence = random_gate_sequence
 
     # Initial rotations on all qubits
     for i in range(num_qubits):             # rotate all qubits
@@ -33,7 +35,7 @@ def hardware_efficient_ansatz(params):
     for l in range(num_layers):
         # Single random gate layer (single qubit rotations)
         for i in range(num_qubits):
-            random_gate_sequence[l][i](params[l][i], wires=i)
+            gate_sequence[l][i](params[l][i], wires=i)
         # Nearest neighbour controlled phase gates
         if num_qubits > 1:                          # no entangling gates if using a single qubit
             qml.broadcast(qml.CZ, wires=range(num_qubits), pattern="ring")
