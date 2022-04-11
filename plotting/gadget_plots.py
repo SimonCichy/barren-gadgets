@@ -36,10 +36,15 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
                 norm = r if normalize else 1
                 ax.semilogy(qubits_list, variance_vals/norm**2, "--s", c=colours[f][nl])
             elif 'local' in file: 
-                norm = 1 if normalize else 1
+                norm = 1
                 ax.semilogy(qubits_list, variance_vals/norm**2, ":v", c=colours[f][nl])
             elif 'gadget' in file:
-                norm = r * k*(k-1) + lam * (1 + k - 1) if normalize else 1
+                if normalize:
+                    kprime = int(file[file.find('gadget') + 6])
+                    ktilde = k / (kprime - 1)
+                    norm = 0.5 * r * ktilde * (ktilde - 1) + r * lam * ktilde
+                else: 
+                    norm = 1
                 ax2.semilogy(2*qubits_list, variance_vals/norm**2, "-o", c=colours[f][nl])
 
     # ax.set_ylim([2.5e-3, 2.2e-1])
