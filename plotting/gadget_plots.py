@@ -7,6 +7,7 @@ from matplotlib.lines import Line2D
 def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
+    xlim = [100, 0]
 
     r = 1
     lam = 1
@@ -17,6 +18,7 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
         layers = data[:,0].astype(int)
         qubits = data[:,1].astype(int)
         gradients = data[:,2:]
+        xlim = [min([xlim[0], min(qubits)]), max([xlim[1], max(qubits)])]
 
         # getting the different numbers of layers tested
         layers_list = np.unique(layers)
@@ -48,6 +50,9 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
     ax2.tick_params(axis ='x', labelcolor = 'grey')
     ax2.xaxis.set_major_locator(MultipleLocator(2))
 
+    xlim = [xlim[0]-0.5, xlim[1]+0.5]
+    ax.set_xlim(xlim)
+    ax2.set_xlim([2*xlim[0], 2*xlim[1]])
     if limits != None:
         ax.set_ylim(limits)
 
