@@ -2,7 +2,6 @@ from gadget_training_utils import *
 
 # For reproduceability and shareability
 np.random.seed(42)
-# data_folder = '../../results/data/'
 
 # Parameters of the simulation
 computational_qubits = 2
@@ -19,13 +18,13 @@ gate_set = [qml.RX, qml.RY, qml.RZ]
 dev_comp = qml.device("default.qubit", wires=range(computational_qubits))
 dev_gad = qml.device("default.qubit", wires=range(computational_qubits+ancillary_qubits))
 
-
-if __name__ == "__main__":
-    # Test 1:
-    # All weights to 0 -> probed state |11...1>|+>
+def test1():
+    """ Test 1:
+    # All weights to 0 -> probed state |10...0>|+>
     # Expected results: 
     # - ancillary cost = 0
     # - perturbation cost = lambda
+    # - computational cost = -1 """
     weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
     # print(unperturbed_qnode(weights_init, random_gate_sequence, computational_qubits, [6, 7]))
@@ -34,12 +33,14 @@ if __name__ == "__main__":
     print(gadget_cost_function(weights_init, random_gate_sequence, computational_qubits, dev_gad, perturbation_factor*lambda_max)==0)
     print(computational_cost_function(weights_init, random_gate_sequence, computational_qubits, dev_gad))
 
-    # Test 2: Same eigenvectors
-    n = 2
+
+def test2(n):
+    """Test 2: Same eigenvectors"""
     Hcomp = qml.PauliZ(0)
     for q in range(1, n, 1):
         Hcomp = Hcomp @ qml.PauliZ(q)
     print(Hcomp)
+    print(min(np.linalg.eig(qml.matrix(Hcomp))[0]))
     # print(np.linalg.eig(qml.matrix(Hcomp)))
     for first_qubit in range(n, 2*n):
         for second_qubit in range(first_qubit+1, 2*n):
@@ -49,9 +50,19 @@ if __name__ == "__main__":
                 Hanc = qml.Hamiltonian(coeffs, obs)
             else: 
                 Hanc += qml.Hamiltonian(coeffs, obs)
-    V = qml.PauliZ(0) @ qml.PauliX(n)
-    for qubit in range(1, n, 1):           # /!\ only valid for 2-local
-        V += qml.PauliZ(qubit) @ qml.PauliX(n+qubit)
+    coeffs = perturbation_factor * lambda_max * np.ones((n, ))
+    obs = []
+    for qubit in range(n):           # /!\ only valid for 2-local
+        obs.append(qml.PauliZ(qubit) @ qml.PauliX(n+qubit))
+    V = qml.Hamiltonian(coeffs, obs)
     Hgad = Hanc + V
+    print(perturbation_factor * lambda_max)
     print(Hgad)
-    print(np.linalg.eig(qml.matrix(Hgad)))
+    print(min(np.linalg.eig(qml.matrix(Hgad))[0]))
+    # print(np.linalg.eig(qml.matrix(Hgad)))
+
+
+if __name__ == "__main__":
+    test1()
+    test2(n=6)
+    

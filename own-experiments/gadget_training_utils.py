@@ -14,14 +14,16 @@ from gadget_gradients_utils import hardware_efficient_ansatz, cat_state_preparat
 def gadget_circuit(params, gate_sequence, computational_qubits, observable):       # also working for k'-local 
     assert(len(np.shape(params)) == 2)                  # check proper dimensions of params
     total_qubits = np.shape(params)[1]
-    for qubit in range(computational_qubits):
-        qml.PauliX(wires=[qubit])                       # cheating by preparing the |11...1> state
-    cat_state_preparation(ancillary_qubits = range(computational_qubits, total_qubits, 1))
+    # for qubit in range(computational_qubits):
+    # qml.PauliX(wires=[0])                       # cheating by preparing the |10...0> state
+    if total_qubits > computational_qubits:
+        cat_state_preparation(ancillary_qubits = range(computational_qubits, total_qubits, 1))
     hardware_efficient_ansatz(params, gate_sequence, rot_y=False)
     return qml.expval(observable)
 
 
 # Cost functions
+# TODO: rewrite to have only one cost function that receives an external observable -> observable to measure defined in the notebook
 def computational_cost_function(params, gate_sequence, computational_qubits, device):
     gadget_qnode = qml.QNode(gadget_circuit, device)
     Hcomp = qml.PauliZ(0)
