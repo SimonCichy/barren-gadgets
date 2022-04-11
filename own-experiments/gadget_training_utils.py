@@ -3,7 +3,6 @@
 # Necessary imports
 import pennylane as qml
 from pennylane import numpy as np
-import matplotlib.pyplot as plt
 # import datetime
 
 from gadget_gradients_utils import hardware_efficient_ansatz, cat_state_preparation
