@@ -4,7 +4,7 @@ from pennylane import numpy as np
 np.random.seed(42)
 
 
-def hardware_efficient_ansatz(params, gate_sequence=None):
+def hardware_efficient_ansatz(params, gate_sequence=None, rot_y = True):
     """A random variational quantum circuit based on the hardware efficient ansatz. 
     There are no measurements and it is to be used within the global or local circuits
 
@@ -27,9 +27,10 @@ def hardware_efficient_ansatz(params, gate_sequence=None):
         gate_sequence = random_gate_sequence
 
     # Initial rotations on all qubits
-    for i in range(num_qubits):             # rotate all qubits
-        qml.RY(np.pi / 4, wires=i)          # "to prevent X, Y , or Z from being an especially preferential 
-                                            # direction with respect to gradients."
+    if rot_y:
+        for i in range(num_qubits):             # rotate all qubits
+            qml.RY(np.pi / 4, wires=i)          # "to prevent X, Y , or Z from being an especially preferential 
+                                                # direction with respect to gradients."
 
     # Repeating a layer structure
     for l in range(num_layers):
