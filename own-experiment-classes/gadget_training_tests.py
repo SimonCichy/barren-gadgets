@@ -1,4 +1,6 @@
-from gadget_training_utils import *
+import pennylane as qml
+from pennylane import numpy as np
+# from gadget_training_utils import *
 from gadget_cost import GadgetCost
 from observables_holmes import ObservablesHolmes
 
@@ -50,6 +52,7 @@ def test1():
 
 def test2():
     """Test 2: Same eigenvectors"""
+    print(Hcomp)
     print(min(qml.eigvals(Hcomp)))
     print(Hgad)
     # print(min(np.linalg.eig(qml.matrix(Hgad))[0]))

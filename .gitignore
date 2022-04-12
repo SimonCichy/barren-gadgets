@@ -133,4 +133,5 @@ dmypy.json
 
 # Some own failsafes
 *.html
+*.zip
 to_cluster/
