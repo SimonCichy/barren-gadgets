@@ -8,8 +8,9 @@ from observables_holmes import ObservablesHolmes
 
 np.random.seed(2)
 data_folder = '../results/data/training/'
-save_data = False
+use_exact_ground_energy = False
 plot_data = True
+save_data = False
 # cost_functions = ['global', 'local', 'gadget']
 cost_functions = ['gadget']
 
@@ -31,12 +32,14 @@ opt = qml.GradientDescentOptimizer(stepsize=0.1)
 # Used observables
 oH = ObservablesHolmes(computational_qubits, ancillary_qubits, perturbation_factor)
 Hcomp = oH.computational()
+Hloc = oH.local()
 Hanc = oH.ancillary()
 V = oH.perturbation()
 Hgad = oH.gadget()
 
 # creating a cost function object
-cf = GadgetCost(computational_qubits, computational_qubits+ancillary_qubits, dev_gad)
+cfg = GadgetCost(computational_qubits, computational_qubits+ancillary_qubits, dev_gad)
+cfc = GadgetCost(computational_qubits, computational_qubits, dev_comp)
 
 # def cat_state_witness(params, gate_sequence, computational_qubits, device):
 #     total_qubits = np.shape(params)[1]
@@ -54,64 +57,62 @@ cf = GadgetCost(computational_qubits, computational_qubits+ancillary_qubits, dev
 #     projector = qml.Hermitian(projector, range(computational_qubits, total_qubits, 1))
 #     return gadget_qnode(params, gate_sequence, computational_qubits, projector)
 
-# # Global case:
-# if 'global' in cost_functions:
-#     print("Training the global cost function")
-#     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
-#     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
-#     cost_computational = [computational_cost_function(weights_init, random_gate_sequence, computational_qubits, dev_comp)]
+# Global case:
+if 'global' in cost_functions:
+    print("Training the global cost function")
+    weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
+    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
+    cost_computational = [cfc.cost_function(weights_init, random_gate_sequence, Hcomp)]
 
-#     weights = weights_init
-#     for it in range(max_iter):
-#         # /!\ keyword arguments are not trained? don't know why but don't remove the 'computational_qubits='
-#         # keyword arguments are not wrapped https://discuss.pennylane.ai/t/wire-error-on-ibm-simulator/1282
-#         weights = opt.step(computational_cost_function, weights, gate_sequence=random_gate_sequence, computational_qubits=computational_qubits, device=dev_comp)
-#         cost_computational.append(computational_cost_function(weights, random_gate_sequence, computational_qubits, dev_comp))
-#         # opt.update_stepsize(stepsize)
-#         if it % 50 == 0:
-#             print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_computational[-1]))
+    weights = weights_init
+    for it in range(max_iter):
+        weights = opt.step(cfc.cost_function, weights, gate_sequence=random_gate_sequence, observable=Hcomp)
+        cost_computational.append(cfc.cost_function(weights, random_gate_sequence, Hcomp))
+        # opt.update_stepsize(stepsize)
+        if it % 50 == 0:
+            print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_computational[-1]))
         
-#     if save_data: 
-#         with open(data_folder + '{}_training_global_{}qubits_{}layers_{}iterations.dat'
-#                     .format(datetime.datetime.now().strftime("%y%m%d"),
-#                             computational_qubits, num_layers, max_iter), 'w') as of:
-#             of.write('# iteration\tcost\n')
+    if save_data: 
+        with open(data_folder + '{}_training_global_{}qubits_{}layers_{}iterations.dat'
+                    .format(datetime.datetime.now().strftime("%y%m%d"),
+                            computational_qubits, num_layers, max_iter), 'w') as of:
+            of.write('# iteration\tcost\n')
 
-#             for it in range(max_iter+1):
-#                 of.write('{}\t{}\n'.format(it, cost_computational[it]))
+            for it in range(max_iter+1):
+                of.write('{}\t{}\n'.format(it, cost_computational[it]))
 
-#     if plot_data:
-#         plt.figure()
-#         plt.plot(np.arange(max_iter+1), cost_computational)
-#     plt.show()
+    if plot_data:
+        plt.figure()
+        plt.plot(np.arange(max_iter+1), cost_computational)
+    plt.show()
 
-# # Local case:
-# if 'local' in cost_functions:
-#     print("Training the local cost function")
-#     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
-#     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
-#     cost_local = [local_cost_function(weights_init, random_gate_sequence, computational_qubits, dev_comp)]
+# Local case:
+if 'local' in cost_functions:
+    print("Training the local cost function")
+    weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
+    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
+    cost_local = [cfc.cost_function(weights_init, random_gate_sequence, Hloc)]
 
-#     weights = weights_init
-#     for it in range(max_iter):
-#         weights = opt.step(local_cost_function, weights, gate_sequence=random_gate_sequence, computational_qubits=computational_qubits, device=dev_comp)
-#         cost_local.append(local_cost_function(weights, random_gate_sequence, computational_qubits, dev_comp))
-#         if it % 50 == 0:
-#             print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_local[-1]))
+    weights = weights_init
+    for it in range(max_iter):
+        weights = opt.step(cfc.cost_function, weights, gate_sequence=random_gate_sequence, observable=Hloc)
+        cost_local.append(cfc.cost_function(weights, random_gate_sequence, Hcomp))
+        if it % 50 == 0:
+            print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_local[-1]))
 
-#     if save_data:
-#         with open(data_folder + '{}_training_local_{}qubits_{}layers_{}iterations.dat'
-#                     .format(datetime.datetime.now().strftime("%y%m%d"),
-#                             computational_qubits, num_layers, max_iter), 'w') as of:
-#             of.write('# iteration\tcost\n')
+    if save_data:
+        with open(data_folder + '{}_training_local_{}qubits_{}layers_{}iterations.dat'
+                    .format(datetime.datetime.now().strftime("%y%m%d"),
+                            computational_qubits, num_layers, max_iter), 'w') as of:
+            of.write('# iteration\tcost\n')
 
-#             for it in range(max_iter+1):
-#                 of.write('{}\t{}\n'.format(it, cost_local[it]))
+            for it in range(max_iter+1):
+                of.write('{}\t{}\n'.format(it, cost_local[it]))
 
-#     if plot_data:
-#         plt.figure()
-#         plt.plot(np.arange(max_iter+1), cost_local)
-#         plt.show()
+    if plot_data:
+        plt.figure()
+        plt.plot(np.arange(max_iter+1), cost_local)
+        plt.show()
 
 # Gadget case:
 if 'gadget' in cost_functions:
@@ -119,10 +120,10 @@ if 'gadget' in cost_functions:
     # weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits+ancillary_qubits), requires_grad=True)
     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
-    cost_computational = [cf.cost_function(weights_init, random_gate_sequence, Hcomp)]
-    cost_gadget = [cf.cost_function(weights_init, random_gate_sequence, Hgad)]
-    cost_ancillary = [cf.cost_function(weights_init, random_gate_sequence, Hanc)]
-    cost_perturbation = [cf.cost_function(weights_init, random_gate_sequence, V)]
+    cost_computational = [cfg.cost_function(weights_init, random_gate_sequence, Hcomp)]
+    cost_gadget = [cfg.cost_function(weights_init, random_gate_sequence, Hgad)]
+    cost_ancillary = [cfg.cost_function(weights_init, random_gate_sequence, Hanc)]
+    cost_perturbation = [cfg.cost_function(weights_init, random_gate_sequence, V)]
     # cat_witness = [cat_state_witness(weights_init, random_gate_sequence, computational_qubits, dev_gad)]
     # ground_witness = [ancillary_ground_projection(weights_init, random_gate_sequence, computational_qubits, dev_gad)]
     print(f"Iteration = {0:5d} | " +
@@ -131,11 +132,11 @@ if 'gadget' in cost_functions:
 
     weights = weights_init
     for it in range(max_iter):
-        weights, prev_cost = opt.step_and_cost(cf.cost_function, weights, gate_sequence=random_gate_sequence, observable=Hgad)
-        cost_computational.append(cf.cost_function(weights, random_gate_sequence, Hcomp))
-        cost_gadget.append(cf.cost_function(weights, random_gate_sequence, Hgad))
-        cost_ancillary.append(cf.cost_function(weights, random_gate_sequence, Hanc))
-        cost_perturbation.append(cf.cost_function(weights, random_gate_sequence, V))
+        weights = opt.step(cfg.cost_function, weights, gate_sequence=random_gate_sequence, observable=Hgad)
+        cost_computational.append(cfg.cost_function(weights, random_gate_sequence, Hcomp))
+        cost_gadget.append(cfg.cost_function(weights, random_gate_sequence, Hgad))
+        cost_ancillary.append(cfg.cost_function(weights, random_gate_sequence, Hanc))
+        cost_perturbation.append(cfg.cost_function(weights, random_gate_sequence, V))
         # cat_witness.append(cat_state_witness(weights_init, random_gate_sequence, computational_qubits, dev_gad))
         # ground_witness.append(ancillary_ground_projection(weights_init, random_gate_sequence, computational_qubits, dev_gad))
         # opt.update_stepsize(stepsize)

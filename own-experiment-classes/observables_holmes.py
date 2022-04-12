@@ -15,6 +15,10 @@ class ObservablesHolmes:
             Hcomp = Hcomp @ qml.PauliZ(qubit + 1)
         return Hcomp
     
+    def local(self):
+        Hloc = qml.PauliZ(0) @ qml.PauliZ(1)
+        return Hloc
+
     def ancillary(self):
         coeffs = []
         obs = []
