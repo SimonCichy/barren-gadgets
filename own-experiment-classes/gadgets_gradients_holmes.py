@@ -2,7 +2,6 @@ import pennylane as qml
 from pennylane import numpy as np
 import datetime
 
-# from gadget_gradients_utils import *
 from gadget_cost import GadgetCost
 from observables_holmes import ObservablesHolmes
 
