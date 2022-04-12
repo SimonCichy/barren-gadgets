@@ -36,26 +36,13 @@ Hloc = oH.local()
 Hanc = oH.ancillary()
 V = oH.perturbation()
 Hgad = oH.gadget()
+Pcat = oH.cat_projector()
+Pground = oH.ancillary_ground_projector()
 
 # creating a cost function object
 cfg = GadgetCost(computational_qubits, computational_qubits+ancillary_qubits, dev_gad)
 cfc = GadgetCost(computational_qubits, computational_qubits, dev_comp)
 
-# def cat_state_witness(params, gate_sequence, computational_qubits, device):
-#     total_qubits = np.shape(params)[1]
-#     gadget_qnode = qml.QNode(gadget_circuit, device)
-#     cat_state = np.zeros(2**(total_qubits - computational_qubits))
-#     cat_state[[0, -1]] = 1/np.sqrt(2) 
-#     cat_projector = qml.Hermitian(np.outer(cat_state, cat_state), range(computational_qubits, total_qubits, 1))
-#     return gadget_qnode(params, gate_sequence, computational_qubits, cat_projector)
-
-# def ancillary_ground_projection(params, gate_sequence, computational_qubits, device):
-#     total_qubits = np.shape(params)[1]
-#     gadget_qnode = qml.QNode(gadget_circuit, device)
-#     projector = np.zeros((2**(total_qubits - computational_qubits), 2**(total_qubits - computational_qubits)))
-#     projector[[0, -1],[0, -1]] = 1
-#     projector = qml.Hermitian(projector, range(computational_qubits, total_qubits, 1))
-#     return gadget_qnode(params, gate_sequence, computational_qubits, projector)
 
 # Global case:
 if 'global' in cost_functions:
@@ -124,8 +111,8 @@ if 'gadget' in cost_functions:
     cost_gadget = [cfg.cost_function(weights_init, random_gate_sequence, Hgad)]
     cost_ancillary = [cfg.cost_function(weights_init, random_gate_sequence, Hanc)]
     cost_perturbation = [cfg.cost_function(weights_init, random_gate_sequence, V)]
-    # cat_witness = [cat_state_witness(weights_init, random_gate_sequence, computational_qubits, dev_gad)]
-    # ground_witness = [ancillary_ground_projection(weights_init, random_gate_sequence, computational_qubits, dev_gad)]
+    cat_witness = [cfg.cost_function(weights_init, random_gate_sequence, Pcat)]
+    # ground_witness = [cfg.cost_function(weights_init, random_gate_sequence, Pground)]
     print(f"Iteration = {0:5d} | " +
         "Gadget cost = {:.8f} | ".format(cost_gadget[-1]) +
         "Computational cost = {:.8f}".format(cost_computational[-1]))
@@ -137,8 +124,8 @@ if 'gadget' in cost_functions:
         cost_gadget.append(cfg.cost_function(weights, random_gate_sequence, Hgad))
         cost_ancillary.append(cfg.cost_function(weights, random_gate_sequence, Hanc))
         cost_perturbation.append(cfg.cost_function(weights, random_gate_sequence, V))
-        # cat_witness.append(cat_state_witness(weights_init, random_gate_sequence, computational_qubits, dev_gad))
-        # ground_witness.append(ancillary_ground_projection(weights_init, random_gate_sequence, computational_qubits, dev_gad))
+        cat_witness.append(cfg.cost_function(weights_init, random_gate_sequence, Pcat))
+        # ground_witness.append(cfg.cost_function(weights_init, random_gate_sequence, Pground))
         # opt.update_stepsize(stepsize)
         if it % 10 == 0:
             print(f"Iteration = {it+1:5d} | " +
@@ -152,10 +139,9 @@ if 'gadget' in cost_functions:
         p_comp, = ax2.plot(np.arange(max_iter+1), cost_computational, c='firebrick', label=r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$')
         p_anc, = ax.plot(np.arange(max_iter+1), cost_ancillary, ':', c='royalblue', label=r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$')
         p_pert, = ax.plot(np.arange(max_iter+1), cost_perturbation, ':', c='darkturquoise', label=r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$') 
-        # p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
+        p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
         # p_plus, = ax2.plot(np.arange(max_iter+1), ground_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
-        # p = [p_gad, p_comp, p_anc, p_pert, p_plus]
-        p = [p_gad, p_comp, p_anc, p_pert]
+        p = [p_gad, p_comp, p_anc, p_pert, p_plus]
         ax.set_xlabel(r"Number of iterations")
         ax.set_ylabel(r"Cost function")
         ax.tick_params(axis ='y', labelcolor = 'navy')
