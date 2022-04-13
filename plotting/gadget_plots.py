@@ -4,13 +4,12 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from matplotlib.lines import Line2D
 
 
-def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
+def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  lambda_value = 1):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
     xlim = [100, 0]
 
     r = 1
-    lam = 1
     # linestyles = ['--', ':', '-', '-.']
 
     for f, file in enumerate(file_list):
@@ -32,6 +31,7 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None):
             variance_vals = np.var(grad_vals, axis=1)
             # rescaling factor
             k = qubits_list
+            lam = lambda_value * (qubits_list - 1) / (4 * qubits_list)
             if 'global' in file: 
                 norm = r if normalize else 1
                 ax.semilogy(qubits_list, variance_vals/norm**2, "--s", c=colours[f][nl])
