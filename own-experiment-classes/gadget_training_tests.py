@@ -2,7 +2,7 @@ import pennylane as qml
 from pennylane import numpy as np
 # from gadget_training_utils import *
 from gadget_cost import GadgetCost
-from observables_holmes import ObservablesHolmes
+from src.observables_holmes import ObservablesHolmes
 
 # For reproduceability and shareability
 np.random.seed(42)

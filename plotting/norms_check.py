@@ -20,12 +20,14 @@ for locality in [2]:
 one_norm = []
 inf_norm = []
 max_eval = []
+coeffs_norm = []
 for n in num_qubits:
     oH = ObservablesHolmes(n, n, lam_scale)
     Hgad = oH.gadget()
     one_norm.append(np.linalg.norm(qml.matrix(Hgad), ord=1))
     inf_norm.append(np.linalg.norm(qml.matrix(Hgad), ord=np.inf))
     max_eval.append(max(np.abs(qml.eigvals(Hgad))))
+    coeffs_norm.append(np.linalg.norm(Hgad.coeffs, ord=1))
 
 
 fig, ax = plt.subplots()
@@ -34,6 +36,7 @@ ax.plot(num_qubits, upper_bounds[2], 'o', label="upper bound")
 ax.plot(num_qubits, inf_norm, 's', label=r"$\|H^{gad}\|_{\infty}$")  
 ax.plot(num_qubits, one_norm, 'v', label=r"$\|H^{gad}\|_{1}$") 
 ax.plot(num_qubits, max_eval, '+', label=r"$\max|\lambda_j|$")  
+ax.plot(num_qubits, coeffs_norm, 'x', label=r"$\|\vec{c}\|_1$")  
 
 ax.set_xlabel(r"N Computational Qubits")
 ax.set_ylabel(r"$ Norm $")

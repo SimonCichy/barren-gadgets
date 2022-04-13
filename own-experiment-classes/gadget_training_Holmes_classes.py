@@ -4,15 +4,15 @@ import matplotlib.pyplot as plt
 import datetime
 
 from gadget_cost import GadgetCost
-from observables_holmes import ObservablesHolmes
+from src.observables_holmes import ObservablesHolmes
 
 np.random.seed(2)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
 save_data = False
-# cost_functions = ['global', 'local', 'gadget']
-cost_functions = ['gadget']
+cost_functions = ['global', 'local', 'gadget']
+# cost_functions = ['gadget']
 
 computational_qubits = 6
 ancillary_qubits = computational_qubits
@@ -83,7 +83,7 @@ if 'local' in cost_functions:
     weights = weights_init
     for it in range(max_iter):
         weights = opt.step(cfc.cost_function, weights, gate_sequence=random_gate_sequence, observable=Hloc)
-        cost_local.append(cfc.cost_function(weights, random_gate_sequence, Hcomp))
+        cost_local.append(cfc.cost_function(weights, random_gate_sequence, Hloc))
         if it % 50 == 0:
             print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_local[-1]))
 
