@@ -31,12 +31,14 @@ for n in num_qubits:
 
 
 fig, ax = plt.subplots()
+ax2 = plt.twinx(ax)
 
+ax2.plot(num_qubits, [inf_norm[i]/coeffs_norm[i] for i in range(len(num_qubits))], '--', c='grey', label=r"$\|H^{gad}\|_{\infty} / \|\vec{c}\|_1$")
 ax.plot(num_qubits, upper_bounds[2], 'o', label="upper bound")
 ax.plot(num_qubits, inf_norm, 's', label=r"$\|H^{gad}\|_{\infty}$")  
 ax.plot(num_qubits, one_norm, 'v', label=r"$\|H^{gad}\|_{1}$") 
 ax.plot(num_qubits, max_eval, '+', label=r"$\max|\lambda_j|$")  
-ax.plot(num_qubits, coeffs_norm, 'x', label=r"$\|\vec{c}\|_1$")  
+ax.plot(num_qubits, coeffs_norm, 'x', label=r"$\|\vec{c}\|_1$")
 
 ax.set_xlabel(r"N Computational Qubits")
 ax.set_ylabel(r"$ Norm $")
