@@ -1,9 +1,12 @@
+import sys
+sys.path.append('../src')
+sys.path.append('src')
 import pennylane as qml
 from pennylane import numpy as np
 import datetime
 
 # from gadget_cost import GadgetCost
-from src.observables_holmes import ObservablesHolmes
+from observables_holmes import ObservablesHolmes
 
 np.random.seed(42)
 data_folder = '../results/data/gradients/'
@@ -15,7 +18,7 @@ data_to_produce = 'variance vs qubits'
 num_samples = 200
 layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
 # If data_to_produce == 'variance vs qubits'
-qubits_list = [2, 4, 6, 8]               # [2, 3, 4, 5, 6]
+qubits_list = [2, 4, 6]               # [2, 3, 4, 5, 6]
 lambda_scaling = 0.5                        # w.r.t. λ_max
 ansatz = qml.templates.StronglyEntanglingLayers
 
