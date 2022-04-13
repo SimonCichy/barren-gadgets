@@ -1,10 +1,13 @@
+import sys
+sys.path.append('../src')
+sys.path.append('src')
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 
 from gadget_cost import GadgetCost
-from src.observables_holmes import ObservablesHolmes
+from observables_holmes import ObservablesHolmes
 
 np.random.seed(2)
 data_folder = '../results/data/training/'
