@@ -14,11 +14,11 @@ class ObservablesHolmes:
         Hcomp = qml.PauliZ(0)
         for qubit in range(self.n_comp-1):
             Hcomp = Hcomp @ qml.PauliZ(qubit + 1)
-        return Hcomp
+        return qml.Hamiltonian([1], [Hcomp])
     
     def local(self):
         Hloc = qml.PauliZ(0) @ qml.PauliZ(1)
-        return Hloc
+        return qml.Hamiltonian([1], [Hloc])
 
     def ancillary(self):
         coeffs = []
