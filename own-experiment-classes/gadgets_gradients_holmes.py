@@ -19,7 +19,7 @@ data_to_produce = 'variance vs qubits'
 num_samples = 200
 layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
 # If data_to_produce == 'variance vs qubits'
-qubits_list = [2, 4, 6, 8]               # [2, 3, 4, 5, 6]
+qubits_list = [2, 4, 6]               # [2, 3, 4, 5, 6]
 lambda_scaling = 0.5                        # w.r.t. λ_max
 
 # ansatz = qml.templates.StronglyEntanglingLayers
@@ -47,7 +47,8 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
             for _ in range(num_samples):
                 if 'gadget' in circuit:
                     locality = int(circuit[circuit.find('gadget') + 6])
-                    ancillary_qubits = num_qubits / (locality - 1)
+                    assert num_qubits % (locality - 1) == 0, "Non integer numer of requested ancillary qubits. The number of computational qubits is not divisible by (locality-1)"
+                    ancillary_qubits = int(num_qubits / (locality - 1))
                     # Generating the random values for the rotations
                     params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits+ancillary_qubits))
                     # params = np.random.uniform(0, np.pi, size=(num_layers, 2*num_qubits, 3))
@@ -89,12 +90,15 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
 
 
 if data_to_produce == 'variance vs qubits':
-    print("Global circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "global")
-    print("Local circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "local")
-    print("2-local gadget circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "gadget2")
+    # print("Global circuit: ")
+    # generate_gradients_vs_qubits(layers_list, qubits_list, "global")
+    # print("Local circuit: ")
+    # generate_gradients_vs_qubits(layers_list, qubits_list, "local")
+    # print("2-local gadget circuit: ")
+    # generate_gradients_vs_qubits(layers_list, qubits_list, "gadget2")
+    print("3-local gadget circuit: ")
+    generate_gradients_vs_qubits(layers_list, qubits_list, "gadget3")
+
 
 
 
