@@ -9,8 +9,9 @@ class ObservablesHolmes:
         self.n_tot = int(self.n_comp + self.n_anc)
         self.factor = perturbation_factor
         self.l = perturbation_factor * (self.n_comp - 1) / (4 * self.n_comp)
-        assert self.n_comp % self.n_anc == 0, "computational qubits not divisible by ancillary qubits. Non-divisible decomposition not implemented yet"
-        self.loc = int(self.n_comp / self.n_anc)
+        if self.n_anc != 0:
+            assert self.n_comp % self.n_anc == 0, "computational qubits not divisible by ancillary qubits. Non-divisible decomposition not implemented yet"
+            self.loc = int(self.n_comp / self.n_anc)
     
     def computational(self):
         Hcomp = qml.PauliZ(0)

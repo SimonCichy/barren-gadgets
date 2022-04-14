@@ -19,7 +19,7 @@ data_to_produce = 'variance vs qubits'
 num_samples = 200
 layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
 # If data_to_produce == 'variance vs qubits'
-qubits_list = [2, 4, 6]               # [2, 3, 4, 5, 6]
+qubits_list = [14, 16, 18]               # [2, 3, 4, 5, 6]
 lambda_scaling = 0.5                        # w.r.t. λ_max
 
 # ansatz = qml.templates.StronglyEntanglingLayers
@@ -90,14 +90,14 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
 
 
 if data_to_produce == 'variance vs qubits':
-    # print("Global circuit: ")
-    # generate_gradients_vs_qubits(layers_list, qubits_list, "global")
-    # print("Local circuit: ")
-    # generate_gradients_vs_qubits(layers_list, qubits_list, "local")
+    print("Global circuit: ")
+    generate_gradients_vs_qubits(layers_list, qubits_list, "global")
+    print("Local circuit: ")
+    generate_gradients_vs_qubits(layers_list, qubits_list, "local")
     # print("2-local gadget circuit: ")
     # generate_gradients_vs_qubits(layers_list, qubits_list, "gadget2")
-    print("3-local gadget circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "gadget3")
+    # print("3-local gadget circuit: ")
+    # generate_gradients_vs_qubits(layers_list, qubits_list, "gadget3")
 
 
 
