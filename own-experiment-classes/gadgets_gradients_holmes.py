@@ -5,7 +5,6 @@ import pennylane as qml
 from pennylane import numpy as np
 import datetime
 
-# from gadget_cost import GadgetCost
 from observables_holmes import ObservablesHolmes
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 
@@ -55,7 +54,6 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
                     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits+ancillary_qubits)] for _ in range(num_layers)]
                     dev = qml.device("default.qubit", wires=range(num_qubits+ancillary_qubits))    # /!\ only for r=1, k=n
                     oH = ObservablesHolmes(num_qubits, ancillary_qubits, lambda_scaling)
-                    # cf = GadgetCost(num_qubits, 2*num_qubits, dev)
                     obs = oH.gadget()
                 else:
                     params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits))
@@ -63,7 +61,6 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
                     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits)] for _ in range(num_layers)]
                     dev = qml.device("default.qubit", wires=range(num_qubits))
                     oH = ObservablesHolmes(num_qubits, 0, lambda_scaling)
-                    # cf = GadgetCost(num_qubits, num_qubits, dev)
                     if circuit == "global":
                         obs = oH.computational()
                     elif circuit == "local":
@@ -74,14 +71,12 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
 
                 cost = qml.ExpvalCost(ansatz, obs, dev)
                 # Calculating the gradients of the cost function w.r.t the parameters
-                # gradient = qml.grad(cf.cost_function)(params, gate_sequence=random_gate_sequence, observable=obs)
                 gradient = qml.grad(cost)(params)
 
                 # Write each newly calculated value (innefficient?)
                 with open(file_name, 'a') as of:
                     of.write('\t{}'.format(gradient[0][0]))
                     # of.write('\t{}'.format(gradient[0][0][1]))
-                # print(gradient[0][0][0])
                     
     # End file with one last line-break
     with open(file_name, 'a') as of:

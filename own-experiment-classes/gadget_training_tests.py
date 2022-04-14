@@ -6,7 +6,6 @@ from pennylane import numpy as np
 
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
-from gadget_cost import GadgetCost
 
 # For reproduceability and shareability
 np.random.seed(42)
@@ -35,23 +34,6 @@ Hloc = oH.local()
 Hanc = oH.ancillary()
 V = oH.perturbation()
 Hgad = oH.gadget()
-
-# creating a cost function object
-cf = GadgetCost(computational_qubits, total_qubits, dev_gad)
-
-def test1():
-    """ Test 1:
-    # All weights to 0 -> (not anymore) probed state |10...0>|+>
-    # Expected results: 
-    # - ancillary cost = 0
-    # - perturbation cost = lambda
-    # - (not anymore) computational cost = -1 """
-    weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
-    print(cf.cost_function(weights_init, random_gate_sequence, Hanc) == 0)
-    print(cf.cost_function(weights_init, random_gate_sequence, V) == 0)
-    print(cf.cost_function(weights_init, random_gate_sequence, Hgad) == 0)
-    print(cf.cost_function(weights_init, random_gate_sequence, Hcomp))
     
 
 def test2():
@@ -115,7 +97,6 @@ def test5():
 
 
 if __name__ == "__main__":
-    # test1()
     # test2()
     test3()
     test4()
