@@ -9,6 +9,9 @@ class ObservablesHolmes:
         self.n_tot = int(self.n_comp + self.n_anc)
         self.factor = perturbation_factor
         self.l = perturbation_factor * (self.n_comp - 1) / (4 * self.n_comp)
+        assert self.n_comp % self.n_anc == 0, "computational qubits not divisible by ancillary qubits. Non-divisible decomposition not implemented yet"
+        self.loc = int(self.n_comp / self.n_anc)
+        print(self.loc)
     
     def computational(self):
         Hcomp = qml.PauliZ(0)
@@ -30,11 +33,23 @@ class ObservablesHolmes:
         Hanc = qml.Hamiltonian(coeffs, obs)
         return Hanc
     
+    # def perturbation(self):
+    #     coeffs = [self.l] * self.n_comp
+    #     obs = []
+    #     for qubit in range(self.n_comp):           # /!\ only valid for 2-local
+    #         obs += [qml.PauliZ(qubit) @ qml.PauliX(self.n_comp+qubit)]
+    #     V = qml.Hamiltonian(coeffs, obs)
+    #     return V
+    
     def perturbation(self):
-        coeffs = [self.l] * self.n_comp
+        coeffs = [self.l] * self.n_anc
         obs = []
-        for qubit in range(self.n_comp):           # /!\ only valid for 2-local
-            obs += [qml.PauliZ(qubit) @ qml.PauliX(self.n_comp+qubit)]
+        for anc_qubit in range(self.n_anc):           # /!\ only valid for 2-local
+            term = qml.PauliX(self.n_comp+anc_qubit)
+            for q in range(self.loc):
+                term = term @ qml.PauliZ(self.loc*anc_qubit+q)
+            # obs += [qml.PauliZ(anc_qubit) @ qml.PauliX(self.n_comp+anc_qubit)]
+            obs += [term]
         V = qml.Hamiltonian(coeffs, obs)
         return V
     
