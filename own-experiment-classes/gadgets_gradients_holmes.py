@@ -45,11 +45,9 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
                 of.write('\n{}\t{}'.format(num_layers, num_qubits))
 
             for _ in range(num_samples):
-                if "gadget" in circuit:
-                    if circuit == "gadget2":
-                        ancillary_qubits = num_qubits
-                    elif circuit == "gadget3":
-                        ancillary_qubits = num_qubits / 2
+                if 'gadget' in circuit:
+                    locality = int(circuit[circuit.find('gadget') + 6])
+                    ancillary_qubits = num_qubits / (locality - 1)
                     # Generating the random values for the rotations
                     params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits+ancillary_qubits))
                     # params = np.random.uniform(0, np.pi, size=(num_layers, 2*num_qubits, 3))
