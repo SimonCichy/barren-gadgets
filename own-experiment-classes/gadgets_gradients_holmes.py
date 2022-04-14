@@ -45,13 +45,17 @@ def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
                 of.write('\n{}\t{}'.format(num_layers, num_qubits))
 
             for _ in range(num_samples):
-                if circuit == "gadget2":
+                if "gadget" in circuit:
+                    if circuit == "gadget2":
+                        ancillary_qubits = num_qubits
+                    elif circuit == "gadget3":
+                        ancillary_qubits = num_qubits / 2
                     # Generating the random values for the rotations
-                    params = np.random.uniform(0, np.pi, size=(num_layers, 2*num_qubits))
+                    params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits+ancillary_qubits))
                     # params = np.random.uniform(0, np.pi, size=(num_layers, 2*num_qubits, 3))
-                    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(2*num_qubits)] for _ in range(num_layers)]
-                    dev = qml.device("default.qubit", wires=range(2*num_qubits))    # /!\ only for r=1, k=n, k'=2
-                    oH = ObservablesHolmes(num_qubits, num_qubits, lambda_scaling)
+                    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits+ancillary_qubits)] for _ in range(num_layers)]
+                    dev = qml.device("default.qubit", wires=range(num_qubits+ancillary_qubits))    # /!\ only for r=1, k=n
+                    oH = ObservablesHolmes(num_qubits, ancillary_qubits, lambda_scaling)
                     # cf = GadgetCost(num_qubits, 2*num_qubits, dev)
                     obs = oH.gadget()
                 else:
