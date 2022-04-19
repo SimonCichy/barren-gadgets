@@ -37,13 +37,10 @@ Hgad = oH.gadget()
     
 
 def test2():
-    """Test 2: Same eigenvectors"""
-    print(Hcomp)
-    print(min(qml.eigvals(Hcomp)))
-    print(Hgad)
-    # print(min(np.linalg.eig(qml.matrix(Hgad))[0]))
-    # print(np.linalg.eig(qml.matrix(Hgad)))
-    print(min(qml.eigvals(Hgad)))
+    evals = qml.eigvals(ObservablesHolmes(4, 4, perturbation_factor).gadget())
+    print("Eigenvalues of the 2-local decomposition of 4 qubits: ")
+    print(evals)
+    print("Minimum eigenvalue:  ", min(evals))
 
 
 def test3():
@@ -97,7 +94,7 @@ def test5():
 
 
 if __name__ == "__main__":
-    # test2()
+    test2()
     test3()
     test4()
     test5()
