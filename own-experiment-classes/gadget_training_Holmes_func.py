@@ -9,7 +9,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 14
+seed = 3
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -22,7 +22,7 @@ cost_functions = ['gadget']
 computational_qubits = 4
 ancillary_qubits = computational_qubits
 num_layers = 2
-max_iter = 100
+max_iter = 500
 gate_set = [qml.RX, qml.RY, qml.RZ]
 
 # perturbation_factor = 0.4
@@ -101,21 +101,23 @@ def training_local(observable_generator, max_iterations = 100, plot_data=True, s
         plt.show()
 
 # Gadget case:
-def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, plot_data=True, save_data=False):
+def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, gate_sequence=None, initial_weights=None, plot_data=True, save_data=False):
     
     # Used observables
     Hcomp = observable_generator.computational()
     Hanc = observable_generator.ancillary()
     V = observable_generator.perturbation()
     Hgad = observable_generator.gadget()
-    Pcat = observable_generator.cat_projector()
-    Pground = observable_generator.ancillary_ground_projector()
+    # Pcat = observable_generator.cat_projector()
+    # Pground = observable_generator.ancillary_ground_projector()
 
-    # Random initialization
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
-    hea = HardwareEfficientAnsatz(random_gate_sequence)
-    # weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
-    weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits+ancillary_qubits), requires_grad=True)
+    if gate_sequence is None:
+        # Random initialization
+        gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
+    hea = HardwareEfficientAnsatz(gate_sequence)
+    if initial_weights is None:
+        # weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
+        initial_weights = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits+ancillary_qubits), requires_grad=True)
 
     # Cost function definitions
     cost_comp = qml.ExpvalCost(hea.ansatz, Hcomp, dev_gad)
@@ -125,17 +127,17 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, p
     # cost_wit = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
 
     # Initial cost values
-    cost_computational = [cost_comp(weights_init)]
-    cost_gadget = [cost_gad(weights_init)]
-    cost_ancillary = [cost_anc(weights_init)]
-    cost_perturbation = [cost_pert(weights_init)]
-    # cat_witness = [cost_wit(weights_init)]
-    # ground_witness = [cfg.cost_function(weights_init, random_gate_sequence, Pground)]
+    cost_computational = [cost_comp(initial_weights)]
+    cost_gadget = [cost_gad(initial_weights)]
+    cost_ancillary = [cost_anc(initial_weights)]
+    cost_perturbation = [cost_pert(initial_weights)]
+    # cat_witness = [cost_wit(initial_weights)]
+    # ground_witness = [cfg.cost_function(initial_weights, random_gate_sequence, Pground)]
     print(f"Iteration = {0:5d} | " +
         "Gadget cost = {:.8f} | ".format(cost_gadget[-1]) +
         "Computational cost = {:.8f}".format(cost_computational[-1]))
 
-    weights = weights_init
+    weights = initial_weights
     for it in range(max_iterations):
         weights = opt.step(cost_gad, weights)
         cost_computational.append(cost_comp(weights))
@@ -172,9 +174,9 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, p
     if save_data:
         locality = 2
         subfolder = 'gadget{}/'.format(locality)
-        with open(data_folder + subfolder + '{}_training_gadget{}_{}qubits_{}layers_{}iterations_{:1.1f}lambda_seed{}.dat'
+        with open(data_folder + subfolder + '{}_training_gadget{}_{:02}qubits_{:02}layers_{}iterations_seed{:02}_{:1.1f}lambda.dat'
                     .format(datetime.datetime.now().strftime("%y%m%d"), locality,
-                            computational_qubits, num_layers, max_iter, l_factor, seed), 'w') as of:
+                            computational_qubits, num_layers, max_iter, seed, l_factor), 'w') as of:
             of.write('# iteration\tcost computational\tcost gadget\tcost ancillary\tcost perturbation\tcat projection\n')
 
             for it in range(max_iter+1):
@@ -198,8 +200,12 @@ if __name__ == "__main__":
         print(" Layers:                 ", num_layers)
         print(" Iterations:             ", max_iter)
         print(" Random seed:            ", seed)
+        random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
+        initial_weights = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits+ancillary_qubits), requires_grad=True)
         for pf in perturbation_factors:
             print(" Perturbation factor:    ", pf)
             oH = ObservablesHolmes(computational_qubits, ancillary_qubits, pf)
-            training_gadget(observable_generator=oH, l_factor=pf, max_iterations=max_iter, plot_data=plot_data, save_data=save_data)
+            training_gadget(observable_generator=oH, l_factor=pf, max_iterations=max_iter, 
+                            gate_sequence=random_gate_sequence, initial_weights=initial_weights, 
+                            plot_data=plot_data, save_data=save_data)
     plt.show()

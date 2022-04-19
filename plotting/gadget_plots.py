@@ -131,8 +131,10 @@ def plot_training(file_list, colours, limits=None):
         ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
     
     ax.set_xlabel(r"Number of iterations")
-    ax.set_ylabel(r"Gadget cost function")
-    ax2.set_ylabel(r"Computational cost function")
+    ax.set_ylabel(r"Gadget cost function", color = colours[-2][1])
+    ax.tick_params(axis ='y', labelcolor = colours[-1][1])
+    ax2.set_ylabel(r"Computational cost function", color = colours[-2][0])
+    ax2.tick_params(axis ='y', labelcolor = colours[-1][0])
     # ax.legend()
 
     if limits != None:
