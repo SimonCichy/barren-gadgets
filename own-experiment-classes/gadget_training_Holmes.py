@@ -9,7 +9,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 2
+seed = 4
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -19,9 +19,9 @@ save_data = True
 cost_functions = ['gadget']
 
 computational_qubits = 4
-ancillary_qubits = computational_qubits
+ancillary_qubits = int(0.5 * computational_qubits)
 num_layers = 2
-max_iter = 500
+max_iter = 1000
 print_frequency = 100
 
 gate_set = [qml.RX, qml.RY, qml.RZ]
