@@ -9,7 +9,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 3
+seed = 2
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -172,7 +172,7 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, g
         # plt.show()
     
     if save_data:
-        locality = 2
+        locality = observable_generator.loc
         subfolder = 'gadget{}/'.format(locality)
         with open(data_folder + subfolder + '{}_training_gadget{}_{:02}qubits_{:02}layers_{}iterations_seed{:02}_{:1.1f}lambda.dat'
                     .format(datetime.datetime.now().strftime("%y%m%d"), locality,

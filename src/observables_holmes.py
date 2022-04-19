@@ -11,7 +11,7 @@ class ObservablesHolmes:
         self.l = perturbation_factor * (self.n_comp - 1) / (4 * self.n_comp)
         if self.n_anc != 0:
             assert self.n_comp % self.n_anc == 0, "computational qubits not divisible by ancillary qubits. Non-divisible decomposition not implemented yet"
-            self.loc = int(self.n_comp / self.n_anc)
+            self.loc = int(self.n_comp / self.n_anc) + 1
     
     def computational(self):
         Hcomp = qml.PauliZ(0)
@@ -46,9 +46,8 @@ class ObservablesHolmes:
         obs = []
         for anc_qubit in range(self.n_anc):           # /!\ only valid for 2-local
             term = qml.PauliX(self.n_comp+anc_qubit)
-            for q in range(self.loc):
-                term = term @ qml.PauliZ(self.loc*anc_qubit+q)
-            # obs += [qml.PauliZ(anc_qubit) @ qml.PauliX(self.n_comp+anc_qubit)]
+            for q in range(self.loc-1):
+                term = term @ qml.PauliZ((self.loc-1)*anc_qubit+q)
             obs += [term]
         V = qml.Hamiltonian(coeffs, obs)
         return V
