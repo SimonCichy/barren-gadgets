@@ -9,7 +9,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 13
+seed = 14
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -166,20 +166,20 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, p
         ax.tick_params(axis ='y', labelcolor = 'navy')
         ax2.tick_params(axis ='y', labelcolor = 'maroon')
         ax.legend(p, [p_.get_label() for p_ in p])
-        ax.set_title(r"$n_{comp}=$" + "{}".format(computational_qubits) + r", $\lambda=$" + "{}".format(l_factor))
+        ax.set_title(r"$n_{comp}=$" + "{}".format(computational_qubits) + r", $\lambda=$" + "{:1.1f}".format(l_factor))
         # plt.show()
     
     if save_data:
         locality = 2
         subfolder = 'gadget{}/'.format(locality)
-        with open(data_folder + subfolder + '{}_training_gadget{}_{}qubits_{}layers_{}iterations_{}lambda_seed{}.dat'
+        with open(data_folder + subfolder + '{}_training_gadget{}_{}qubits_{}layers_{}iterations_{:1.1f}lambda_seed{}.dat'
                     .format(datetime.datetime.now().strftime("%y%m%d"), locality,
                             computational_qubits, num_layers, max_iter, l_factor, seed), 'w') as of:
-            of.write('# iteration\tcost gadget\tcost computational\tcost ancillary\tcost perturbation\tcat projection\n')
+            of.write('# iteration\tcost computational\tcost gadget\tcost ancillary\tcost perturbation\tcat projection\n')
 
             for it in range(max_iter+1):
                 # of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_gadget[it], cost_computational[it], cost_ancillary[it], cost_perturbation[it], cat_witness[it]))
-                of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_gadget[it], cost_computational[it], cost_ancillary[it], cost_perturbation[it]))
+                of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_computational[it], cost_gadget[it], cost_ancillary[it], cost_perturbation[it]))
 
 
 if __name__ == "__main__":
@@ -199,7 +199,7 @@ if __name__ == "__main__":
         print(" Iterations:             ", max_iter)
         print(" Random seed:            ", seed)
         for pf in perturbation_factors:
-            print(" Perturbation factor:   ", pf)
+            print(" Perturbation factor:    ", pf)
             oH = ObservablesHolmes(computational_qubits, ancillary_qubits, pf)
             training_gadget(observable_generator=oH, l_factor=pf, max_iterations=max_iter, plot_data=plot_data, save_data=save_data)
     plt.show()

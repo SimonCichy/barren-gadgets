@@ -115,7 +115,7 @@ def plot_variances_vs_layers(file_list, colours, normalize=False):
 
 def plot_training(file_list, colours, limits=None):
     fig, ax = plt.subplots()
-    # ax2 = ax.twiny() 
+    ax2 = ax.twinx() 
     legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
                r'$\langle \psi_{HE}| H^{gad} |\psi_{HE} \rangle$',
                r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$',
@@ -126,13 +126,14 @@ def plot_training(file_list, colours, limits=None):
         iterations = data[:,0].astype(int)
         cost_values = data[:,1:]
 
-        for observable in range(np.shape(cost_values)[1]):
+        for observable in range(1, 2, 1):
             ax.plot(iterations, cost_values[:, observable], c=colours[f][observable], label=legends[observable])
+        ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
     
-    # ax.set_ylim([2.5e-3, 2.2e-1])
     ax.set_xlabel(r"Number of iterations")
-    ax.set_ylabel(r"Cost function")
-    ax.legend()
+    ax.set_ylabel(r"Gadget cost function")
+    ax2.set_ylabel(r"Computational cost function")
+    # ax.legend()
 
     if limits != None:
         ax.set_ylim(limits)
