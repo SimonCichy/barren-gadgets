@@ -20,8 +20,9 @@ cost_functions = ['gadget']
 
 computational_qubits = 4
 ancillary_qubits = int(0.5 * computational_qubits)
-num_layers = 2
-max_iter = 1000
+num_layers = 4
+max_iter = 500
+step = 0.3
 print_frequency = 100
 
 gate_set = [qml.RX, qml.RY, qml.RZ]
@@ -29,7 +30,7 @@ perturbation_factors = np.linspace(0, 1, 6)
 
 dev_comp = qml.device("default.qubit", wires=range(computational_qubits))
 dev_gad = qml.device("default.qubit", wires=range(computational_qubits+ancillary_qubits))
-opt = qml.GradientDescentOptimizer(stepsize=0.1)
+opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
 # # Global case:
@@ -175,9 +176,9 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     if save_data:
         locality = observable_generator.loc
         subfolder = 'gadget{}/'.format(locality)
-        with open(data_folder + subfolder + '{}_training_gadget{}_{:02}qubits_{:02}layers_{}iterations_seed{:02}_{:1.1f}lambda.dat'
+        with open(data_folder + subfolder + '{}_training_gadget{}_{:02}qubits_{:02}layers_{}iterations_step{}_seed{:02}_{:1.1f}lambda.dat'
                     .format(datetime.datetime.now().strftime("%y%m%d"), locality,
-                            computational_qubits, num_layers, max_iter, seed, l_factor), 'w') as of:
+                            computational_qubits, num_layers, max_iter, step, seed, l_factor), 'w') as of:
             of.write('# iteration\tcost computational\tcost gadget\tcost ancillary\tcost perturbation\tcat projection\n')
 
             for it in range(max_iter+1):
