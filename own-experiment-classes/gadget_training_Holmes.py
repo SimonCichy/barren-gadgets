@@ -9,7 +9,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 4
+seed = 5
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
