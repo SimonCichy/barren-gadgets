@@ -4,7 +4,7 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from matplotlib.lines import Line2D
 
 
-def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  lambda_value = 1):
+def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  lambda_value=1, layering='fixed'):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
     xlim = [100, 0]
@@ -15,6 +15,8 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  
     for f, file in enumerate(file_list):
         data = np.loadtxt(file)
         layers = data[:,0].astype(int)
+        if layering == 'linear':
+            layers = np.ones(len(layers))       # eliminating the layer information
         qubits = data[:,1].astype(int)
         gradients = data[:,2:]
         xlim = [min([xlim[0], min(qubits)]), max([xlim[1], max(qubits)])]
@@ -65,12 +67,12 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  
     if limits != None:
         ax.set_ylim(limits)
 
-    # selection = 1 if np.shape(colours)[0] == 3 else 0
-    selection = -1
-    custom_lines = [Line2D([0], [0], color=colours[selection][nl], lw=2) for nl in range(len(layers_list))]
-                #    [Line2D([0], [0], color='grey', linestyle=linestyles[c], lw=2) for c in range(len(file_list))]
-    ax.legend(custom_lines, ['1 layer']+['{} layers'.format(num_layers) for num_layers in layers_list[1:]])
-    # ax.legend(ncol=2)
+    if layering == 'fixed':
+        selection = -1
+        custom_lines = [Line2D([0], [0], color=colours[selection][nl], lw=2) for nl in range(len(layers_list))]
+                    #    [Line2D([0], [0], color='grey', linestyle=linestyles[c], lw=2) for c in range(len(file_list))]
+        ax.legend(custom_lines, ['1 layer']+['{} layers'.format(num_layers) for num_layers in layers_list[1:]])
+        # ax.legend(ncol=2)
 
     plt.show()
 

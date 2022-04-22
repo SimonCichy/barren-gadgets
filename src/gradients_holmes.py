@@ -50,8 +50,11 @@ class GradientsHolmes:
         for num_qubits in self.qubit_list:
             print(num_qubits, " qubits")
 
-            locality = int(circuit[circuit.find('gadget') + 6])
-            num_layers = int(num_qubits * (1 + 1/(locality-1)))
+            if 'gadget' in circuit:
+                locality = int(circuit[circuit.find('gadget') + 6])
+                num_layers = int(num_qubits * (1 + 1/(locality-1)))
+            else:
+                num_layers = num_qubits
 
             print(num_layers, " layers")
             with open(file_name, 'a') as of:

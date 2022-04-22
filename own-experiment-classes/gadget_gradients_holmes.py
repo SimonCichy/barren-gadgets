@@ -11,8 +11,9 @@ np.random.seed(42)
 
 # General parameters:
 num_samples = 200
-layers_list = [1, 2, 5]         # [1, 2, 5, 10, 20, 50]
-qubits_list = [2, 4]               # [2, 3, 4, 5, 6]
+# layers_list = [1, 2, 5]         # [1, 2, 5, 10, 20, 50]
+layers_list = 'linear'
+qubits_list = [2, 4, 6, 8]               # [2, 3, 4, 5, 6]
 lambda_scaling = 0.5                        # w.r.t. λ_max
 
 colours = np.array([plt.cm.Purples(np.linspace(0, 1, 10)), 
@@ -27,10 +28,10 @@ if __name__ == "__main__":
     gh.generate("global")
     print("Local circuit: ")
     gh.generate("local")
-    print("2-local gadget circuit: ")
-    gh.generate("gadget2")
     print("3-local gadget circuit: ")
     gh.generate("gadget3")
+    print("2-local gadget circuit: ")
+    gh.generate("gadget2")
 
 
 
