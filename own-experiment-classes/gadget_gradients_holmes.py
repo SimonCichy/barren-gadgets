@@ -1,99 +1,36 @@
 import sys
 sys.path.append('../src')
 sys.path.append('src')
-import pennylane as qml
-from pennylane import numpy as np
-import datetime
+import numpy as np
+import matplotlib.pyplot as plt
 
-from observables_holmes import ObservablesHolmes
-from hardware_efficient_ansatz import HardwareEfficientAnsatz
+from gradients_holmes import GradientsHolmes
+from gadget_plots import plot_variances_vs_qubits
 
 np.random.seed(42)
-data_folder = '../results/data/gradients/'
-
-data_to_produce = 'variance vs qubits'
-# data_to_produce = 'variance vs layers'
 
 # General parameters:
 num_samples = 200
-layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
-# If data_to_produce == 'variance vs qubits'
-qubits_list = [14, 16, 18]               # [2, 3, 4, 5, 6]
+layers_list = [1, 2, 5]         # [1, 2, 5, 10, 20, 50]
+qubits_list = [2, 4]               # [2, 3, 4, 5, 6]
 lambda_scaling = 0.5                        # w.r.t. λ_max
 
-# ansatz = qml.templates.StronglyEntanglingLayers
+colours = np.array([plt.cm.Purples(np.linspace(0, 1, 10)), 
+                    plt.cm.Blues(np.linspace(0, 1, 10)),
+                    plt.cm.Oranges(np.linspace(0, 1, 10)),
+                    plt.cm.Reds(np.linspace(0, 1, 10)),
+                    plt.cm.Greys(np.linspace(0, 1, 10))])[:, 3:]
 
-gate_set = [qml.RX, qml.RY, qml.RZ]
-
-def generate_gradients_vs_qubits(layer_list, qubit_list, circuit):
-    file_name = data_folder + '{}_'.format(datetime.datetime.now().strftime("%y%m%d")) + \
-              circuit + '_{}qubits_{}layers_{}lambda_{}samples.dat'.format(qubit_list[-1], layer_list[-1], lambda_scaling, num_samples)
-    with open(file_name, 'w') as of:
-        of.write('# layers\t# qubits\tgradients')
-
-    for num_layers in layer_list:
-        print(num_layers, " layers")
-        #TODO: change to progress bar
-
-        for num_qubits in qubit_list:
-            print(num_qubits, " qubits")
-            #TODO: change to progress bar
-
-            # write a new line
-            with open(file_name, 'a') as of:
-                of.write('\n{}\t{}'.format(num_layers, num_qubits))
-
-            for _ in range(num_samples):
-                if 'gadget' in circuit:
-                    locality = int(circuit[circuit.find('gadget') + 6])
-                    assert num_qubits % (locality - 1) == 0, "Non integer numer of requested ancillary qubits. The number of computational qubits is not divisible by (locality-1)"
-                    ancillary_qubits = int(num_qubits / (locality - 1))
-                    # Generating the random values for the rotations
-                    params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits+ancillary_qubits))
-                    # params = np.random.uniform(0, np.pi, size=(num_layers, 2*num_qubits, 3))
-                    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits+ancillary_qubits)] for _ in range(num_layers)]
-                    dev = qml.device("default.qubit", wires=range(num_qubits+ancillary_qubits))    # /!\ only for r=1, k=n
-                    oH = ObservablesHolmes(num_qubits, ancillary_qubits, lambda_scaling)
-                    obs = oH.gadget()
-                else:
-                    params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits))
-                    # params = np.random.uniform(0, np.pi, size=(num_layers, num_qubits, 3))
-                    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(num_qubits)] for _ in range(num_layers)]
-                    dev = qml.device("default.qubit", wires=range(num_qubits))
-                    oH = ObservablesHolmes(num_qubits, 0, lambda_scaling)
-                    if circuit == "global":
-                        obs = oH.computational()
-                    elif circuit == "local":
-                        obs = oH.local()
-                
-                hea = HardwareEfficientAnsatz(random_gate_sequence)
-                ansatz = hea.ansatz
-
-                cost = qml.ExpvalCost(ansatz, obs, dev)
-                # Calculating the gradients of the cost function w.r.t the parameters
-                gradient = qml.grad(cost)(params)
-
-                # Write each newly calculated value (innefficient?)
-                with open(file_name, 'a') as of:
-                    of.write('\t{}'.format(gradient[0][0]))
-                    # of.write('\t{}'.format(gradient[0][0][1]))
-                    
-    # End file with one last line-break
-    with open(file_name, 'a') as of:
-        of.write('\n')
-
-
-
-if data_to_produce == 'variance vs qubits':
+if __name__ == "__main__":
+    gh = GradientsHolmes(qubits_list, layers_list, lambda_scaling, num_samples)
     print("Global circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "global")
+    gh.generate("global")
     print("Local circuit: ")
-    generate_gradients_vs_qubits(layers_list, qubits_list, "local")
-    # print("2-local gadget circuit: ")
-    # generate_gradients_vs_qubits(layers_list, qubits_list, "gadget2")
-    # print("3-local gadget circuit: ")
-    # generate_gradients_vs_qubits(layers_list, qubits_list, "gadget3")
-
+    gh.generate("local")
+    print("2-local gadget circuit: ")
+    gh.generate("gadget2")
+    print("3-local gadget circuit: ")
+    gh.generate("gadget3")
 
 
 
