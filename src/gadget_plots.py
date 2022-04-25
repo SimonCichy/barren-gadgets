@@ -115,7 +115,7 @@ def plot_variances_vs_layers(file_list, colours, normalize=False):
 
 
 
-def plot_training(file_list, colours, limits=None):
+def plot_training(file_list, colours, limits=None, target_energies=None):
     fig, ax = plt.subplots()
     ax2 = ax.twinx() 
     legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
@@ -128,9 +128,14 @@ def plot_training(file_list, colours, limits=None):
         iterations = data[:,0].astype(int)
         cost_values = data[:,1:]
 
-        for observable in range(1, 2, 1):
-            ax.plot(iterations, cost_values[:, observable], c=colours[f][observable], label=legends[observable])
-        ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
+        if target_energies == None: 
+            ax.plot(iterations, cost_values[:, 1], c=colours[f][1], label=legends[1])
+            ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
+        elif type(target_energies) is dict:
+            ax.semilogy(iterations, cost_values[:, 1]-target_energies['gadget'][f], c=colours[f][1], label=legends[1])
+            ax2.semilogy(iterations, cost_values[:, 0]-target_energies['computational'], c=colours[f][0], label=legends[0])
+        else:
+            print("wrong type for target_energies")
     
     ax.set_xlabel(r"Number of iterations")
     ax.set_ylabel(r"Gadget cost function", color = colours[-2][1])
