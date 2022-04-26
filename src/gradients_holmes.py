@@ -98,14 +98,13 @@ class GradientsHolmes:
                 of.write('\n{}\t{}'.format(num_layers, num_qubits))
 
             for _ in range(self.num_samples):
-                cost, params = self.get_cost(circuit, num_qubits, num_layers)
-                gradient = qml.grad(cost)(params)
+                gradient = self.get_gradient(circuit, num_qubits, num_layers)
                 with open(file_name, 'a') as of:
                     of.write('\t{}'.format(gradient[0][0]))
         with open(file_name, 'a') as of:
             of.write('\n')
     
-    def get_cost(self, circuit, num_qubits, num_layers):
+    def get_gradient(self, circuit, num_qubits, num_layers,  perturbation_factor=None):
         """Method to generate the cost function of which the gradients will be
         recorded.
         TODO: transform to 'get_gradient(self, circuit, num_qubits, num_layers) 
@@ -125,17 +124,19 @@ class GradientsHolmes:
             params (list)   : list of (randomly generated) parameters to probe
                               the constructed cost function
         """
+        if perturbation_factor == None:
+            perturbation_factor = self.perturbation_factor
         if 'gadget' in circuit:
             # finding the target locality of the gadget decomposition
             locality = int(circuit[circuit.find('gadget') + 6])
             assert num_qubits % (locality - 1) == 0, "Non integer number of requested ancillary qubits. The number of computational qubits is not divisible by (locality-1)"
             ancillary_qubits = int(num_qubits / (locality - 1))
             width = num_qubits+ancillary_qubits
-            oH = ObservablesHolmes(num_qubits, ancillary_qubits, self.perturbation_factor)
+            oH = ObservablesHolmes(num_qubits, ancillary_qubits, perturbation_factor)
             obs = oH.gadget()
         else:
             width = num_qubits
-            oH = ObservablesHolmes(num_qubits, 0, self.perturbation_factor)
+            oH = ObservablesHolmes(num_qubits, 0, perturbation_factor)
             if circuit == "global":
                 obs = oH.computational()
             elif circuit == "local":
@@ -146,12 +147,32 @@ class GradientsHolmes:
         hea = HardwareEfficientAnsatz(random_gate_sequence)
         ansatz = hea.ansatz
         cost = qml.ExpvalCost(ansatz, obs, dev)
-        return cost, params
+        gradient = qml.grad(cost)(params)
+        return gradient
     
     def get_file_name(self, circuit):
         return self.data_folder + '{}_'.format(datetime.datetime.now().strftime("%y%m%d")) + \
-              circuit + '_{}qubits_{}layers_{}lambda_{}samples.dat'.format(self.qubit_list[-1], self.layer_list[-1], 
+              circuit + '_{}qubits_{}layers_{}lambda_{}samples' + \
+              '.dat'.format(self.qubit_list[-1], self.layer_list[-1], 
                                                                            self.perturbation_factor, self.num_samples)
+        
+    def generate_gradients_vs_layers(self, lambda_list, num_qubits, circuit):
+        file_name = self.get_file_name(circuit)
+        with open(file_name, 'w') as of:
+            of.write('# layers\tlambda\tgradients for {} qubits'.format(num_qubits))
+        
+        for num_layers in self.layer_list:
+            print(num_layers, " layers")
+
+            for lam in lambda_list:
+                with open(file_name, 'a') as of:
+                    of.write('\n{}\t{}'.format(num_layers, lam))
+                for _ in range(self.num_samples):
+                    gradient = self.get_gradient(circuit, num_qubits, num_layers, lam)
+                    with open(file_name, 'a') as of:
+                        of.write('\t{}'.format(gradient[0][0]))
+        with open(file_name, 'a') as of:
+            of.write('\n')
 
 
     
