@@ -9,11 +9,30 @@ class HardwareEfficientAnsatz:
         self.cat_range = cat_range
     
     def generate_sequence(self, n_qubits, n_layers):
+        """Generation of a random sequence of Pauli gate rotations to be used in the Alternating Layered Ansatz
+
+        Args:
+            n_qubits (int)  : number of qubits (width) of the circuit to be filled with rotations
+            n_layers (int)  : number of layers (depth) of the circuit to be filled with rotations
+
+        Returns:
+            self.gate_sequence (list)   : list of rotations to be implemented in each layer on each qubit.
+                                          should be of dimension (n_layers, n_qubits)
+        """
         gate_set = [qml.RX, qml.RY, qml.RZ]
         random_gate_sequence = [[np.random.choice(gate_set) for _ in range(n_qubits)] for _ in range(n_layers)]
         self.gate_sequence = random_gate_sequence
     
     def cat_state_preparation(self, wires):
+        """Generating a cat state on the specified qubits (e.g. the ancillary qubits for the perturbative gadget implementation)
+        Resulting state: (|00...0> + |11...1>)/sqrt(2) 
+
+        Args:
+            wires (list)                : list of wires to apply the rotations on
+
+        Returns:
+            (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
+        """
         # leave the computational qubits in the |0> state
         # create a cat state |+> in the ancillary register
         # /!\ inefficient in depth
@@ -22,6 +41,17 @@ class HardwareEfficientAnsatz:
             qml.CNOT(wires=[wires[0], qubit])
     
     def ansatz(self, params, wires):
+        """Generating the circuit corresponding to an Alternating Layerd Ansatz (McClean2018, Cerezo2021 and Holmes2021)
+
+        Args:
+            params (array[array[float]]): array of parameters of dimension (num_layers, num_qubits) containing the rotation angles
+                                          should have the same dimentions as self.gate_sequence as they are used pairwise
+            wires (list)                : list of wires to apply the rotations on
+
+        Returns:
+            (callable) quantum function representing the ansatz (to be used e.g. with qml.ExpvalCost)
+        """
+        
         assert(len(np.shape(params)) == 2)      # check proper dimensions of params
         num_layers = np.shape(params)[0]        # np.shape(params) = (num_layers, num_qubits)
         num_qubits = np.shape(params)[1]
