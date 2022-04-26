@@ -108,7 +108,7 @@ class ObservablesHolmes:
         cat_state = np.zeros(2**self.n_anc)
         cat_state[[0, -1]] = 1/np.sqrt(2) 
         cat_projector = qml.Hermitian(np.outer(cat_state, cat_state), range(self.n_comp, self.n_tot, 1))
-        return cat_projector
+        return qml.Hamiltonian([1], [cat_projector])
 
     def ancillary_ground_projector(self):
         """Generation of a projector on the ground state of the ancillary 

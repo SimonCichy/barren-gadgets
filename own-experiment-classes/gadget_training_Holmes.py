@@ -1,3 +1,4 @@
+import sched
 import sys
 sys.path.append('../src')
 sys.path.append('src')
@@ -9,7 +10,7 @@ import datetime
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 5
+seed = 4
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -19,9 +20,9 @@ save_data = True
 cost_functions = ['gadget']
 
 computational_qubits = 4
-ancillary_qubits = int(0.5 * computational_qubits)
-num_layers = 4
-max_iter = 500
+ancillary_qubits = int(1 * computational_qubits)
+num_layers = 8
+max_iter = 5000
 step = 0.3
 print_frequency = 100
 
@@ -103,14 +104,15 @@ def training_local(observable_generator, max_iterations = 100, plot_data=True, s
 # Gadget case:
 def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100, 
                     gate_sequence=None, initial_weights=None, 
-                    plot_data=True, save_data=False, print_frequency=10):
+                    plot_data=True, save_data=False, print_frequency=10, 
+                    check_witness=False):
     
     # Used observables
     Hcomp = observable_generator.computational()
     Hanc = observable_generator.ancillary()
     V = observable_generator.perturbation()
     Hgad = observable_generator.gadget()
-    # Pcat = observable_generator.cat_projector()
+    Pcat = observable_generator.cat_projector()
     # Pground = observable_generator.ancillary_ground_projector()
 
     if gate_sequence is None:
@@ -126,15 +128,16 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     cost_gad = qml.ExpvalCost(hea.ansatz, Hgad, dev_gad)
     cost_anc = qml.ExpvalCost(hea.ansatz, Hanc, dev_gad)
     cost_pert = qml.ExpvalCost(hea.ansatz, V, dev_gad)
-    # cost_wit = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
+    if check_witness:
+        cost_wit = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
 
     # Initial cost values
     cost_computational = [cost_comp(initial_weights)]
     cost_gadget = [cost_gad(initial_weights)]
     cost_ancillary = [cost_anc(initial_weights)]
     cost_perturbation = [cost_pert(initial_weights)]
-    # cat_witness = [cost_wit(initial_weights)]
-    # ground_witness = [cfg.cost_function(initial_weights, random_gate_sequence, Pground)]
+    if check_witness:
+        cat_witness = [cost_wit(initial_weights)]
     print(f"Iteration = {0:5d} | " +
         "Gadget cost = {:.8f} | ".format(cost_gadget[-1]) +
         "Computational cost = {:.8f}".format(cost_computational[-1]))
@@ -146,8 +149,8 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         cost_gadget.append(cost_gad(weights))
         cost_ancillary.append(cost_anc(weights))
         cost_perturbation.append(cost_pert(weights))
-        # cat_witness.append(cost_wit(weights_init))
-        # ground_witness.append(cfg.cost_function(weights_init, random_gate_sequence, Pground))
+        if check_witness:
+            cat_witness.append(cost_wit(weights))
         # opt.update_stepsize(stepsize)
         if it % print_frequency == 0:
             print(f"Iteration = {it+1:5d} | " +
@@ -161,10 +164,12 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         p_comp, = ax2.plot(np.arange(max_iter+1), cost_computational, c='firebrick', label=r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$')
         p_anc, = ax.plot(np.arange(max_iter+1), cost_ancillary, ':', c='royalblue', label=r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$')
         p_pert, = ax.plot(np.arange(max_iter+1), cost_perturbation, ':', c='darkturquoise', label=r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$') 
-        # p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
-        # p_plus, = ax2.plot(np.arange(max_iter+1), ground_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
-        # p = [p_gad, p_comp, p_anc, p_pert, p_plus]
-        p = [p_gad, p_comp, p_anc, p_pert]
+        if check_witness:
+            p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
+            # p_plus, = ax2.plot(np.arange(max_iter+1), ground_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
+            p = [p_gad, p_comp, p_anc, p_pert, p_plus]
+        else: 
+            p = [p_gad, p_comp, p_anc, p_pert]
         ax.set_xlabel(r"Number of iterations")
         ax.set_ylabel(r"Cost function")
         ax.tick_params(axis ='y', labelcolor = 'navy')
@@ -182,9 +187,45 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
             of.write('# iteration\tcost computational\tcost gadget\tcost ancillary\tcost perturbation\tcat projection\n')
 
             for it in range(max_iter+1):
-                # of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_gadget[it], cost_computational[it], cost_ancillary[it], cost_perturbation[it], cat_witness[it]))
-                of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_computational[it], cost_gadget[it], cost_ancillary[it], cost_perturbation[it]))
+                if check_witness:
+                    of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_gadget[it], cost_computational[it], cost_ancillary[it], cost_perturbation[it], cat_witness[it]))
+                else:
+                    of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_computational[it], cost_gadget[it], cost_ancillary[it], cost_perturbation[it]))
 
+
+def scheduled_training(schedule):
+    """Training of a quantum circuit according to the provided schedule
+
+    Args:
+        schedule (dict)     : dictionnary containing all the necessary components for the training:
+        - 'device'          : device to be used for the training
+        - 'ansatz'          : ansatz to be used as trainable quantum circuit (e.g. StronglyEntanglingLayers or HardwareEfficientAnsatz)
+        - 'initial weights' : weights with which to start the training
+        - 'training observables'    : list of observables to train the circuit on
+        - 'monitoring observables'  : list of observables to keep track of during training
+        - 'iterations'              : list of number of iterations to be training on each of the observables
+
+    Returns:
+        plots
+        saved files
+    """
+    dev = schedule['device']
+    ansatz = schedule['ansatz']
+    weights = schedule['initial weights']
+    training_obs = schedule['training observables']
+    monitoring_obs = schedule['monitoring observables']
+    max_iter_list = schedule['iterations']
+    assert np.shape(ansatz.gate_sequence) == np.shape(weights)
+    assert len(training_obs) == len(max_iter_list)
+    
+    cost_functions = [qml.ExpvalCost(ansatz, obs, dev) for obs in monitoring_obs]
+    cost_lists = [] * len(monitoring_obs)
+    for c in range(len(cost_functions)):
+        cost_lists[c].append(cost_functions[c](weights))
+    for phase, obs in enumerate(training_obs):
+        max_iter = max_iter_list[phase]
+        for it in range(max_iter):
+            pass
 
 if __name__ == "__main__":
     if 'global' in cost_functions:
@@ -207,7 +248,11 @@ if __name__ == "__main__":
         for pf in perturbation_factors:
             print(" Perturbation factor:    ", pf)
             oH = ObservablesHolmes(computational_qubits, ancillary_qubits, pf)
-            training_gadget(observable_generator=oH, l_factor=pf, max_iterations=max_iter, 
-                            gate_sequence=random_gate_sequence, initial_weights=initial_weights, 
-                            plot_data=plot_data, save_data=save_data, print_frequency=print_frequency)
+            training_gadget(observable_generator=oH, l_factor=pf, 
+                            max_iterations=max_iter, 
+                            gate_sequence=random_gate_sequence, 
+                            initial_weights=initial_weights, 
+                            plot_data=plot_data, save_data=save_data, 
+                            print_frequency=print_frequency, 
+                            check_witness=True)
     plt.show()
