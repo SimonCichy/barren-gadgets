@@ -34,6 +34,8 @@ class ObservablesHolmes:
         Returns:
             observable (qml.Hamiltonian)    : computational Hamiltonian to be used as observable
         """
+        # TODO: substitute with and check
+        # Hcomp = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(self.n_comp)])
         Hcomp = qml.PauliZ(0)
         for qubit in range(self.n_comp-1):
             Hcomp = Hcomp @ qml.PauliZ(qubit + 1)
@@ -77,6 +79,8 @@ class ObservablesHolmes:
         obs = []
         for anc_qubit in range(self.n_anc):           # /!\ only valid for 2-local
             term = qml.PauliX(self.n_comp+anc_qubit)
+            # TODO: substitute with and check
+            # term = qml.operation.Tensor(term, *[qml.PauliZ((self.loc-1)*anc_qubit+q) for q in range(self.loc-1)])
             for q in range(self.loc-1):
                 term = term @ qml.PauliZ((self.loc-1)*anc_qubit+q)
             obs += [term]
