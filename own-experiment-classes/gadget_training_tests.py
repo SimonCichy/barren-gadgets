@@ -6,6 +6,7 @@ from pennylane import numpy as np
 
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
+from jordan_gadgets import PerturbativeGadgets
 
 # For reproduceability and shareability
 np.random.seed(42)
@@ -93,9 +94,14 @@ def test5():
     print(ObservablesHolmes(6, 3, perturbation_factor).gadget())
 
 
+def test6():
+    gadgetizer = PerturbativeGadgets()
+    print(gadgetizer.gadgetize(Hcomp, target_locality=2))
+
 if __name__ == "__main__":
-    test2()
-    test3()
-    test4()
-    test5()
+    # test2()
+    # test3()
+    # test4()
+    # test5()
+    test6()
     
