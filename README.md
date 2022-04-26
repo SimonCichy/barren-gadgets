@@ -28,14 +28,20 @@ which has $r=1$ and $k=n$. For the example of $n=4$ one obtains:
   - [runable] paper_perturbative_gadgets_generate.ipynb: generation of the gradient variance data  
   - [utils] gadget_gradients_utils.py: collection of methods used in the gradient generation notebook  
   - [utils] gadget_training_utils.py: collection of methods used in the training script (to be replaced by gadget_cost.py + observables_holmes.py)   
-- own-experiments-classes: compilation of scripts and notebooks corresponding to experiments on perturbative gadgets that have been re-written using more abstraction (/!\ not identical results!) 
+- own-experiments-classes: compilation of scripts and notebooks corresponding to experiments on perturbative gadgets that have been re-written using more abstraction
   - [runable] gadget_training_tests.py: simple tests to check the correct implementation of some utilitary scripts  
-  - [runable] gadget_training_Holmes_classes.py: training experiment using 2-local gadget decomposition to optimize the computational Hamiltonian  
-  - [runable] gadget_gradient_holmes.py: generation of the gradient variance data (using the classes instead of the hard-coded functions)  
-  - [utils] gadget_cost: class that implements the calculation of the expectation value of a given observable on the gadget circuit
-  - [utils] obsrvables_holmes.py: class that generates the relevant observables for the example from the Holmes2021 paper  
-- plotting: directory containing the notebooks displaying the main results and necessary utils  
+  - [runable] gadget_training_Holmes.py: training experiment using 2-local or 3-local gadget decomposition to optimize the computational Hamiltonian  
+  - [runable] gadget_gradient_holmes.py: generation of the gradient variance data (using the classes instead of the hard-coded functions)
+- src: folder with the source files containing methods used in the main scripts  
+  - hardware_efficient_ansatz: compilation of classes falling under the "hardware efficient ansatz" description (for now only one to be renamed AlternatingLayeredAnsatz). Has a method self.ansatz that can be used with qml.ExpvalCost
+  - observables_holmes.py: class that generates the relevant observables for the example from the Holmes2021 paper  
+  - gradient_holmes.py: class containing methods to generate the data of the variance vs qubits plots
+  - observable_nomes.py: file containing methods to numerically generate the norms/eigenvalues of the studied operators (to be moved to ownexperiments)
+  gadget_plots.py: compilation of methods used to generate the different plots in relevant_results.ipynb
+- plotting: directory containing the notebooks displaying the main results
 
 ## TODOs:
 - Rewrite the gradient generation to accept an arbitrary observable (WET -> DRY)
 - Create a base class for the observables (virtual global and gadget, but runnable projectors)
+- Create a more flexible training method that accepts a schedule to be able to change depth, measured observable, ... during training
+- Create a method that gets a qml.Hamiltonian object and automatically decomposes it into the gadgetised equivalent
