@@ -145,5 +145,4 @@ class ObservablesHolmes:
                                       wires=range(self.n_comp))]
         coeffs = np.ones(len(obs))
         projector = qml.Hamiltonian(coeffs, obs)
-        print(projector)
         return projector
