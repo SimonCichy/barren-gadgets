@@ -4,7 +4,8 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 from matplotlib.lines import Line2D
 
 
-def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  lambda_value=1, layering='fixed'):
+def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  
+                             lambda_value=1, layering='fixed'):
     fig, ax = plt.subplots()
     ax2 = ax.twiny() 
     xlim = [100, 0]
@@ -77,9 +78,9 @@ def plot_variances_vs_qubits(file_list, colours, normalize=False, limits=None,  
     plt.show()
 
 
-def plot_variances_vs_layers(file_list, colours, normalize=False):
+def plot_variances_vs_layers(file_list, colours, normalize=False, limits=None):
     fig, ax = plt.subplots()
-    ax2 = ax.twiny() 
+    # ax2 = ax.twiny() 
 
     for f, file in enumerate(file_list):
         data = np.loadtxt(file)
@@ -101,13 +102,26 @@ def plot_variances_vs_layers(file_list, colours, normalize=False):
             r = 1
             n = int(file[file.find('qubits')-1])
             k = n
+            if type(normalize) is dict:
+                norm = normalize['gadget']
+            elif normalize:
+                kprime = int(file[file.find('gadget') + 6])
+                ktilde = k / (kprime - 1)
+                norm = 0.5 * r * ktilde * (ktilde - 1) + r * lam * ktilde
+            else: 
+                norm = 1
             norm = r * k*(k-1) + lam * (1 + k - 1) if normalize else 1
 
-            ax.semilogy(layers_list, variance_vals/norm**2, "-v", c=colours[f][l], label=r"$\lambda=${}".format(lam))
+            ax.semilogy(layers_list, variance_vals/norm**2, "-v", 
+                        c=colours[f][l], 
+                        label=r"$\lambda=${:1.1f}".format(lam) + \
+                              r"$\lambda_{max}$")
 
         ax.set_xlabel(r"Number of layers")
         ax.set_ylabel(r"$\langle \partial \theta_{1, 1} E\rangle$ variance")
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        if limits != None:
+            ax.set_ylim(limits)
         ax.legend()
         ax.set_title(r"$n_{comp}=$"+"{}".format(n))
 

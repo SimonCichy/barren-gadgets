@@ -152,9 +152,10 @@ class GradientsHolmes:
     
     def get_file_name(self, circuit):
         return self.data_folder + '{}_'.format(datetime.datetime.now().strftime("%y%m%d")) + \
-              circuit + '_{}qubits_{}layers_{}lambda_{}samples' + \
-              '.dat'.format(self.qubit_list[-1], self.layer_list[-1], 
-                                                                           self.perturbation_factor, self.num_samples)
+              circuit + '_{}qubits'.format(self.qubit_list[-1]) + \
+                        '_{}layers'.format(self.layer_list[-1]) + \
+                        '_{}lambda'.format(self.perturbation_factor) + \
+                        '_{}samples.dat'.format(self.num_samples)
         
     def generate_gradients_vs_layers(self, lambda_list, num_qubits, circuit):
         file_name = self.get_file_name(circuit)
