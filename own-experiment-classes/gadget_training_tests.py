@@ -35,6 +35,7 @@ Hloc = oH.local()
 Hanc = oH.ancillary()
 V = oH.perturbation()
 Hgad = oH.gadget()
+Pground_comp = oH.computational_ground_projector()
     
 
 def test2():
@@ -49,19 +50,24 @@ def test3():
           " on the computational and local Hamiltonians")
     print("Minimum eigenvalue of Hcomp:                       ", min(qml.eigvals(Hcomp)))
     print("Minimum eigenvalue of Hloc:                        ", min(qml.eigvals(Hloc)))
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
+    random_gate_sequence = [[np.random.choice(gate_set) 
+                             for _ in range(computational_qubits+ancillary_qubits)] 
+                             for _ in range(num_layers)]
     hea = HardwareEfficientAnsatz(random_gate_sequence, initial_y_rot=False)
     cost_comp = qml.ExpvalCost(hea.ansatz, Hcomp, dev_gad)
     cost_loc = qml.ExpvalCost(hea.ansatz, Hloc, dev_gad)
+    cost_proj = qml.ExpvalCost(hea.ansatz, Pground_comp, dev_gad)
     weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
     print("Expectation value of Hcomp with zero state:        ", cost_comp(weights_init))
     print("Expectation value of Hloc with zero state:         ", cost_loc(weights_init))
+    print("Expectation value of Proj with zero state:         ", cost_proj(weights_init))
     weights = np.copy(weights_init)
     index = random_gate_sequence[0].index(qml.RX)
     print("Flipping qubit ", index)
     weights[0][index] = np.pi
     print("Expectation value of Hcomp with one flipped qubit: ", cost_comp(weights))
     print("Expectation value of Hloc with one flipped qubit:  ", cost_loc(weights))
+    print("Expectation value of Proj with one flipped qubit:  ", cost_proj(weights))
 
 
 def test4():
@@ -98,10 +104,11 @@ def test6():
     gadgetizer = PerturbativeGadgets()
     print(gadgetizer.gadgetize(Hcomp, target_locality=2))
 
+
 if __name__ == "__main__":
     # test2()
-    # test3()
-    # test4()
+    test3()
+    test4()
     # test5()
-    test6()
-    
+    # test6()
+

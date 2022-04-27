@@ -1,3 +1,4 @@
+from sympy.utilities.iterables import multiset_permutations
 import pennylane as qml
 from pennylane import numpy as np
 
@@ -121,4 +122,28 @@ class ObservablesHolmes:
         projector = np.zeros((2**self.n_anc, 2**self.n_anc))
         projector[[0, -1],[0, -1]] = 1
         projector = qml.Hermitian(projector, range(self.n_comp, self.n_tot, 1))
+        return projector
+    
+    def computational_ground_projector(self):
+        """Generation of a projector on the ground state of the computational 
+        Hamiltonian, e.g.: span{|001>, |010>, |100>, |111>}
+        to be used as a cost function with qml.ExpvalCost
+        Args: None
+        Returns:
+            observable (qml.Hamiltonian)    : projector
+        """
+        odd_numbers = np.arange(self.n_comp)
+        odd_numbers = odd_numbers[odd_numbers % 2 == 1]
+        obs = []
+        for bit_flips in odd_numbers:
+            # all combinations of bit_flips X gates on the n_comp qubits
+            state = np.zeros(self.n_comp)
+            state[0:bit_flips] = 1
+            for perm in multiset_permutations(state):
+                perm = [int(i) for i in perm]   # eliminating the tensor property
+                obs += [qml.Projector(basis_state=perm, 
+                                      wires=range(self.n_comp))]
+        coeffs = np.ones(len(obs))
+        projector = qml.Hamiltonian(coeffs, obs)
+        print(projector)
         return projector
