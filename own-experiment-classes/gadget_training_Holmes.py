@@ -1,7 +1,7 @@
-import sched
 import sys
 sys.path.append('../src')
 sys.path.append('src')
+import warnings
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
@@ -114,6 +114,7 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     Hgad = observable_generator.gadget()
     Pcat = observable_generator.cat_projector()
     # Pground = observable_generator.ancillary_ground_projector()
+    Pground_comp = observable_generator.computational_ground_projector()
 
     if gate_sequence is None:
         # Random initialization
@@ -129,7 +130,8 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     cost_anc = qml.ExpvalCost(hea.ansatz, Hanc, dev_gad)
     cost_pert = qml.ExpvalCost(hea.ansatz, V, dev_gad)
     if check_witness:
-        cost_wit = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
+        proj_cat = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
+        proj_gs = qml.ExpvalCost(hea.ansatz, Pground_comp, dev_gad)
 
     # Initial cost values
     cost_computational = [cost_comp(initial_weights)]
@@ -137,7 +139,8 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     cost_ancillary = [cost_anc(initial_weights)]
     cost_perturbation = [cost_pert(initial_weights)]
     if check_witness:
-        cat_witness = [cost_wit(initial_weights)]
+        cat_witness = [proj_cat(initial_weights)]
+        gs_witness = [proj_gs(initial_weights)]
     print(f"Iteration = {0:5d} | " +
         "Gadget cost = {:.8f} | ".format(cost_gadget[-1]) +
         "Computational cost = {:.8f}".format(cost_computational[-1]))
@@ -150,7 +153,8 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         cost_ancillary.append(cost_anc(weights))
         cost_perturbation.append(cost_pert(weights))
         if check_witness:
-            cat_witness.append(cost_wit(weights))
+            cat_witness.append(proj_cat(weights))
+            gs_witness.append(proj_gs(weights))
         # opt.update_stepsize(stepsize)
         if it % print_frequency == 0:
             print(f"Iteration = {it+1:5d} | " +
@@ -167,7 +171,8 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         if check_witness:
             p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
             # p_plus, = ax2.plot(np.arange(max_iter+1), ground_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
-            p = [p_gad, p_comp, p_anc, p_pert, p_plus]
+            p_gs, = ax2.plot(np.arange(max_iter+1), gs_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| P_{gs}^{comp}| \psi_{HE} \rangle |^2 $')
+            p = [p_gad, p_comp, p_anc, p_pert, p_plus, p_gs]
         else: 
             p = [p_gad, p_comp, p_anc, p_pert]
         ax.set_xlabel(r"Number of iterations")
@@ -175,22 +180,42 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         ax.tick_params(axis ='y', labelcolor = 'navy')
         ax2.tick_params(axis ='y', labelcolor = 'maroon')
         ax.legend(p, [p_.get_label() for p_ in p])
-        ax.set_title(r"$n_{comp}=$" + "{}".format(computational_qubits) + r", $\lambda=$" + "{:1.1f}".format(l_factor))
+        ax.set_title(r"$n_{comp}=$" + "{}".format(computational_qubits) + 
+                     r", $\lambda=$" + "{:1.1f}".format(l_factor))
         # plt.show()
     
     if save_data:
         locality = observable_generator.loc
         subfolder = 'gadget{}/'.format(locality)
-        with open(data_folder + subfolder + '{}_training_gadget{}_{:02}qubits_{:02}layers_{}iterations_step{}_seed{:02}_{:1.1f}lambda.dat'
-                    .format(datetime.datetime.now().strftime("%y%m%d"), locality,
-                            computational_qubits, num_layers, max_iter, step, seed, l_factor), 'w') as of:
-            of.write('# iteration\tcost computational\tcost gadget\tcost ancillary\tcost perturbation\tcat projection\n')
+        with open(data_folder + subfolder + 
+                  '{}_'.format(datetime.datetime.now().strftime("%y%m%d")) + 
+                  'training_gadget{}_'.format(locality) + 
+                  '{:02}qubits_'.format(computational_qubits) + 
+                  '{:02}layers_'.format(num_layers) + 
+                  '{}iterations_'.format(max_iter) + 
+                  'step{}_'.format(step) + 
+                  'seed{:02}_'.format(seed) + 
+                  '{:1.1f}lambda.dat'.format(l_factor), 'w') as of:
+            of.write('# iteration\t' + 'cost computational\t' + 
+                     'cost gadget\t' + 'cost ancillary\t' + 
+                     'cost perturbation\t' + 'cat projection\t' + 
+                     'computational ground projection\n')
 
             for it in range(max_iter+1):
                 if check_witness:
-                    of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_gadget[it], cost_computational[it], cost_ancillary[it], cost_perturbation[it], cat_witness[it]))
+                    of.write('{}\t'.format(it) + 
+                             '{}\t'.format(cost_computational[it]) + 
+                             '{}\t'.format(cost_gadget[it]) + 
+                             '{}\t'.format(cost_ancillary[it]) + 
+                             '{}\t'.format(cost_perturbation[it]) + 
+                             '{}\t'.format(cat_witness[it]) +
+                             '{}\n'.format(gs_witness[it]))
                 else:
-                    of.write('{}\t{}\t{}\t{}\t{}\n'.format(it, cost_computational[it], cost_gadget[it], cost_ancillary[it], cost_perturbation[it]))
+                    of.write('{}\t'.format(it) + 
+                             '{}\t'.format(cost_computational[it]) + 
+                             '{}\t'.format(cost_gadget[it]) + 
+                             '{}\t'.format(cost_ancillary[it]) + 
+                             '{}\n'.format(cost_perturbation[it]))
 
 
 def scheduled_training(schedule):
