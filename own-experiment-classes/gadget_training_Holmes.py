@@ -168,13 +168,13 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
         p_comp, = ax2.plot(np.arange(max_iter+1), cost_computational, c='firebrick', label=r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$')
         p_anc, = ax.plot(np.arange(max_iter+1), cost_ancillary, ':', c='royalblue', label=r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$')
         p_pert, = ax.plot(np.arange(max_iter+1), cost_perturbation, ':', c='darkturquoise', label=r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$') 
+        p = [p_gad, p_comp, p_anc, p_pert]
         if check_witness:
             p_plus, = ax2.plot(np.arange(max_iter+1), cat_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
             # p_plus, = ax2.plot(np.arange(max_iter+1), ground_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| +\rangle |^2 $')
             p_gs, = ax2.plot(np.arange(max_iter+1), gs_witness, '--', c='salmon', label=r'$|\langle \psi_{HE}| P_{gs}^{comp}| \psi_{HE} \rangle |^2 $')
-            p = [p_gad, p_comp, p_anc, p_pert, p_plus, p_gs]
-        else: 
-            p = [p_gad, p_comp, p_anc, p_pert]
+            p += [p_plus, p_gs]
+
         ax.set_xlabel(r"Number of iterations")
         ax.set_ylabel(r"Cost function")
         ax.tick_params(axis ='y', labelcolor = 'navy')

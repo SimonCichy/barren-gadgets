@@ -129,34 +129,45 @@ def plot_variances_vs_layers(file_list, colours, normalize=False, limits=None):
 
 
 
-def plot_training(file_list, colours, limits=None, target_energies=None):
+def plot_training(file_list, colours, limits=None, target_energies=None, 
+                  check_witness=False):
     fig, ax = plt.subplots()
     ax2 = ax.twinx() 
     legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
                r'$\langle \psi_{HE}| H^{gad} |\psi_{HE} \rangle$',
                r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$',
-               r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$']
+               r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$', 
+               r'$1 - \langle + |\psi_{HE} \rangle$', 
+               r'$1 - \langle \psi_{HE}| P^{comp}_{gs} |\psi_{HE} \rangle$']
+    p = [[None] * len(legends)] * len(file_list)
 
     for f, file in enumerate(file_list):
         data = np.loadtxt(file)
         iterations = data[:,0].astype(int)
         cost_values = data[:,1:]
 
-        if target_energies == None: 
-            ax.plot(iterations, cost_values[:, 1], c=colours[f][1], label=legends[1])
-            ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
+        if target_energies is None: 
+            p[f][1], = ax.plot(iterations, cost_values[:, 1], c=colours[f][1], label=legends[1])
+            p[f][0], = ax2.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
         elif type(target_energies) is dict:
-            ax.semilogy(iterations, cost_values[:, 1]-target_energies['gadget'][f], c=colours[f][1], label=legends[1])
-            ax2.semilogy(iterations, cost_values[:, 0]-target_energies['computational'], c=colours[f][0], label=legends[0])
+            p[f][1], = ax.semilogy(iterations, cost_values[:, 1]-target_energies['gadget'][f], c=colours[f][1], label=legends[1])
+            p[f][0], = ax2.semilogy(iterations, cost_values[:, 0]-target_energies['computational'], c=colours[f][0], label=legends[0])
         else:
             print("wrong type for target_energies")
+        
+        if check_witness:
+            p[f][-2], = ax2.semilogy(iterations, 1-cost_values[:, -2], ':', c=colours[f][1], label=legends[-2])
+            p[f][-1], = ax2.semilogy(iterations, 1-cost_values[:, -1], ':',  c=colours[f][0], label=legends[-1])
     
     ax.set_xlabel(r"Number of iterations")
     ax.set_ylabel(r"Gadget cost function", color = colours[-2][1])
     ax.tick_params(axis ='y', labelcolor = colours[-1][1])
     ax2.set_ylabel(r"Computational cost function", color = colours[-2][0])
     ax2.tick_params(axis ='y', labelcolor = colours[-1][0])
-    # ax.legend()
+    labels_to_show = p[-2][:2]
+    if check_witness:
+        labels_to_show += p[-2][-2:]
+    ax.legend(labels_to_show, [p_.get_label() for p_ in labels_to_show])
 
     if limits != None:
         ax.set_ylim(limits)
