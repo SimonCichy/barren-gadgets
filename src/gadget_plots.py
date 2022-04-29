@@ -129,8 +129,7 @@ def plot_variances_vs_layers(file_list, colours, normalize=False, limits=None):
 
 
 
-def plot_training(file_list, colours, limits=None, target_energies=None, 
-                  check_witness=False):
+def plot_training(file_list, colours, limits=None, target_energies=None):
     fig, ax = plt.subplots()
     ax2 = ax.twinx() 
     legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
@@ -154,10 +153,6 @@ def plot_training(file_list, colours, limits=None, target_energies=None,
             p[f][0], = ax2.semilogy(iterations, cost_values[:, 0]-target_energies['computational'], c=colours[f][0], label=legends[0])
         else:
             print("wrong type for target_energies")
-        
-        if check_witness:
-            p[f][-2], = ax2.semilogy(iterations, 1-cost_values[:, -2], ':', c=colours[f][1], label=legends[-2])
-            p[f][-1], = ax2.semilogy(iterations, 1-cost_values[:, -1], ':',  c=colours[f][0], label=legends[-1])
     
     ax.set_xlabel(r"Number of iterations")
     ax.set_ylabel(r"Gadget cost function", color = colours[-2][1])
@@ -165,11 +160,51 @@ def plot_training(file_list, colours, limits=None, target_energies=None,
     ax2.set_ylabel(r"Computational cost function", color = colours[-2][0])
     ax2.tick_params(axis ='y', labelcolor = colours[-1][0])
     labels_to_show = p[-2][:2]
-    if check_witness:
-        labels_to_show += p[-2][-2:]
     ax.legend(labels_to_show, [p_.get_label() for p_ in labels_to_show])
 
     if limits != None:
         ax.set_ylim(limits)
 
     plt.show()
+
+def plot_training_with_witnesses(file_list, colours, limits=None, target_energies=None):
+    fig, ax = plt.subplots()
+    ax2 = ax.twinx() 
+    legends = [r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$', 
+               r'$\langle \psi_{HE}| H^{gad} |\psi_{HE} \rangle$',
+               r'$\langle \psi_{HE}| H^{anc} |\psi_{HE} \rangle$',
+               r'$\langle \psi_{HE}| \lambda V |\psi_{HE} \rangle$', 
+               r'$\langle + |\psi_{HE} \rangle$', 
+               r'$\langle \psi_{HE}| P^{comp}_{gs} |\psi_{HE} \rangle$']
+    p = [[None] * len(legends)] * len(file_list)
+
+    for f, file in enumerate(file_list):
+        data = np.loadtxt(file)
+        iterations = data[:,0].astype(int)
+        cost_values = data[:,1:]
+
+        if target_energies is None: 
+            p[f][0], = ax.plot(iterations, cost_values[:, 0], c=colours[f][0], label=legends[0])
+            p[f][1], = ax.plot(iterations, cost_values[:, 1], c=colours[f][1], label=legends[1])
+        elif type(target_energies) is dict:
+            p[f][0], = ax.semilogy(iterations, cost_values[:, 0]-target_energies['computational'], c=colours[f][0], label=legends[0])
+            p[f][1], = ax.semilogy(iterations, cost_values[:, 1]-target_energies['gadget'][f], c=colours[f][1], label=legends[1])
+        else:
+            print("wrong type for target_energies")
+
+        p[f][-2], = ax2.plot(iterations, cost_values[:, -2], ':', c=colours[f][1], label=legends[-2])
+        p[f][-1], = ax2.plot(iterations, cost_values[:, -1], ':',  c=colours[f][0], label=legends[-1])
+    
+    ax.set_xlabel(r"Number of iterations")
+    ax.set_ylabel(r"Cost functions")
+    # ax.tick_params(axis ='y', labelcolor = colours[-1][1])
+    ax2.set_ylabel(r"Projections", color = 'darkgrey')
+    ax2.tick_params(axis ='y', labelcolor = 'darkgrey')
+    labels_to_show = p[-1][:2] + p[-1][-2:]
+    ax.legend(labels_to_show, [p_.get_label() for p_ in labels_to_show])
+
+    if limits != None:
+        ax.set_ylim(limits)
+
+    plt.show()
+
