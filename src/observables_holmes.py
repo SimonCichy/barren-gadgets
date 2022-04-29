@@ -119,9 +119,12 @@ class ObservablesHolmes:
         Returns:
             observable (qml.Hamiltonian)    : projector
         """
-        projector = np.zeros((2**self.n_anc, 2**self.n_anc))
-        projector[[0, -1],[0, -1]] = 1
-        projector = qml.Hermitian(projector, range(self.n_comp, self.n_tot, 1))
+        zeros_state = [0] * self.n_anc
+        ones_state = [1] * self.n_anc
+        obs = [qml.Projector(basis_state=zeros_state, wires=range(self.n_comp, self.n_tot, 1)), 
+               qml.Projector(basis_state=ones_state, wires=range(self.n_comp, self.n_tot, 1))]
+        coeffs = [1, 1]
+        projector = qml.Hamiltonian(coeffs, obs)
         return projector
     
     def computational_ground_projector(self):
