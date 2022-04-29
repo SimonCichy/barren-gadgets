@@ -82,5 +82,9 @@ class PerturbativeGadgets:
             raise Exception('The given Hamiltonian has terms with different locality.' +
                             ' Gadgetization not implemented for this case')
 
+    def eliminate_minus_subspace(Hamiltonian):
+        """Method to discard the block of the Hamiltonian acting on the -1 
+        subspace of the X^n operator"""
+        pass
 
 

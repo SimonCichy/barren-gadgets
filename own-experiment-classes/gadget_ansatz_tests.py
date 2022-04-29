@@ -6,7 +6,6 @@ from pennylane import numpy as np
 
 from hardware_efficient_ansatz import HardwareEfficientAnsatz
 from observables_holmes import ObservablesHolmes
-from jordan_gadgets import PerturbativeGadgets
 
 # For reproduceability and shareability
 np.random.seed(42)
@@ -118,11 +117,6 @@ def test5():
     print("3-local decomposition of 6 qubits")
     print(ObservablesHolmes(6, 3, perturbation_factor).gadget())
 
-
-def test6():
-    gadgetizer = PerturbativeGadgets()
-    print(gadgetizer.gadgetize(Hcomp, target_locality=2))
-
 def test7():
     random_gate_sequence = [[np.random.choice(gate_set) 
                              for _ in range(computational_qubits+ancillary_qubits)] 
@@ -148,6 +142,5 @@ if __name__ == "__main__":
     test3()
     # test4()
     # test5()
-    # test6()
     # test7()
 
