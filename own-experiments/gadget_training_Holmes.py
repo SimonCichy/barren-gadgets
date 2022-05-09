@@ -7,7 +7,8 @@ from pennylane import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 
-from hardware_efficient_ansatz import HardwareEfficientAnsatz
+# from hardware_efficient_ansatz import HardwareEfficientAnsatz
+from hardware_efficient_ansatz import AlternatingLayeredAnsatz
 from observables_holmes import ObservablesHolmes
 
 seed = 4
@@ -38,8 +39,8 @@ opt = qml.GradientDescentOptimizer(stepsize=step)
 def training_global(observable_generator, max_iterations = 100, plot_data=True, save_data=False):
     Hcomp = observable_generator.computational()
     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
-    hea = HardwareEfficientAnsatz(random_gate_sequence)
-    cost = qml.ExpvalCost(hea.ansatz, Hcomp, dev_comp)
+    ala = AlternatingLayeredAnsatz(random_gate_sequence)
+    cost = qml.ExpvalCost(ala.ansatz, Hcomp, dev_comp)
     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
     cost_computational = [cost(weights_init)]
 
@@ -72,8 +73,8 @@ def training_global(observable_generator, max_iterations = 100, plot_data=True, 
 def training_local(observable_generator, max_iterations = 100, plot_data=True, save_data=False):
     Hloc = observable_generator.local()
     random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
-    hea = HardwareEfficientAnsatz(random_gate_sequence)
-    cost = qml.ExpvalCost(hea.ansatz, Hloc, dev_comp)
+    ala = AlternatingLayeredAnsatz(random_gate_sequence)
+    cost = qml.ExpvalCost(ala.ansatz, Hloc, dev_comp)
     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
     cost_local = [cost(weights_init)]
 
@@ -119,19 +120,19 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
     if gate_sequence is None:
         # Random initialization
         gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
-    hea = HardwareEfficientAnsatz(gate_sequence)
+    ala = AlternatingLayeredAnsatz(gate_sequence)
     if initial_weights is None:
         # weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
         initial_weights = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits+ancillary_qubits), requires_grad=True)
 
     # Cost function definitions
-    cost_comp = qml.ExpvalCost(hea.ansatz, Hcomp, dev_gad)
-    cost_gad = qml.ExpvalCost(hea.ansatz, Hgad, dev_gad)
-    cost_anc = qml.ExpvalCost(hea.ansatz, Hanc, dev_gad)
-    cost_pert = qml.ExpvalCost(hea.ansatz, V, dev_gad)
+    cost_comp = qml.ExpvalCost(ala.ansatz, Hcomp, dev_gad)
+    cost_gad = qml.ExpvalCost(ala.ansatz, Hgad, dev_gad)
+    cost_anc = qml.ExpvalCost(ala.ansatz, Hanc, dev_gad)
+    cost_pert = qml.ExpvalCost(ala.ansatz, V, dev_gad)
     if check_witness:
-        proj_cat = qml.ExpvalCost(hea.ansatz, Pcat, dev_gad)
-        proj_gs = qml.ExpvalCost(hea.ansatz, Pground_comp, dev_gad)
+        proj_cat = qml.ExpvalCost(ala.ansatz, Pcat, dev_gad)
+        proj_gs = qml.ExpvalCost(ala.ansatz, Pground_comp, dev_gad)
 
     # Initial cost values
     cost_computational = [cost_comp(initial_weights)]
@@ -227,7 +228,7 @@ def scheduled_training(schedule):
         - 'optimizers'      : list of optimizers to be used for the trainings
         - 'ansaetze'        : list of ansaetze to be used as trainable quantum 
                               circuit (e.g. StronglyEntanglingLayers or 
-                              HardwareEfficientAnsatz)
+                              AlternatingLayeredAnsatz)
                               /!\ it is responsibility of the user to ensure the
                               'continuity' of consecutive ansaetze s.t. the 
                               trained parameters can be used on consecutive ones

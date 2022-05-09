@@ -3,7 +3,7 @@ from pennylane import numpy as np
 import datetime
 
 from observables_holmes import ObservablesHolmes
-from hardware_efficient_ansatz import HardwareEfficientAnsatz
+from hardware_efficient_ansatz import AlternatingLayeredAnsatz
 
 
 class GradientsHolmes:
@@ -144,8 +144,8 @@ class GradientsHolmes:
         params = np.random.uniform(0, np.pi, size=(num_layers, width))
         random_gate_sequence = [[np.random.choice(self.gate_set) for _ in range(width)] for _ in range(num_layers)]
         dev = qml.device("default.qubit", wires=range(width))     # /!\ only for r=1, k=n
-        hea = HardwareEfficientAnsatz(random_gate_sequence)
-        ansatz = hea.ansatz
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        ansatz = ala.ansatz
         cost = qml.ExpvalCost(ansatz, obs, dev)
         gradient = qml.grad(cost)(params)
         return gradient
