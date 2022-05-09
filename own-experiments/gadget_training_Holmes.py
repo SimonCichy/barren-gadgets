@@ -11,34 +11,44 @@ import datetime
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz
 from observables_holmes import ObservablesHolmes
 
-seed = 4
+seed = 2
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
-save_data = True
+save_data = False
 # cost_functions = ['global', 'local', 'gadget']
 cost_functions = ['gadget']
 
 computational_qubits = 4
 ancillary_qubits = int(1 * computational_qubits)
 num_layers = 8
-max_iter = 5000
+max_iter = 2000
 step = 0.3
 print_frequency = 100
+num_shots = 1000
 
 gate_set = [qml.RX, qml.RY, qml.RZ]
 perturbation_factors = np.linspace(0, 1, 6)
 
-dev_comp = qml.device("default.qubit", wires=range(computational_qubits))
-dev_gad = qml.device("default.qubit", wires=range(computational_qubits+ancillary_qubits))
+dev_comp = qml.device("default.qubit", 
+                      wires=range(computational_qubits), 
+                      shots=num_shots)
+dev_gad = qml.device("default.qubit", 
+                     wires=range(computational_qubits+ancillary_qubits), 
+                     shots=num_shots)
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
-## Global case:
-def training_global(observable_generator, max_iterations = 100, plot_data=True, save_data=False):
+# Global case:
+def training_global(observable_generator, 
+                    max_iterations = 100, 
+                    plot_data=True, 
+                    save_data=False):
     Hcomp = observable_generator.computational()
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
+    random_gate_sequence = [[np.random.choice(gate_set) 
+                             for _ in range(computational_qubits)] 
+                             for _ in range(num_layers)]
     ala = AlternatingLayeredAnsatz(random_gate_sequence)
     cost = qml.ExpvalCost(ala.ansatz, Hcomp, dev_comp)
     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
@@ -50,7 +60,8 @@ def training_global(observable_generator, max_iterations = 100, plot_data=True, 
         cost_computational.append(cost(weights))
         # opt.update_stepsize(stepsize)
         if it % 50 == 0:
-            print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_computational[-1]))
+            print("Iteration = {:5d} | ".format(it+1) + 
+                  "Cost function = {: .8f}".format(cost_computational[-1]))
         
     if save_data: 
         with open(data_folder + '{}_training_global_{}qubits_{}layers_{}iterations.dat'
@@ -66,13 +77,19 @@ def training_global(observable_generator, max_iterations = 100, plot_data=True, 
         plt.plot(np.arange(max_iter+1), cost_computational, c='firebrick')
         plt.xlabel(r"Number of iterations")
         plt.ylabel(r"Cost function")
-        plt.title(r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$ for ' + r"$n_{comp}=$"+"{}".format(computational_qubits))
+        plt.title(r'$\langle \psi_{HE}| H^{comp} |\psi_{HE} \rangle$ for ' + 
+                  r"$n_{comp}=$"+"{}".format(computational_qubits))
         plt.show()
 
 # Local case:
-def training_local(observable_generator, max_iterations = 100, plot_data=True, save_data=False):
+def training_local(observable_generator, 
+                   max_iterations = 100, 
+                   plot_data=True, 
+                   save_data=False):
     Hloc = observable_generator.local()
-    random_gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits)] for _ in range(num_layers)]
+    random_gate_sequence = [[np.random.choice(gate_set) 
+                             for _ in range(computational_qubits)] 
+                             for _ in range(num_layers)]
     ala = AlternatingLayeredAnsatz(random_gate_sequence)
     cost = qml.ExpvalCost(ala.ansatz, Hloc, dev_comp)
     weights_init = np.random.uniform(0, np.pi, size=(num_layers, computational_qubits), requires_grad=True)
@@ -83,7 +100,8 @@ def training_local(observable_generator, max_iterations = 100, plot_data=True, s
         weights = opt.step(cost, weights)
         cost_local.append(cost(weights))
         if it % 50 == 0:
-            print("Iteration = {:5d} | Cost function = {: .8f}".format(it+1, cost_local[-1]))
+            print("Iteration = {:5d} | ".format(it+1) + 
+                  "Cost function = {: .8f}".format(cost_local[-1]))
 
     if save_data:
         with open(data_folder + '{}_training_local_{}qubits_{}layers_{}iterations.dat'
@@ -99,7 +117,8 @@ def training_local(observable_generator, max_iterations = 100, plot_data=True, s
         plt.plot(np.arange(max_iter+1), cost_local)
         plt.xlabel(r"Number of iterations")
         plt.ylabel(r"Cost function")
-        plt.title(r'$\langle \psi_{HE}| H^{loc} |\psi_{HE} \rangle$ for ' + r"$n_{comp}=$"+"{}".format(computational_qubits))
+        plt.title(r'$\langle \psi_{HE}| H^{loc} |\psi_{HE} \rangle$ for ' + 
+                  r"$n_{comp}=$"+"{}".format(computational_qubits))
         plt.show()
 
 # Gadget case:
@@ -119,7 +138,9 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
 
     if gate_sequence is None:
         # Random initialization
-        gate_sequence = [[np.random.choice(gate_set) for _ in range(computational_qubits+ancillary_qubits)] for _ in range(num_layers)]
+        gate_sequence = [[np.random.choice(gate_set) 
+                          for _ in range(computational_qubits+ancillary_qubits)] 
+                          for _ in range(num_layers)]
     ala = AlternatingLayeredAnsatz(gate_sequence)
     if initial_weights is None:
         # weights_init = np.zeros((num_layers, computational_qubits+ancillary_qubits), requires_grad=True)           # starting close to the ground state
@@ -157,7 +178,7 @@ def training_gadget(observable_generator, l_factor= 0.5, max_iterations = 100,
             cat_witness.append(proj_cat(weights))
             gs_witness.append(proj_gs(weights))
         # opt.update_stepsize(stepsize)
-        if it % print_frequency == 0:
+        if (it + 1) % print_frequency == 0:
             print(f"Iteration = {it+1:5d} | " +
                 "Gadget cost = {:.8f} | ".format(cost_gadget[-1]) +
                 "Computational cost = {:.8f}".format(cost_computational[-1]))
