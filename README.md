@@ -23,7 +23,7 @@ which has $r=1$ and $k=n$. For the example of $n=4$ one obtains:
 ## Repository structure:
 - ~~[to be eliminated] pennylane-tutorials:~~ set of demos downloaded from the pennylane website to use as references (unedited)  
 - ~~[to be eliminated] adapted tutorials:~~ pennylane demos that have been altered for learning purposes to get used to pennylane  
-- *own-experiments-hardcoded:* compilation of scripts and notebooks corresponding to experiments on perturbative gadgets 
+- [to be eliminated] *own-experiments-hardcoded:* compilation of scripts and notebooks corresponding to experiments on perturbative gadgets 
   - [runable] gadget_training_Holmes.py: training experiment using 2-local gadget decomposition to optimize the computational Hamiltonian  
   - [runable] paper_perturbative_gadgets_generate.ipynb: generation of the gradient variance data  
   - [utils] gadget_gradients_utils.py: collection of methods used in the gradient generation notebook  
