@@ -37,7 +37,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     training_obs = schedule['training observables']
     monitoring_obs = schedule['monitoring observables']
     label_list = ['Training cost'] + schedule['labels']
-    max_iter_list = schedule['iterations']
+    max_iter_list = [int(i) for i in schedule['iterations']]
     print_frequency = 100
     
     # ==========   Sanity checks   ==========
@@ -85,12 +85,12 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
                           'valid schedule. ' + 
                           'ansatz nr. {}: '.format(nr-1) + 
                           'of depth {} '.format(np.shape(weights)[0]) + 'vs ' +
-                          'ansatz nr. {}: '.format(nr) + 
-                          'of depth {} '.format(np.shape(ansatz.gate_sequence)[0]))
+                          'ansatz nr. {}: of depth '.format(nr) + 
+                          '{}'.format(np.shape(ansatz_list[phase].gate_sequence)[0]))
         elif depth_difference > 0:
             # padding with zeros to ensure "continuity" of the cost value
             # /!\ assumes that U(0) = II for all gates
-            np.append(weights, np.zeros(depth_difference, len(dev.wires)))
+            np.append(weights, np.zeros((depth_difference, len(dev.wires))))
         # updating the monitoring cost functions with the new ansatz
         cost_functions[0] = qml.ExpvalCost(ansatz, training_obs[phase], dev)
         for c, obs in enumerate(monitoring_obs):
@@ -123,7 +123,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         max_iter_sum = max_iter_list[0]
         for max_iter in max_iter_list[1:]: 
             max_iter_sum += max_iter
-            training_iterations += list(range(training_iterations[-1], max_iter_sum+1))
+            training_iterations += list(range(training_iterations[-1], max_iter_sum+1, 1))
         plt.figure()
         for c, cost in enumerate(cost_lists):
             plt.plot(training_iterations, cost, label=label_list[c])

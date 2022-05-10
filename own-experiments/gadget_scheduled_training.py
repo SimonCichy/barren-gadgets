@@ -49,16 +49,17 @@ if __name__ == "__main__":
         random_gate_sequence = [[np.random.choice(gate_set) 
                                 for _ in range(computational_qubits+ancillary_qubits)] 
                                 for _ in range(num_layers)]
-        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        ala1 = AlternatingLayeredAnsatz(random_gate_sequence[:-ancillary_qubits])
+        ala2 = AlternatingLayeredAnsatz(random_gate_sequence)
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, computational_qubits+ancillary_qubits), 
                             requires_grad=True)
         schedule = {
             'device': dev_gad,
-            'optimizers': [opt], 
-            'ansaetze': [ala],
-            'initial weights': initial_weights, 
-            'training observables': [oH.gadget()],
+            'optimizers': [opt] * 2, 
+            'ansaetze': [ala1, ala2],
+            'initial weights': initial_weights[:-ancillary_qubits], 
+            'training observables': [oH.gadget()] * 2,
             'monitoring observables': [oH.computational(), 
                                        oH.ancillary(), 
                                        oH.perturbation(), 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
                        r'$\langle \psi_{HE}| H^{gad} |\psi_{HE} \rangle$', 
                        r'$|\langle \psi_{HE}| +\rangle |^2 $', 
                        r'$|\langle \psi_{HE}| P_{gs}^{comp}| \psi_{HE} \rangle |^2 $'], 
-            'iterations': [max_iter]
+            'iterations': [max_iter, 0.5*max_iter]
         }
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
