@@ -18,19 +18,18 @@ class CompilingKhatri:
         self.n_tot = int(2 * self.n_comp)
         self.example = example
         assert example in [1, 2]
-        self.params_ex1 = np.random.uniform(0, np.pi, 
+        self.params_ex = [None, None, None]
+        self.params_ex[1] = np.random.uniform(0, np.pi, 
                           size=self.n_comp)
-        self.params_ex2 = np.random.uniform(0, np.pi, 
+        self.params_ex[2] = np.random.uniform(0, np.pi, 
                           size=(2, self.n_comp))
-    
-    def cost(self, params, locality):
-        if locality == self.n_comp:
-            target_qubits = list(range(locality))
-            return 1 - self.circuit(params, target_qubits)[0]
-        elif locality == 1:
-            fidelities = [self.circuit(params, target)[0] for target in range(self.n_comp)]
-            return 1 - np.sum(fidelities)/self.n_comp
 
+    def cost_global(self, params):
+        return 1 - self.circuit(params, range(self.n_comp))[0]
+    
+    def cost_local(self, params):
+        fidelities = [self.circuit(params, target)[0] for target in range(self.n_comp)]
+        return 1 - np.sum(fidelities)/self.n_comp
 
     def circuit(self, params, target_qubits):
         """Method to generate the circuit of the examples"""
@@ -63,7 +62,7 @@ class CompilingKhatri:
     def example1(self, params):
         # target unitary U to be learned 
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex1[qubit])
+            qml.RZ(self.params_ex[1][qubit])
         # learned unitary V 
         for qubit in range(self.n_comp, self.n_tot, 1):
             qml.RZ(params[qubit])
@@ -71,11 +70,11 @@ class CompilingKhatri:
     def example2(self, params):
         # target unitary U to be learned 
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex1[0][qubit])
+            qml.RZ(self.params_ex[2][0][qubit])
         #TODO check the shape of the chain broadcast
         qml.broadcast(qml.CZ, wires=range(self.n_comp), pattern="chain")
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex1[1][qubit])
+            qml.RZ(self.params_ex[2][1][qubit])
         # learned unitary V 
         for qubit in range(self.n_comp, self.n_tot, 1):
             qml.RZ(params[0][qubit])
