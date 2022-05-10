@@ -16,7 +16,7 @@ np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
-save_data = False
+save_data = True
 # cost_functions = ['global', 'local', 'gadget']
 cost_functions = ['gadget']
 
