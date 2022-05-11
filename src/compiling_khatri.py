@@ -1,5 +1,3 @@
-from threading import local
-from sympy.utilities.iterables import multiset_permutations
 import pennylane as qml
 from pennylane import numpy as np
 
@@ -13,7 +11,7 @@ class CompilingKhatri:
         computational_qubits (int)  : number of qubits acted upon by the 
                                       target unitary to be compiled
     """
-    def __init__(self, computational_qubits, example):
+    def __init__(self, computational_qubits, example, device):
         self.n_comp = int(computational_qubits)
         self.n_tot = int(2 * self.n_comp)
         self.example = example
@@ -23,12 +21,14 @@ class CompilingKhatri:
                           size=self.n_comp)
         self.params_ex[2] = np.random.uniform(0, np.pi, 
                           size=(2, self.n_comp))
+        self.device = device
 
     def cost_global(self, params):
-        return 1 - self.circuit(params, range(self.n_comp))[0]
+        return 1 - qml.QNode(self.circuit, self.device)(params, range(self.n_comp))[0]
     
     def cost_local(self, params):
-        fidelities = [self.circuit(params, target)[0] for target in range(self.n_comp)]
+        fidelities = [qml.QNode(self.circuit, self.device)(params, [target])[0] 
+                      for target in range(self.n_comp)]
         return 1 - np.sum(fidelities)/self.n_comp
 
     def circuit(self, params, target_qubits):
@@ -38,7 +38,8 @@ class CompilingKhatri:
             self.example1(params)
         elif self.example == 2:
             self.example2(params)
-        self.HST(target_qubits)
+        probs = self.HST(list(target_qubits))
+        return probs
     
     def entangled_state_prep(self):
         """ Generate the maximally entangled state over all qubits"""
@@ -62,25 +63,25 @@ class CompilingKhatri:
     def example1(self, params):
         # target unitary U to be learned 
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex[1][qubit])
+            qml.RZ(self.params_ex[1][qubit], wires=qubit)
         # learned unitary V 
         for qubit in range(self.n_comp, self.n_tot, 1):
-            qml.RZ(params[qubit])
+            qml.RZ(params[qubit-self.n_comp], wires=qubit)
 
     def example2(self, params):
         # target unitary U to be learned 
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex[2][0][qubit])
+            qml.RZ(self.params_ex[2][0][qubit], wires=qubit)
         #TODO check the shape of the chain broadcast
         qml.broadcast(qml.CZ, wires=range(self.n_comp), pattern="chain")
         for qubit in range(self.n_comp):
-            qml.RZ(self.params_ex[2][1][qubit])
+            qml.RZ(self.params_ex[2][1][qubit], wires=qubit)
         # learned unitary V 
         for qubit in range(self.n_comp, self.n_tot, 1):
-            qml.RZ(params[0][qubit])
+            qml.RZ(params[0][qubit-self.n_comp], wires=qubit)
         qml.broadcast(qml.CZ, wires=range(self.n_comp), pattern="chain")
         for qubit in range(self.n_comp):
-            qml.RZ(params[1][qubit])
+            qml.RZ(params[1][qubit-self.n_comp], wires=qubit)
 
 
 
