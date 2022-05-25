@@ -4,6 +4,10 @@ import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
 
+from hardware_efficient_ansatz import AlternatingLayeredAnsatz
+from observables_holmes import ObservablesHolmes
+from jordan_gadgets import PerturbativeGadgets
+
 
 def scheduled_training(schedule, plot_data=True, save_data=False):
     """Training of a quantum circuit according to the provided schedule
@@ -131,6 +135,56 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
 
     # ==========    Saving    ==========
     if save_data:
+        print("Data saving is not implemented yet")
         pass
+
+
+
+class SchedulesOfInterest:
+    """ Class serving as a repository of used schedules that are interesting"""
+
+    def __init__(self, computational_qubits, ancillary_qubits, 
+                 device_computational, device_gadget):
+        self.n_comp = int(computational_qubits)
+        self.n_anc = int(ancillary_qubits)
+        self.n_tot = self.n_comp + self.n_anc
+        self.dev_comp = device_computational
+        self.dev_gad = device_gadget
+        self.gate_set = [qml.RX, qml.RY, qml.RZ]
+
+    def linear_ala_gad(self, perturbation, optimizer, iterations):
+        num_layers = self.n_comp + self.n_anc
+        random_gate_sequence = [[np.random.choice(self.gate_set) 
+                                for _ in range(self.n_tot)] 
+                                for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_tot), 
+                            requires_grad=True)
+        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        gadgetizer = PerturbativeGadgets(method='Jordan', 
+                                         perturbation_factor=perturbation)
+        schedule = {
+            'device': self.dev_gad,
+            'optimizers': [optimizer], 
+            'ansaetze': [ala],
+            'initial weights': initial_weights, 
+            'training observables': [oH.gadget()],
+            'monitoring observables': [oH.computational(), 
+                                       oH.ancillary(), 
+                                       oH.perturbation(), 
+                                       oH.gadget(), 
+                                       gadgetizer.cat_projector(oH.computational()), 
+                                       oH.computational_ground_projector()],
+            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$', 
+                       r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
+                       r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
+                       r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
+                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+            'iterations': [iterations]
+        }
+        return schedule
+    
 
 
