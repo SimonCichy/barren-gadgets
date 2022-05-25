@@ -42,7 +42,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     monitoring_obs = schedule['monitoring observables']
     label_list = ['Training cost'] + schedule['labels']
     max_iter_list = [int(i) for i in schedule['iterations']]
-    print_frequency = 100
+    print_frequency = 20
     
     # ==========   Sanity checks   ==========
     # same number phases for all parameters
@@ -186,5 +186,29 @@ class SchedulesOfInterest:
         }
         return schedule
     
+    def linear_ala_comp(self, perturbation, optimizer, iterations):
+        num_layers = self.n_comp
+        random_gate_sequence = [[np.random.choice(self.gate_set) 
+                                for _ in range(self.n_tot)] 
+                                for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_tot), 
+                            requires_grad=True)
+        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        schedule = {
+            'device': self.dev_gad,
+            'optimizers': [optimizer], 
+            'ansaetze': [ala],
+            'initial weights': initial_weights, 
+            'training observables': [oH.computational()],
+            'monitoring observables': [oH.computational(), 
+                                       oH.computational_ground_projector()],
+            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$',
+                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+            'iterations': [iterations]
+        }
+        return schedule
+
 
 
