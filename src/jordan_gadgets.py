@@ -33,14 +33,9 @@ class PerturbativeGadgets:
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
         """
-        # checking for unaccounted for situations
-        self.run_checks(Hamiltonian)
-        # checking how many qubits the Hamiltonian acts on
-        computational_qubits = len(Hamiltonian.wires)
+        computational_qubits, computational_locality, _ = self.get_params(Hamiltonian)
         # total qubit count, updated progressively when adding ancillaries
         total_qubits = computational_qubits
-        # getting the locality, assuming all terms have the same
-        computational_locality = len(Hamiltonian.ops[0].non_identity_obs)
         l = self.perturbation_factor * (computational_locality - 1) / (4 * computational_locality)
         # creating the gadget Hamiltonian
         coeffs_anc = []
@@ -67,6 +62,17 @@ class PerturbativeGadgets:
         Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
         Hpert = qml.Hamiltonian(coeffs_pert, obs_pert)
         return Hanc + Hpert
+
+    def get_params(self, Hamiltonian):
+        # checking for unaccounted for situations
+        self.run_checks(Hamiltonian)
+        # checking how many qubits the Hamiltonian acts on
+        computational_qubits = len(Hamiltonian.wires)
+        # getting the number of terms in the Hamiltonian
+        computational_terms = len(Hamiltonian.ops)
+        # getting the locality, assuming all terms have the same
+        computational_locality = len(Hamiltonian.ops[0].non_identity_obs)
+        return computational_qubits, computational_locality, computational_terms
     
     def run_checks(self, Hamiltonian):
         computational_qubits = len(Hamiltonian.wires)
@@ -86,5 +92,27 @@ class PerturbativeGadgets:
         """Method to discard the block of the Hamiltonian acting on the -1 
         subspace of the X^n operator"""
         pass
+    
+    def cat_projector(self, Hamiltonian):
+        """Generation of a projector on the cat state (|00...0> + |11...1>)/sqrt(2)
+        to be used as a cost function with qml.ExpvalCost
+        Args: 
+            Hamiltonian (qml.Hamiltonian)   : Hamiltonian to be gadgetized
+        Returns:
+            observable (qml.Hamiltonian)    : projector
+        """
+        n_comp, k, r = self.get_params(Hamiltonian)
+        coeffs = [1] * r
+        obs = []
+        for register in range(r):
+            target_qubits = range(n_comp + register * k, 
+                                  n_comp + (register + 1) * k, 1)
+            cat_state = np.zeros(2**k)
+            cat_state[[0, -1]] = 1/np.sqrt(2) 
+            cat_projector = qml.Hermitian(np.outer(cat_state, cat_state), 
+                                          target_qubits)
+            obs.append(cat_projector)
+        projector = qml.Hamiltonian(coeffs, obs)
+        return projector
 
 

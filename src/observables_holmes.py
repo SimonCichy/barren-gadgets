@@ -100,12 +100,14 @@ class ObservablesHolmes:
         return Hgad
 
     def cat_projector(self):
-        """Generation of a projector on the cat state (|00...0> + |11...1>)/sqrt(2)
+        """ Warning: Deprecated - use cat_projector in PerturbativeGadgets instead
+        Generation of a projector on the cat state (|00...0> + |11...1>)/sqrt(2)
         to be used as a cost function with qml.ExpvalCost
         Args: None
         Returns:
             observable (qml.Hamiltonian)    : projector
         """
+        print("Warning: Deprecated - use cat_projector in PerturbativeGadgets instead")
         cat_state = np.zeros(2**self.n_anc)
         cat_state[[0, -1]] = 1/np.sqrt(2) 
         cat_projector = qml.Hermitian(np.outer(cat_state, cat_state), range(self.n_comp, self.n_tot, 1))

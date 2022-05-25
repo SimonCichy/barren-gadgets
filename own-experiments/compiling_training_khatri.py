@@ -74,6 +74,7 @@ if __name__ == "__main__":
         plt.xlabel("Iterations")
         plt.ylabel("Cost")
         plt.title("{} qubits".format(computational_qubits))
+        plt.legend()
     if save_data:
         pass
     plt.show()
