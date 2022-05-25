@@ -79,5 +79,5 @@ correct implementations when updating them
 ## TODOs:
 - Rewrite the gradient generation to accept an arbitrary observable (WET -> DRY)
 - Create a base class for the observables (virtual global and gadget, but runnable projectors)
-- Create a more flexible training method that accepts a schedule to be able to change depth, measured observable, ... during training
-- Create a method that gets a qml.Hamiltonian object and automatically decomposes it into the gadgetised equivalent
+- ~~Create a more flexible training method that accepts a schedule to be able to change depth, measured observable, ... during training~~
+- ~~Create a method that gets a qml.Hamiltonian object and automatically decomposes it into the gadgetised equivalent~~
