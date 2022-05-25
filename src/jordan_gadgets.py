@@ -114,5 +114,29 @@ class PerturbativeGadgets:
             obs.append(cat_projector)
         projector = qml.Hamiltonian(coeffs, obs)
         return projector
-
+    
+    #TODO: implement X_ground_projector -> Nope, not used
+    # def X_ground_projector(self, Hamiltonian):
+    #     """Generation of a projector on the ground state of the X^n operator
+    #     span{|00...0>, |11...1>} for each ancillary register
+    #     to be used as a cost function with qml.ExpvalCost
+    #     Args: 
+    #         Hamiltonian (qml.Hamiltonian)   : Hamiltonian to be gadgetized
+    #     Returns:
+    #         observable (qml.Hamiltonian)    : projector
+    #     """
+    #     n_comp, k, r = self.get_params(Hamiltonian)
+    #     coeffs = [1] * 2 * r
+    #     obs = []
+    #     for register in range(r):
+    #         target_qubits = range(n_comp + register * k, 
+    #                               n_comp + (register + 1) * k, 1)
+    #         zero_projector = qml.Projector(basis_state=[0]*k, 
+    #                                 wires=target_qubits)
+    #         one_projector = qml.Projector(basis_state=[1]*k, 
+    #                                 wires=target_qubits)
+    #         obs.append(zero_projector)
+    #         obs.append(one_projector)
+    #     projector = qml.Hamiltonian(coeffs, obs)
+    #     return projector
 
