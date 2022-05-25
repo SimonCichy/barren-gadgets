@@ -42,7 +42,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     monitoring_obs = schedule['monitoring observables']
     label_list = ['Training cost'] + schedule['labels']
     max_iter_list = [int(i) for i in schedule['iterations']]
-    print_frequency = 20
+    print_frequency = 10
     
     # ==========   Sanity checks   ==========
     # same number phases for all parameters
@@ -111,7 +111,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         print("Ansatz: ", type(ansatz_list[phase]).__name__)
         print("Iterations: ", max_iter)
         print(f"Iteration = {0:5d} of {max_iter:5d} | " +
-              "Training cost = {:.8f} | ".format(cost_lists[0][-1]))
+              "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
         # Looping through the iterations of the phase
         for it in range(max_iter):
             weights = opt.step(training_cost, weights)
@@ -119,7 +119,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
                 cost_lists[c].append(cost_functions[c](weights))
             if (it + 1) % print_frequency == 0:
                 print(f"Iteration = {it+1:5d} of {max_iter:5d} | " +
-                      "Training cost = {:.8f} | ".format(cost_lists[0][-1]))
+                      "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
 
     # ==========   Plotting   ==========
     if plot_data:
@@ -137,7 +137,6 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     if save_data:
         print("Data saving is not implemented yet")
         pass
-
 
 
 class SchedulesOfInterest:
