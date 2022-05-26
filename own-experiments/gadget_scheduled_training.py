@@ -42,7 +42,7 @@ if __name__ == "__main__":
     for pf in perturbation_factors:
         print(" Perturbation factor:    ", pf)
         soi = SchedulesOfInterest(computational_qubits, ancillary_qubits, 
-                                  dev_comp, dev_gad)
+                                  dev_comp, dev_gad, seed)
         schedule = soi.linear_ala_comp(pf, opt, max_iter)
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 

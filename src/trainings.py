@@ -1,4 +1,3 @@
-import datetime
 import warnings
 import pennylane as qml
 from pennylane import numpy as np
@@ -145,13 +144,14 @@ class SchedulesOfInterest:
     """ Class serving as a repository of used schedules that are interesting"""
 
     def __init__(self, computational_qubits, ancillary_qubits, 
-                 device_computational, device_gadget):
+                 device_computational, device_gadget, seed):
         self.n_comp = int(computational_qubits)
         self.n_anc = int(ancillary_qubits)
         self.n_tot = self.n_comp + self.n_anc
         self.dev_comp = device_computational
         self.dev_gad = device_gadget
         self.gate_set = [qml.RX, qml.RY, qml.RZ]
+        self.np_rdm_seed = seed
 
     def linear_ala_gad(self, perturbation, optimizer, iterations):
         num_layers = self.n_comp + self.n_anc
@@ -166,8 +166,10 @@ class SchedulesOfInterest:
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
         schedule = {
+            'name': 'linear_ala_gad',
             'device': self.dev_gad,
             'optimizers': [optimizer], 
+            'seed': self.np_rdm_seed,
             'ansaetze': [ala],
             'initial weights': initial_weights, 
             'training observables': [oH.gadget()],
@@ -198,8 +200,10 @@ class SchedulesOfInterest:
                             requires_grad=True)
         oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
         schedule = {
+            'name': 'linear_ala_comp',
             'device': self.dev_comp,
-            'optimizers': [optimizer], 
+            'optimizers': [optimizer],  
+            'seed': self.np_rdm_seed,
             'ansaetze': [ala],
             'initial weights': initial_weights, 
             'training observables': [oH.computational()],
@@ -224,8 +228,10 @@ class SchedulesOfInterest:
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
         schedule = {
+            'name': 'layerwise_ala_gad',
             'device': self.dev_gad,
-            'optimizers': [optimizer] * layer_steps, 
+            'optimizers': [optimizer] * layer_steps,  
+            'seed': self.np_rdm_seed,
             'ansaetze': [AlternatingLayeredAnsatz(random_gate_sequence[:d*individual_depth]) 
                          for d in range(1, layer_steps+1, 1)],
             'initial weights': initial_weights, 
@@ -259,8 +265,10 @@ class SchedulesOfInterest:
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
         schedule = {
+            'name': 'ala_gad_to_comp',
             'device': self.dev_gad,
-            'optimizers': [optimizer] * 2, 
+            'optimizers': [optimizer] * 2,  
+            'seed': self.np_rdm_seed,
             'ansaetze': [ala] * 2,
             'initial weights': initial_weights, 
             'training observables': [oH.gadget(), oH.computational()],
