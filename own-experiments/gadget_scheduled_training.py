@@ -13,13 +13,13 @@ np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
-save_data = False
+save_data = True
 
-computational_qubits = 12
+computational_qubits = 2
 ancillary_qubits = int(1 * computational_qubits)
 max_iter = 100
 step = 0.3
-num_shots = 100
+num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
 perturbation_factors = [1]

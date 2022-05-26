@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz
 from observables_holmes import ObservablesHolmes
 from jordan_gadgets import PerturbativeGadgets
+from data_management import save_training
 
 
 def scheduled_training(schedule, plot_data=True, save_data=False):
@@ -135,8 +136,9 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
 
     # ==========    Saving    ==========
     if save_data:
-        print("Data saving is not implemented yet")
-        pass
+        # print("Data saving is not implemented yet")
+        # pass
+        save_training(schedule, cost_lists)
 
 
 class SchedulesOfInterest:
