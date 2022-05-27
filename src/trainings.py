@@ -3,7 +3,7 @@ import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
 
-from hardware_efficient_ansatz import AlternatingLayeredAnsatz
+from hardware_efficient_ansatz import AlternatingLayeredAnsatz, SimplifiedAlternatingLayeredAnsatz
 from observables_holmes import ObservablesHolmes
 from jordan_gadgets import PerturbativeGadgets
 from data_management import save_training
@@ -92,6 +92,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         elif depth_difference > 0:
             # padding with zeros to ensure "continuity" of the cost value
             # /!\ assumes that U(0) = II for all gates
+            #TODO: check that these angles are then trained and don't stay at 0
             np.append(weights, np.zeros((depth_difference, len(dev.wires))))
         # updating the monitoring cost functions with the new ansatz
         cost_functions[0] = qml.ExpvalCost(ansatz, training_obs[phase], dev)
@@ -229,6 +230,29 @@ class SchedulesOfInterest:
             'optimizers': [optimizer],  
             'seed': self.np_rdm_seed,
             'ansaetze': [ala],
+            'initial weights': initial_weights, 
+            'training observables': [oH.computational()],
+            'monitoring observables': [oH.computational(), 
+                                       oH.computational_ground_projector()],
+            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$',
+                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+            'iterations': [iterations]
+        }
+        return schedule
+
+    def shallow_sala_comp(self, perturbation, optimizer, iterations):
+        num_layers = 2
+        sala = SimplifiedAlternatingLayeredAnsatz(self.n_comp, num_layers)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_comp), 
+                            requires_grad=True)
+        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        schedule = {
+            'name': 'linear_ala_comp',
+            'device': self.dev_comp,
+            'optimizers': [optimizer],  
+            'seed': self.np_rdm_seed,
+            'ansaetze': [sala],
             'initial weights': initial_weights, 
             'training observables': [oH.computational()],
             'monitoring observables': [oH.computational(), 

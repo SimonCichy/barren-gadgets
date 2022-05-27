@@ -20,7 +20,8 @@ class AlternatingLayeredAnsatz:
                                           should be of dimension (n_layers, n_qubits)
         """
         gate_set = [qml.RX, qml.RY, qml.RZ]
-        random_gate_sequence = [[np.random.choice(gate_set) for _ in range(n_qubits)] for _ in range(n_layers)]
+        random_gate_sequence = [[np.random.choice(gate_set) for _ in range(n_qubits)] 
+                                                            for _ in range(n_layers)]
         self.gate_sequence = random_gate_sequence
     
     def cat_state_preparation(self, wires):
@@ -69,7 +70,50 @@ class AlternatingLayeredAnsatz:
                 self.gate_sequence[l][i](params[l][i], wires=i)
             # Nearest neighbour controlled phase gates
             if num_qubits > 1:                          # no entangling gates if using a single qubit
-                qml.broadcast(qml.CZ, wires=wires, pattern="ring")
+                # qml.broadcast(qml.CZ, wires=wires, pattern="ring")
+                qml.broadcast(qml.CZ, wires=wires, pattern="double")
+                qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
+
+
+class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
+    def __init__(self, width, depth, initial_y_rot=True, cat_range=None):
+        super().__init__(initial_y_rot=initial_y_rot, cat_range=cat_range)
+        self.gate_sequence = [[qml.RY for _ in range(width)] 
+                                      for _ in range(depth)]
+    
+    def ansatz(self, params, wires):
+        """Generating the circuit corresponding to a simplified 
+        Alternating Layerd Ansatz (FIG.4. Cerezo2021)
+
+        Args:
+            params (array[array[float]]): array of parameters of dimension (num_layers, num_qubits) containing the rotation angles
+                                          should have the same dimentions as self.gate_sequence as they are used pairwise
+            wires (list)                : list of wires to apply the rotations on
+
+        Returns:
+            (callable) quantum function representing the ansatz (to be used e.g. with qml.ExpvalCost)
+        """
+        
+        assert(len(np.shape(params)) == 2)      # check proper dimensions of params
+        num_layers = np.shape(params)[0]        # np.shape(params) = (num_layers, num_qubits)
+        num_qubits = np.shape(params)[1]
+        assert(len(wires) == num_qubits)
+        if self.do_y:
+            for i in wires:
+                qml.RY(np.pi/4, wires=i)
+        if self.cat_range is not None:
+            self.cat_state_preparation(self.cat_range)
+        for l in range(num_layers):
+            parity = l % 2
+            # Nearest neighbour controlled phase gates
+            if parity == 0:                          # even layers
+                qml.broadcast(qml.CZ, wires=wires, pattern="double")
+            else:                                   # odd layers
+                qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
+            # Single random gate layer (single qubit Y rotations)
+            target_wires = wires[parity: int(2*np.floor((num_qubits-parity)/2))] 
+            for i in target_wires:
+                self.gate_sequence[l][i](params[l][i], wires=i)
 
 
 class HardwareEfficientAnsatz:
