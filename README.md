@@ -21,13 +21,19 @@ behaves like the computational Hamiltonian
 Looking again at the example Hamiltonian used by Holmes et al.
     $$H_G = \bigotimes_{i=1}^n \sigma_i^z $$
 which has $r=1$ and $k=n$. For the example of $n=4$ one obtains: 
-    $$H^{gad} = H^{anc} + V 
-    = (\mathbb{I} - Z_1^{(a)} Z_2^{(a)}) + (\mathbb{I} - Z_1^{(a)} Z_3^{(a)}) 
-    + (\mathbb{I} - Z_1^{(a)} Z_4^{(a)})
-    + (\mathbb{I} - Z_2^{(a)} Z_3^{(a)}) + (\mathbb{I} - Z_2^{(a)} Z_4^{(a)}) 
-    + (\mathbb{I} - Z_3^{(a)} Z_4^{(a)}) 
-    + Z_1^{(c)} \otimes X_1^{(a)} + Z_2^{(c)} \otimes X_2^{(a)} 
-    + Z_3^{(c)} \otimes X_3^{(a)} + Z_4^{(c)} \otimes X_4^{(a)}$$
+    $$ \begin{matrix*}[l]
+    H^{gad} & = & H^{anc} + V \\
+    & = & (\mathbb{I} - Z_1^{(a)} Z_2^{(a)}) 
+    + (\mathbb{I} - Z_1^{(a)} Z_3^{(a)}) 
+    + (\mathbb{I} - Z_1^{(a)} Z_4^{(a)}) \\
+    & + & (\mathbb{I} - Z_2^{(a)} Z_3^{(a)}) 
+    + (\mathbb{I} - Z_2^{(a)} Z_4^{(a)}) 
+    + (\mathbb{I} - Z_3^{(a)} Z_4^{(a)}) \\
+    & + & Z_1^{(c)} \otimes X_1^{(a)} 
+    + Z_2^{(c)} \otimes X_2^{(a)} \\
+    & + & Z_3^{(c)} \otimes X_3^{(a)} 
+    + Z_4^{(c)} \otimes X_4^{(a)} \\
+    \end{matrix*} $$
 
 ## Repository structure:
 - ~~[to be eliminated] pennylane-tutorials:~~ set of demos downloaded from the 
