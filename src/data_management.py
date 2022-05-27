@@ -21,7 +21,7 @@ def save_training(schedule, cost_lists):
              monitoring_obs = schedule['monitoring observables'],
              label_list = ['Training cost'] + schedule['labels'],
              max_iter_list = [int(i) for i in schedule['iterations']],
-             *cost_lists, 
+             cost_data = cost_lists, 
              allow_pickle=True)
 
 def create_todays_subfolder(data_folder):
@@ -65,9 +65,12 @@ def get_training_info(file):
     
 
 def get_training_costs(file):
-    pass
+    data = np.load(file)
+    #TODO: check format of output variable
+    return data['cost_data']
 
 def get_training_labels(file):
-    pass
+    data = np.load(file, allow_pickle=True)
+    return data['label_list']
 
 

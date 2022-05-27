@@ -70,10 +70,6 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     cost_functions = [None] * (1 + len(monitoring_obs))
     cost_lists = [[] for _ in range(len(cost_functions))]
     # cost_lists = [[]] * len(cost_functions)  # /!\ all point to the same object
-    # Defining the initial cost functions
-    # ansatz = ansatz_list[0].ansatz
-    # cost_functions = [qml.ExpvalCost(ansatz, training_obs[0], dev)]
-    # cost_functions += [qml.ExpvalCost(ansatz, obs, dev) for obs in monitoring_obs]
     
     # ==========   Training   ==========
     # Looping through all the phases of the scheduled training (might be a 
