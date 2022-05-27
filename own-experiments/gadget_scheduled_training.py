@@ -8,14 +8,14 @@ import matplotlib.pyplot as plt
 
 from trainings import scheduled_training, SchedulesOfInterest
 
-seed = 4
+seed = 2
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
-save_data = True
+save_data = False
 
-computational_qubits = 2
+computational_qubits = 10
 ancillary_qubits = int(1 * computational_qubits)
 max_iter = 100
 step = 0.3
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         print(" Perturbation factor:    ", pf)
         soi = SchedulesOfInterest(computational_qubits, ancillary_qubits, 
                                   dev_comp, dev_gad, seed)
-        schedule = soi.linear_ala_comp(pf, opt, max_iter)
+        schedule = soi.shallow_ala_comp(pf, opt, max_iter)
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
     toc = time.perf_counter()
