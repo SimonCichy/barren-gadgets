@@ -70,6 +70,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     cost_functions = [None] * (1 + len(monitoring_obs))
     cost_lists = [[] for _ in range(len(cost_functions))]
     # cost_lists = [[]] * len(cost_functions)  # /!\ all point to the same object
+    if save_data:
+        save_training(schedule, cost_lists, mode='new file')
     
     # ==========   Training   ==========
     # Looping through all the phases of the scheduled training (might be a 
@@ -116,6 +118,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
             if (it + 1) % print_frequency == 0:
                 print(f"Iteration = {it+1:5d} of {max_iter:5d} | " +
                       "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
+                if save_data:
+                    save_training(schedule, cost_lists, mode='overwrite')
 
     # ==========   Plotting   ==========
     if plot_data:
@@ -131,9 +135,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
 
     # ==========    Saving    ==========
     if save_data:
-        # print("Data saving is not implemented yet")
-        # pass
-        save_training(schedule, cost_lists)
+        save_training(schedule, cost_lists, mode='overwrite')
 
 
 class SchedulesOfInterest:
