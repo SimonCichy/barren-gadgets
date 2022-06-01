@@ -96,7 +96,9 @@ class ObservablesHolmes:
         Returns:
             observable (qml.Hamiltonian)    : gadget Hamiltonian to be used as observable
         """
+        sign_correction = (-1)^(self.n_comp % 2 + 1)    # Assuming k = n_commp
         Hgad = self.ancillary() + self.perturbation()
+        Hgad.coeffs = [sign_correction * c for c in Hgad.coeffs]
         return Hgad
 
     def cat_projector(self):

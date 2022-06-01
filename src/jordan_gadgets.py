@@ -37,6 +37,7 @@ class PerturbativeGadgets:
         # total qubit count, updated progressively when adding ancillaries
         total_qubits = computational_qubits
         l = self.perturbation_factor * (computational_locality - 1) / (4 * computational_locality)
+        sign_correction = (-1)^(computational_locality % 2 + 1)
         # creating the gadget Hamiltonian
         coeffs_anc = []
         coeffs_pert = []
@@ -59,6 +60,8 @@ class PerturbativeGadgets:
                         (target_locality-1)*anc_q:(target_locality-1)*(anc_q+1)])
                 obs_pert.append(term)
             coeffs_pert += [l * Hamiltonian.coeffs[str_count]] + [l] * (ancillary_qubits - 1)
+        coeffs_anc = [sign_correction * c for c in coeffs_anc]
+        coeffs_pert = [sign_correction * c for c in coeffs_pert]
         Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
         Hpert = qml.Hamiltonian(coeffs_pert, obs_pert)
         return Hanc + Hpert
