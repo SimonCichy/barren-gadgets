@@ -206,7 +206,7 @@ class SchedulesOfInterest:
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, self.n_comp), 
                             requires_grad=True)
-        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
         schedule = {
             'name': 'linear_ala_comp',
             'device': qml.device("default.qubit", 
@@ -235,7 +235,7 @@ class SchedulesOfInterest:
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, self.n_comp), 
                             requires_grad=True)
-        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
         schedule = {
             'name': 'shallow_ala_comp',
             'device': qml.device("default.qubit", 
@@ -260,7 +260,7 @@ class SchedulesOfInterest:
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, self.n_comp), 
                             requires_grad=True)
-        oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
+        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
         schedule = {
             'name': 'shallow_sala_comp',
             'device': qml.device("default.qubit", 
