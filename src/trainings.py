@@ -231,7 +231,7 @@ class SchedulesOfInterest:
                             requires_grad=True)
         oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
         schedule = {
-            'name': 'linear_ala_comp',
+            'name': 'shallow_ala_comp',
             'device': self.dev_comp,
             'optimizers': [optimizer],  
             'seed': self.np_rdm_seed,
@@ -254,7 +254,7 @@ class SchedulesOfInterest:
                             requires_grad=True)
         oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
         schedule = {
-            'name': 'linear_ala_comp',
+            'name': 'shallow_sala_comp',
             'device': self.dev_comp,
             'optimizers': [optimizer],  
             'seed': self.np_rdm_seed,
