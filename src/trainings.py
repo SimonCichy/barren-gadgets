@@ -269,7 +269,7 @@ class SchedulesOfInterest:
         }
         return schedule
 
-    def shallow_ala_gad(self, perturbation, optimizer, iterations):
+    def shallow_ala_gad(self, perturbation, optimizer, iterations, target_locality=2):
         num_layers = 2
         random_gate_sequence = [[np.random.choice(self.gate_set) 
                                 for _ in range(self.n_tot)] 
@@ -281,26 +281,27 @@ class SchedulesOfInterest:
         oH = ObservablesHolmes(self.n_comp, self.n_anc, perturbation)
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
+        Hcomp = oH.computational()
         schedule = {
-            'name': 'linear_ala_gad',
+            'name': 'shallow_ala_gad',
             'device': self.dev_gad,
             'optimizers': [optimizer], 
             'seed': self.np_rdm_seed,
             'ansaetze': [ala],
             'initial weights': initial_weights, 
-            'training observables': [oH.gadget()],
-            'monitoring observables': [oH.computational(), 
-                                       oH.ancillary(), 
-                                       oH.perturbation(), 
-                                       oH.gadget(), 
-                                       gadgetizer.cat_projector(oH.computational()), 
+            'training observables': [gadgetizer.gadgetize(Hcomp, target_locality)],
+            'monitoring observables': [Hcomp, 
+                                    #    oH.ancillary(), 
+                                    #    oH.perturbation(), 
+                                       gadgetizer.gadgetize(Hcomp, target_locality), 
+                                       gadgetizer.cat_projector(Hcomp, target_locality), 
                                        oH.computational_ground_projector()],
             'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
+                    #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
+                    #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
                        r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
-                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}] $'], 
             'iterations': [iterations]
         }
         return schedule

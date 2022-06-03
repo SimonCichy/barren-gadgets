@@ -96,7 +96,7 @@ class PerturbativeGadgets:
         subspace of the X^n operator"""
         pass
     
-    def cat_projector(self, Hamiltonian):
+    def cat_projector(self, Hamiltonian, target_locality=2):
         """Generation of a projector on the cat state (|00...0> + |11...1>)/sqrt(2)
         to be used as a cost function with qml.ExpvalCost
         Args: 
@@ -105,12 +105,14 @@ class PerturbativeGadgets:
             observable (qml.Hamiltonian)    : projector
         """
         n_comp, k, r = self.get_params(Hamiltonian)
+        ktilde = int(k/(target_locality-1))
         coeffs = [1] * r
         obs = []
         for register in range(r):
-            target_qubits = range(n_comp + register * k, 
-                                  n_comp + (register + 1) * k, 1)
-            cat_state = np.zeros(2**k)
+            #TODO: change k with ktilde
+            target_qubits = range(n_comp + register * ktilde, 
+                                  n_comp + (register + 1) * ktilde, 1)
+            cat_state = np.zeros(2**ktilde)
             cat_state[[0, -1]] = 1/np.sqrt(2) 
             cat_projector = qml.Hermitian(np.outer(cat_state, cat_state), 
                                           target_qubits)
