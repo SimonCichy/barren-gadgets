@@ -15,35 +15,26 @@ use_exact_ground_energy = False
 plot_data = True
 save_data = False
 
-computational_qubits = 12
-ancillary_qubits = int(1 * computational_qubits)
+computational_qubits = 4
 max_iter = 100
 step = 0.3
 num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
 perturbation_factors = [1]
-
-dev_comp = qml.device("default.qubit", 
-# dev_comp = qml.device("lightning.qubit", 
-                      wires=range(computational_qubits), 
-                      shots=num_shots)
-dev_gad = qml.device("default.qubit", 
-                     wires=range(computational_qubits+ancillary_qubits), 
-                     shots=num_shots)
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
 if __name__ == "__main__":
     print(" Computational qubits:   ", computational_qubits)
-    print(" Ancillary qubits:       ", ancillary_qubits)
+    # print(" Ancillary qubits:       ", ancillary_qubits)
     print(" Random seed:            ", seed)
     tic = time.perf_counter()
     for pf in perturbation_factors:
         print(" Perturbation factor:    ", pf)
-        soi = SchedulesOfInterest(computational_qubits, ancillary_qubits, 
-                                  dev_comp, dev_gad, seed)
-        schedule = soi.shallow_sala_comp(pf, opt, max_iter)
+        soi = SchedulesOfInterest(computational_qubits, 
+                                  seed, num_shots)
+        schedule = soi.shallow_ala_gad(pf, opt, max_iter, 3)
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
     toc = time.perf_counter()
