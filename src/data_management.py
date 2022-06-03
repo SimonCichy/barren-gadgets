@@ -10,7 +10,12 @@ def save_training(schedule, cost_lists, mode='new file', runtime=None):
     filename = create_filename(data_folder, data_type='training', mode=mode)
     np.savez(filename, 
              qubits = np.shape(schedule['ansaetze'][-1].gate_sequence)[1],
-             dev = schedule['device'],
+             dev = {
+                 'name': schedule['device'].short_name,
+                 'wires': schedule['device'].wires,
+                 'shots': schedule['device'].shots, 
+                 'version': schedule['device'].version,
+             },
              random_seed = schedule['seed'],
              schedule_name = schedule['name'],
              optimizer_list = schedule['optimizers'],
@@ -54,7 +59,10 @@ def get_training_info(file):
     print("Schedule      : ", data['schedule_name'])
     print("Qubits        : ", data['qubits'])
     print("Random seed   : ", data['random_seed'])
-    print("Device        : ", data['dev'])
+    print("Device name   : ", data['dev'].item()['name'])
+    print("       wires  : ", data['dev'].item()['wires'])
+    print("       shots  : ", data['dev'].item()['shots'])
+    print("       version: ", data['dev'].item()['version'])
     for phase in range(len(data['ansatz_list'])):
         print("Phase ", phase+1)
         print("  Optimizer           : ", data['optimizer_list'][phase])
