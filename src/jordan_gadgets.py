@@ -37,7 +37,7 @@ class PerturbativeGadgets:
         # total qubit count, updated progressively when adding ancillaries
         total_qubits = computational_qubits
         l = self.perturbation_factor * (computational_locality - 1) / (4 * computational_locality)
-        sign_correction = (-1)^(computational_locality % 2 + 1)
+        sign_correction = (-1)**(computational_locality % 2 + 1)
         # creating the gadget Hamiltonian
         coeffs_anc = []
         coeffs_pert = []
