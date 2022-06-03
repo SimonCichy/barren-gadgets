@@ -3,7 +3,7 @@ import os.path
 import datetime
 import numpy as np
 
-def save_training(schedule, cost_lists, mode='new file'):
+def save_training(schedule, cost_lists, mode='new file', runtime=None):
     data_folder = '../results/data/'
     data_folder += 'training/'
     data_folder = create_todays_subfolder(data_folder, mode=mode)
@@ -22,6 +22,7 @@ def save_training(schedule, cost_lists, mode='new file'):
              label_list = ['Training cost'] + schedule['labels'],
              max_iter_list = [int(i) for i in schedule['iterations']],
              cost_data = cost_lists, 
+             runtime = runtime,
              allow_pickle=True)
 
 def create_todays_subfolder(data_folder, mode='new file'):

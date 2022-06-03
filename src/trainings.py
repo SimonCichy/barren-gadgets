@@ -1,4 +1,5 @@
 import warnings
+import time
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
@@ -33,6 +34,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         plots
         saved files
     """
+    # start timer
+    tic = time.perf_counter()
     # Getting the settings from the schedule dictionary
     dev = schedule['device']
     optimizer_list = schedule['optimizers']
@@ -71,7 +74,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     cost_lists = [[] for _ in range(len(cost_functions))]
     # cost_lists = [[]] * len(cost_functions)  # /!\ all point to the same object
     if save_data:
-        save_training(schedule, cost_lists, mode='new file')
+        toc = time.perf_counter()
+        save_training(schedule, cost_lists, mode='new file', runtime=toc-tic)
     
     # ==========   Training   ==========
     # Looping through all the phases of the scheduled training (might be a 
@@ -120,8 +124,14 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
                 print(f"Iteration = {it+1:5d} of {max_iter:5d} | " +
                       "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
                 if save_data:
-                    save_training(schedule, cost_lists, mode='overwrite')
+                    toc = time.perf_counter()
+                    save_training(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
 
+    # ==========    Saving    ==========
+    if save_data:
+        toc = time.perf_counter()
+        save_training(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
+    
     # ==========   Plotting   ==========
     if plot_data:
         training_iterations = list(range(max_iter_list[0]+1))
@@ -133,10 +143,6 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         for c, cost in enumerate(cost_lists):
             plt.plot(training_iterations, cost, label=label_list[c])
         plt.legend()
-
-    # ==========    Saving    ==========
-    if save_data:
-        save_training(schedule, cost_lists, mode='overwrite')
 
 
 class SchedulesOfInterest:
