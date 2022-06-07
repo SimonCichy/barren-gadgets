@@ -3,6 +3,9 @@ from pennylane import numpy as np
 
 
 class AlternatingLayeredAnsatz:
+
+    name = "Alternating Layered Ansatz"
+
     def __init__(self, gate_sequence=None, initial_y_rot=True, cat_range=None):
         self.gate_sequence = gate_sequence
         self.do_y = initial_y_rot
@@ -76,6 +79,9 @@ class AlternatingLayeredAnsatz:
 
 
 class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
+
+    name = "Simplified Alternating Layered Ansatz"
+
     def __init__(self, width, depth, initial_y_rot=True, cat_range=None):
         super().__init__(initial_y_rot=initial_y_rot, cat_range=cat_range)
         self.gate_sequence = [[qml.RY for _ in range(width)] 
