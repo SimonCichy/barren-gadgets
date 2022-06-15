@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz, SimplifiedAlternatingLayeredAnsatz
 from observables_holmes import ObservablesHolmes
 from jordan_gadgets import PerturbativeGadgets
-from data_management import save_training
+from data_management import save_training2
 
 
 def scheduled_training(schedule, plot_data=True, save_data=False):
@@ -75,7 +75,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     # cost_lists = [[]] * len(cost_functions)  # /!\ all point to the same object
     if save_data:
         toc = time.perf_counter()
-        save_training(schedule, cost_lists, mode='new file', runtime=toc-tic)
+        save_training2(schedule, cost_lists, mode='new file', runtime=toc-tic)
     
     # ==========   Training   ==========
     # Looping through all the phases of the scheduled training (might be a 
@@ -125,12 +125,12 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
                       "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
                 if save_data:
                     toc = time.perf_counter()
-                    save_training(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
+                    save_training2(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
 
     # ==========    Saving    ==========
     if save_data:
         toc = time.perf_counter()
-        save_training(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
+        save_training2(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
     
     # ==========   Plotting   ==========
     if plot_data:
