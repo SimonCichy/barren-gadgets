@@ -71,22 +71,22 @@ def save_training2(schedule, cost_lists, mode='new file', runtime=None):
                 'layers        : ' +
                 str([np.shape(a.gate_sequence)[0] for a in schedule['ansaetze']])
             )
+            f.write('\n')
             training_obs = ''
             for o, obs in enumerate (schedule['training observables']):
                 training_obs += '- phase ' + str(o) + '\n'
+                #  /!\ there is a \n that sneeks in there for some reason
                 training_obs += str(obs.coeffs) + '\n'
                 training_obs += str(obs.ops) + '\n'
             f.write('training observables : \n')
-            f.write('\n'.join(training_obs))
+            f.write(training_obs)
+            label_list = ['Training cost'] + schedule['labels']
+            f.write('labels : \n - ')
+            f.write('\n - '.join(label_list))
             f.write('\n')
-            # label_list = ['Training cost'] + schedule['labels'],
-            # f.write('ansätze : \n - ')
-            # f.write('\n - '.join(label_list))
-            # f.write('\n')
-                # runtime = runtime
     else:
         with open(filename + '.txt', 'a') as f:
-            f.write('appending a new line \n')
+            f.write('runtime: ' + str(runtime) + '\n')
 
 def create_todays_subfolder(data_folder, mode='new file'):
     data_folder += '{}'.format(datetime.datetime.now().strftime("%y%m%d"))
