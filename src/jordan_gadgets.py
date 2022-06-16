@@ -22,7 +22,7 @@ class PerturbativeGadgets:
         self.method = method
         self.perturbation_factor = perturbation_factor
     
-    def gadgetize(self, Hamiltonian, target_locality=2):
+    def gadgetize(self, Hamiltonian, target_locality=2, offset_energy=False):
         """Generation of the perturbative gadget equivalent of the given 
         Hamiltonian according to the proceedure in Jordan2012
         Args:
@@ -30,6 +30,8 @@ class PerturbativeGadgets:
                                               into more local terms
             target_locality (int)           : locality of the resulting 
                                               gadget Hamiltonian
+            offset_energy (bool)            : whether to shift all Hcomp to have
+                                              only negative eigenenergies
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
         """
@@ -69,6 +71,26 @@ class PerturbativeGadgets:
                     # apply identities on some computational qubits -> superfluous
                 obs_pert.append(term)
             coeffs_pert += [l * Hamiltonian.coeffs[str_count]] + [l] * (ancillary_qubits - 1)
+        if offset_energy:
+            previous_total = total_qubits
+            total_qubits += ancillary_qubits
+            # Generating the ancillary part, same as the others
+            for first in range(previous_total, total_qubits):
+                for second in range(first+1, total_qubits):
+                    coeffs_anc += [0.5, -0.5]
+                    obs_anc += [qml.Identity(first) @ qml.Identity(second), 
+                            qml.PauliZ(first) @ qml.PauliZ(second)]
+            # Generating the perturbative part, 
+            # only identities on the computational register
+            for anc_q in range(ancillary_qubits):
+                term = qml.PauliX(previous_total+anc_q)
+                # Is that even necessary?
+                # term = qml.operation.Tensor(term, qml.Identity(wires=
+                #        range(computational_qubits+anc_q*(target_locality-1), 
+                #              computational_qubits+(anc_q+1)*(target_locality-1))))
+                obs_pert.append(term)
+            M = np.sum(Hamiltonian.coeffs)
+            coeffs_pert += [l * M] + [l] * (ancillary_qubits - 1)
         coeffs_anc = [sign_correction * c for c in coeffs_anc]
         coeffs_pert = [sign_correction * c for c in coeffs_pert]
         Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
