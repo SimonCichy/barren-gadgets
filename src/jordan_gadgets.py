@@ -43,8 +43,9 @@ class PerturbativeGadgets:
         coeffs_pert = []
         obs_anc = []
         obs_pert = []
+        ancillary_qubits = int(computational_locality / (target_locality - 1))
         for str_count, string in enumerate(Hamiltonian.ops):
-            ancillary_qubits = int(len(string.non_identity_obs) / (target_locality - 1))
+            # ancillary_qubits = int(len(string.non_identity_obs) / (target_locality - 1))
             previous_total = total_qubits
             total_qubits += ancillary_qubits
             # Generating the ancillary part
@@ -52,12 +53,20 @@ class PerturbativeGadgets:
                 for second in range(first+1, total_qubits):
                     coeffs_anc += [0.5, -0.5]
                     obs_anc += [qml.Identity(first) @ qml.Identity(second), 
-                            qml.PauliZ(first) @ qml.PauliZ(second)]
+                                qml.PauliZ(first) @ qml.PauliZ(second)]
             # Generating the perturbative part
             for anc_q in range(ancillary_qubits):
                 term = qml.PauliX(previous_total+anc_q)
-                term = qml.operation.Tensor(term, *string.non_identity_obs[
+                if (anc_q+1)*(target_locality-1) <= len(string.non_identity_obs):
+                    # /!\ if the switch from Pauli to identity happens mid-register
+                    #TODO: correct that 
+                    # if anc_q*(target_locality-1) < len(string.non_identity_obs) < (anc_q+1)*(target_locality-1)
+                    # term = qml.operation.Tensor(term, *string.non_identity_obs[
+                        # (target_locality-1)*anc_q:])
+                    term = qml.operation.Tensor(term, *string.non_identity_obs[
                         (target_locality-1)*anc_q:(target_locality-1)*(anc_q+1)])
+                # else: 
+                    # apply identities on some computational qubits -> superfluous
                 obs_pert.append(term)
             coeffs_pert += [l * Hamiltonian.coeffs[str_count]] + [l] * (ancillary_qubits - 1)
         coeffs_anc = [sign_correction * c for c in coeffs_anc]
@@ -74,7 +83,8 @@ class PerturbativeGadgets:
         # getting the number of terms in the Hamiltonian
         computational_terms = len(Hamiltonian.ops)
         # getting the locality, assuming all terms have the same
-        computational_locality = len(Hamiltonian.ops[0].non_identity_obs)
+        computational_locality = max([len(Hamiltonian.ops[s].non_identity_obs) 
+                                      for s in range(computational_terms)])
         return computational_qubits, computational_locality, computational_terms
     
     def run_checks(self, Hamiltonian):
@@ -91,11 +101,6 @@ class PerturbativeGadgets:
             raise Exception('The given Hamiltonian has terms with different locality.' +
                             ' Gadgetization not implemented for this case')
 
-    def eliminate_minus_subspace(Hamiltonian):
-        """Method to discard the block of the Hamiltonian acting on the -1 
-        subspace of the X^n operator"""
-        pass
-    
     def cat_projector(self, Hamiltonian, target_locality=2):
         """Generation of a projector on the cat state (|00...0> + |11...1>)/sqrt(2)
         to be used as a cost function with qml.ExpvalCost
