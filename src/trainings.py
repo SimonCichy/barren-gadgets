@@ -114,7 +114,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         print("Ansatz: ", type(ansatz_list[phase]).__name__)
         print("Iterations: ", max_iter)
         print(f"Iteration = {0:5d} of {max_iter:5d} | " +
-              "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
+              "Training cost = {:12.8f} | ".format(cost_lists[0][-1]) +
+              "Monitoring cost = {:12.8f} | ".format(cost_lists[1][-1]))
         # Looping through the iterations of the phase
         for it in range(max_iter):
             weights = opt.step(training_cost, weights)
@@ -122,7 +123,8 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
                 cost_lists[c].append(cost_functions[c](weights))
             if (it + 1) % print_frequency == 0:
                 print(f"Iteration = {it+1:5d} of {max_iter:5d} | " +
-                      "Training cost = {:12.8f} | ".format(cost_lists[0][-1]))
+                      "Training cost = {:12.8f} | ".format(cost_lists[0][-1]) +
+                      "Monitoring cost = {:12.8f} | ".format(cost_lists[1][-1]))
                 if save_data:
                     toc = time.perf_counter()
                     save_training2(schedule, cost_lists, mode='overwrite', runtime=toc-tic)
