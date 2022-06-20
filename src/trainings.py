@@ -227,14 +227,16 @@ class SchedulesOfInterest:
                                     #    oH.ancillary(), 
                                     #    oH.perturbation(), 
                                        Hgad, 
+                                       oH.computational_ground_projector(), 
                                        gadgetizer.cat_projector(Hcomp, target_locality), 
-                                       oH.computational_ground_projector()],
-            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$', 
+                                       gadgetizer.ancillary_X(Hcomp, target_locality)],
+            'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
                        r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
-                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
             'iterations': [iterations]
         }
         return schedule
