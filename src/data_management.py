@@ -148,4 +148,12 @@ def get_training_labels(file):
     data = np.load(file, allow_pickle=True)
     return data['label_list']
 
+def get_training_labels2(file):
+    with open(file, 'r') as f:
+        text_info = f.read()  
+    idx_labels = text_info.find("labels :") + len("labels :") + 3
+    idx_runtime = text_info.find("runtime:")
+    labels = text_info[idx_labels+2:idx_runtime-2].split('\n -') 
+    return labels
+
 
