@@ -141,10 +141,14 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
         for max_iter in max_iter_list[1:]: 
             max_iter_sum += max_iter
             training_iterations += list(range(training_iterations[-1], max_iter_sum+1, 1))
-        plt.figure()
-        for c, cost in enumerate(cost_lists):
-            plt.plot(training_iterations, cost, label=label_list[c])
-        plt.legend()
+        fig, ax1 = plt.subplots()
+        ax2 = ax1.twinx()
+        ax2.plot(training_iterations, cost_lists[0], ':', c='grey', label=label_list[0])
+        for c, cost in enumerate(cost_lists[1:]):
+            ax1.plot(training_iterations, cost, label=label_list[c+1])
+        ax1.legend()
+        ax2.set_ylabel('Training cost', color='grey')
+        ax2.tick_params(axis ='y', labelcolor='grey')
 
 
 class SchedulesOfInterest:
