@@ -22,7 +22,8 @@ class PerturbativeGadgets:
         self.method = method
         self.perturbation_factor = perturbation_factor
     
-    def gadgetize(self, Hamiltonian, target_locality=2, offset_energy=False):
+    def gadgetize(self, Hamiltonian, target_locality=2, 
+                  offset_energy=False, penalization=None):
         """Generation of the perturbative gadget equivalent of the given 
         Hamiltonian according to the proceedure in Jordan2012
         Args:
@@ -32,6 +33,8 @@ class PerturbativeGadgets:
                                               gadget Hamiltonian
             offset_energy (bool)            : whether to shift all Hcomp to have
                                               only negative eigenenergies
+            penalization (float)            : "regularization" constant to 
+                                              penalize being away from |GHZ+>
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
         """
@@ -91,11 +94,20 @@ class PerturbativeGadgets:
                 obs_pert.append(term)
             M = np.sum(Hamiltonian.coeffs)
             coeffs_pert += [l * M] + [l] * (ancillary_qubits - 1)
-        coeffs_anc = [sign_correction * c for c in coeffs_anc]
-        coeffs_pert = [sign_correction * c for c in coeffs_pert]
-        Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
-        Hpert = qml.Hamiltonian(coeffs_pert, obs_pert)
-        return Hanc + Hpert
+        # coeffs_anc = [sign_correction * c for c in coeffs_anc]
+        # coeffs_pert = [sign_correction * c for c in coeffs_pert]
+        # Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
+        # Hpert = qml.Hamiltonian(coeffs_pert, obs_pert)
+        # return Hanc + Hpert
+        coeffs = [sign_correction * c for c in coeffs_anc]
+        coeffs += [sign_correction * c for c in coeffs_pert]
+        obs = obs_anc + obs_pert
+        if penalization is not None:
+            P = self.cat_projector(Hamiltonian, target_locality)
+            coeffs += [penalization*c for c in P.coeffs]
+            obs += P.ops
+        Hgad = qml.Hamiltonian(coeffs, obs)
+        return Hgad
 
     def get_params(self, Hamiltonian):
         # checking for unaccounted for situations

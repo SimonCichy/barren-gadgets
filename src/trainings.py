@@ -235,7 +235,59 @@ class SchedulesOfInterest:
             'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
+                       r'$\langle \psi_{ALA}| \tilde{H}^{gad} |\psi_{ALA} \rangle$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
+            'iterations': [iterations]
+        }
+        return schedule
+    
+    def linear_ala_gad_penalized(self, perturbation, optimizer, iterations, 
+                                 target_locality=2):
+        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
+        Hcomp = oH.computational()
+        gadgetizer = PerturbativeGadgets(method='Jordan', 
+                                         perturbation_factor=perturbation)
+        Hgad = gadgetizer.gadgetize(Hcomp, target_locality, 
+                                    penalization=-10)
+        _, k, r = gadgetizer.get_params(Hcomp)
+        n_anc = r * int(k / (target_locality - 1))
+        num_layers = self.n_comp + n_anc
+        random_gate_sequence = [[np.random.choice(self.gate_set) 
+                                for _ in range(self.n_comp + n_anc)] 
+                                for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_comp + n_anc), 
+                            requires_grad=True)
+        schedule = {
+            'name': 'linear_ala_gad_penalized',
+            'device': qml.device("default.qubit", 
+                                 wires=range(self.n_comp + n_anc), 
+                                 shots=self.num_shots),
+            'optimizers': [optimizer], 
+            'seed': self.np_rdm_seed,
+            'ansaetze': [ala],
+            'initial weights': initial_weights, 
+            'training observables': [Hgad],
+            'monitoring observables': [Hcomp, 
+                                    #    oH.ancillary(), 
+                                    #    oH.perturbation(), 
+                                       Hgad, 
+                                       oH.computational_ground_projector(), 
+                                       gadgetizer.cat_projector(Hcomp, target_locality), 
+                                       gadgetizer.ancillary_X(Hcomp, target_locality)],
+            'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
+                    #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
+                    #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| (H^{gad} - | GHZ_+\rangle\langle GHZ_+|)]$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
+            'iterations': [iterations]
+        }
+        return schedule
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
