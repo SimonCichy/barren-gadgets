@@ -15,8 +15,8 @@ use_exact_ground_energy = False
 plot_data = True
 save_data = True
 
-computational_qubits = 2
-max_iter = 100
+computational_qubits = 4
+max_iter = 500
 step = 0.3
 num_shots = None
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         print(" Perturbation factor:    ", pf)
         soi = SchedulesOfInterest(computational_qubits, 
                                   seed, num_shots)
-        schedule = soi.linear_ala_gad(pf, opt, max_iter)
+        schedule = soi.linear_ala_gad_initialized(pf, opt, max_iter)
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
     toc = time.perf_counter()

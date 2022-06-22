@@ -6,10 +6,12 @@ class AlternatingLayeredAnsatz:
 
     name = "Alternating Layered Ansatz"
 
-    def __init__(self, gate_sequence=None, initial_y_rot=True, cat_range=None):
+    def __init__(self, gate_sequence=None, initial_y_rot=True, cat_range=None, 
+                       undo_cat=False):
         self.gate_sequence = gate_sequence
         self.do_y = initial_y_rot
         self.cat_range = cat_range
+        self.undo_cat = undo_cat
     
     def generate_sequence(self, n_qubits, n_layers):
         """Generation of a random sequence of Pauli gate rotations to be used in the Alternating Layered Ansatz
@@ -44,6 +46,20 @@ class AlternatingLayeredAnsatz:
         for qubit in wires[1:]:
             qml.CNOT(wires=[wires[0], qubit])
     
+    def cat_state_undoing(self, wires):
+        """Unduing a cat state on the specified qubits 
+        (e.g. the ancillary qubits for the perturbative gadget implementation)
+
+        Args:
+            wires (list)                : list of wires to apply the rotations on
+
+        Returns:
+            (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
+        """
+        for qubit in wires[1:]:
+            qml.CNOT(wires=[wires[0], qubit])
+        qml.Hadamard(wires=wires[0])
+    
     def ansatz(self, params, wires):
         """Generating the circuit corresponding to an Alternating Layerd Ansatz (McClean2018, Cerezo2021 and Holmes2021)
 
@@ -76,6 +92,9 @@ class AlternatingLayeredAnsatz:
                 # qml.broadcast(qml.CZ, wires=wires, pattern="ring")
                 qml.broadcast(qml.CZ, wires=wires, pattern="double")
                 qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
+        if self.cat_range is not None:
+            if self.undo_cat:
+                self.cat_state_undoing(self.cat_range)
 
 
 class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):

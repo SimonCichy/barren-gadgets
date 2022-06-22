@@ -306,6 +306,10 @@ class SchedulesOfInterest:
         random_gate_sequence = [[np.random.choice(self.gate_set) 
                                 for _ in range(self.n_comp + n_anc)] 
                                 for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence, 
+                                       initial_y_rot=False, 
+                                       cat_range=range(self.n_comp, self.n_comp+n_anc), 
+                                       undo_cat=False)
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, self.n_comp + n_anc), 
                             requires_grad=True)
