@@ -12,8 +12,7 @@ class NewPerturbativeGadgets:
                                       perturbation (should be in [0, 1] and is a
                                       pre-factor to \lambda_max as in 
                                       Jordan2012"""
-    def __init__(self, method='Jordan', perturbation_factor=1):
-        self.method = method
+    def __init__(self, perturbation_factor=1):
         self.perturbation_factor = perturbation_factor
     
     def gadgetize(self, Hamiltonian, target_locality=3):
@@ -54,7 +53,7 @@ class NewPerturbativeGadgets:
                 obs_anc += [qml.Identity(anc_q), qml.PauliZ(anc_q)]
             # Generating the perturbative part
             for anc_q in range(ancillary_register_size):
-                term = qml.PauliX(previous_total+anc_q) @ qml.PauliX(previous_total+anc_q+1)
+                term = qml.PauliX(previous_total+anc_q) @ qml.PauliX(previous_total+(anc_q+1)%2)
                 term = qml.operation.Tensor(term, *string.non_identity_obs[
                     (target_locality-2)*anc_q:(target_locality-2)*(anc_q+1)])
                 obs_pert.append(term)
@@ -90,6 +89,8 @@ class NewPerturbativeGadgets:
             raise Exception('The given Hamiltonian has terms with different locality.' +
                             ' Gadgetization not implemented for this case')
         # validity of the target locality given the computational locality
+        if target_locality < 3:
+            raise Exception('The target locality can not be smaller than 3')
         ancillary_register_size = computational_locality / (target_locality - 2)
         if int(ancillary_register_size) != ancillary_register_size:
             raise Exception('The locality of the Hamiltonian and the target' + 
