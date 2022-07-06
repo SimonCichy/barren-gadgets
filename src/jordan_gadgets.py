@@ -73,7 +73,8 @@ class PerturbativeGadgets:
                 # else: 
                     # apply identities on some computational qubits -> superfluous
                 obs_pert.append(term)
-            coeffs_pert += [l * Hamiltonian.coeffs[str_count]] + [l] * (ancillary_qubits - 1)
+            coeffs_pert += [l * sign_correction * Hamiltonian.coeffs[str_count]] \
+                        + [l] * (ancillary_qubits - 1)
         if offset_energy:
             previous_total = total_qubits
             total_qubits += ancillary_qubits
@@ -93,14 +94,8 @@ class PerturbativeGadgets:
                 #              computational_qubits+(anc_q+1)*(target_locality-1))))
                 obs_pert.append(term)
             M = np.sum(Hamiltonian.coeffs)
-            coeffs_pert += [l * M] + [l] * (ancillary_qubits - 1)
-        # coeffs_anc = [sign_correction * c for c in coeffs_anc]
-        # coeffs_pert = [sign_correction * c for c in coeffs_pert]
-        # Hanc = qml.Hamiltonian(coeffs_anc, obs_anc)
-        # Hpert = qml.Hamiltonian(coeffs_pert, obs_pert)
-        # return Hanc + Hpert
-        coeffs = [sign_correction * c for c in coeffs_anc]
-        coeffs += [sign_correction * c for c in coeffs_pert]
+            coeffs_pert += [l * sign_correction * M] + [l] * (ancillary_qubits - 1)
+        coeffs = coeffs_anc + coeffs_pert
         obs = obs_anc + obs_pert
         if penalization is not None:
             P = self.cat_projector(Hamiltonian, target_locality)

@@ -143,7 +143,10 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
             training_iterations += list(range(training_iterations[-1], max_iter_sum+1, 1))
         fig, ax1 = plt.subplots()
         ax2 = ax1.twinx()
-        ax2.plot(training_iterations, cost_lists[0], ':', c='grey', label=label_list[0])
+        ax2.plot(training_iterations, cost_lists[0], '--', c='grey', label=label_list[0])
+        ax1.plot(training_iterations, np.ones(len(training_iterations)), ':', c='gainsboro')
+        ax1.plot(training_iterations, -np.ones(len(training_iterations)), ':', c='gainsboro')
+        ax1.plot(training_iterations, np.zeros(len(training_iterations)), ':', c='gainsboro')
         for c, cost in enumerate(cost_lists[1:]):
             ax1.plot(training_iterations, cost, label=label_list[c+1])
         ax1.legend()
@@ -190,15 +193,17 @@ class SchedulesOfInterest:
             'monitoring observables': [Hcomp, 
                                     #    oH.ancillary(), 
                                     #    oH.perturbation(), 
-                                       Hgad, 
-                                       gadgetizer.cat_projector(Hcomp, target_locality), 
-                                       oH.computational_ground_projector()],
+                                       Hgad,  
+                                       oH.computational_ground_projector(), 
+                                       gadgetizer.cat_projector(Hcomp, target_locality),
+                                       gadgetizer.ancillary_X(Hcomp, target_locality)],
             'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
-                    #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
+                    #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$',
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{gad}]$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $',
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
-                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
             'iterations': [iterations]
         }
         return schedule
@@ -239,7 +244,7 @@ class SchedulesOfInterest:
             'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| \tilde{H}^{gad} |\psi_{ALA} \rangle$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{gad}]$', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
@@ -253,8 +258,10 @@ class SchedulesOfInterest:
         Hcomp = oH.computational()
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
+        Htrain = gadgetizer.gadgetize(Hcomp, target_locality, 
+                                    penalization=-1)
         Hgad = gadgetizer.gadgetize(Hcomp, target_locality, 
-                                    penalization=-10)
+                                    penalization=0)
         _, k, r = gadgetizer.get_params(Hcomp)
         n_anc = r * int(k / (target_locality - 1))
         num_layers = self.n_comp + n_anc
@@ -274,7 +281,7 @@ class SchedulesOfInterest:
             'seed': self.np_rdm_seed,
             'ansaetze': [ala],
             'initial weights': initial_weights, 
-            'training observables': [Hgad],
+            'training observables': [Htrain],
             'monitoring observables': [Hcomp, 
                                     #    oH.ancillary(), 
                                     #    oH.perturbation(), 
@@ -285,7 +292,7 @@ class SchedulesOfInterest:
             'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| (H^{gad} - | GHZ_+\rangle\langle GHZ_+|)]$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{gad}]$', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
@@ -299,6 +306,8 @@ class SchedulesOfInterest:
         Hcomp = oH.computational()
         gadgetizer = PerturbativeGadgets(method='Jordan', 
                                          perturbation_factor=perturbation)
+        Htrain = gadgetizer.gadgetize(Hcomp, target_locality, 
+                                    penalization=-1)
         Hgad = gadgetizer.gadgetize(Hcomp, target_locality)
         _, k, r = gadgetizer.get_params(Hcomp)
         n_anc = r * int(k / (target_locality - 1))
@@ -316,7 +325,7 @@ class SchedulesOfInterest:
         # initial_weights *= 0.02
         initial_weights[:, self.n_comp:] *= 0.02
         schedule = {
-            'name': 'linear_ala_gad_penalized',
+            'name': 'linear_ala_gad_initialized',
             'device': qml.device("default.qubit", 
                                  wires=range(self.n_comp + n_anc), 
                                  shots=self.num_shots),
@@ -324,7 +333,7 @@ class SchedulesOfInterest:
             'seed': self.np_rdm_seed,
             'ansaetze': [ala],
             'initial weights': initial_weights, 
-            'training observables': [Hgad],
+            'training observables': [Htrain],
             'monitoring observables': [Hcomp, 
                                     #    oH.ancillary(), 
                                     #    oH.perturbation(), 
@@ -335,7 +344,7 @@ class SchedulesOfInterest:
             'labels': [r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{comp}]$', 
                     #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
                     #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| (H^{gad} - | GHZ_+\rangle\langle GHZ_+|)]$', 
+                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| H^{gad}]$', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
                        r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| X^{\otimes rk}] $'], 
