@@ -48,12 +48,12 @@ class NewPerturbativeGadgets:
             previous_total = total_qubits
             total_qubits += ancillary_register_size
             # Generating the ancillary part
-            for anc_q in range(ancillary_register_size):
+            for anc_q in range(previous_total, total_qubits):
                 coeffs_anc += [0.5, -0.5]
                 obs_anc += [qml.Identity(anc_q), qml.PauliZ(anc_q)]
             # Generating the perturbative part
             for anc_q in range(ancillary_register_size):
-                term = qml.PauliX(previous_total+anc_q) @ qml.PauliX(previous_total+(anc_q+1)%2)
+                term = qml.PauliX(previous_total+anc_q) @ qml.PauliX(previous_total+(anc_q+1)%ancillary_register_size)
                 term = qml.operation.Tensor(term, *string.non_identity_obs[
                     (target_locality-2)*anc_q:(target_locality-2)*(anc_q+1)])
                 obs_pert.append(term)
