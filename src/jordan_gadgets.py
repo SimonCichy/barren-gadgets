@@ -41,6 +41,7 @@ class PerturbativeGadgets:
         computational_qubits, computational_locality, _ = self.get_params(Hamiltonian)
         # total qubit count, updated progressively when adding ancillaries
         total_qubits = computational_qubits
+        #TODO: correct lambda_max for the case of more than 1 term and/or c_s
         l = self.perturbation_factor * (computational_locality - 1) / (4 * computational_locality)
         sign_correction = (-1)**(computational_locality % 2 + 1)
         # creating the gadget Hamiltonian
