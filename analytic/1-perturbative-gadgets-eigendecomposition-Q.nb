@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    301093,       7257]
-NotebookOptionsPosition[    241691,       6018]
-NotebookOutlinePosition[    296455,       7176]
-CellTagsIndexPosition[    296412,       7173]
+NotebookDataLength[    304530,       7351]
+NotebookOptionsPosition[    244705,       6106]
+NotebookOutlinePosition[    299469,       7264]
+CellTagsIndexPosition[    299426,       7261]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -39,12 +39,13 @@ e8dd2179f5bb"],
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"Needs", "[", "\"\<Quantum`Notation`\>\"", "]"}], 
+  RowBox[{"Needs", "[", "\"\<Quantum`Computing`\>\"", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"SetComputingAliases", "[", "]"}], ";"}]}], "Input",
- CellChangeTimes->{{3.8636866522215705`*^9, 3.86368666057767*^9}},
- CellLabel->"In[83]:=",ExpressionUUID->"8e8f24ee-fd5a-467d-a382-728bdf101071"],
+ CellChangeTimes->{{3.8636866522215705`*^9, 3.86368666057767*^9}, {
+  3.864972930930423*^9, 3.864972932173712*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"8e8f24ee-fd5a-467d-a382-728bdf101071"],
 
 Cell[CellGroupData[{
 
@@ -76,6 +77,12 @@ Cell[BoxData[{
    Quantum`Notation`zz020TPNotation,
    Editable->False,
    Selectable->False]}], "\[IndentingNewLine]", 
+ RowBox[{"signcorrection", " ", ":=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"-", "1"}], ")"}], "^", 
+   RowBox[{"(", 
+    RowBox[{"k", "+", "1"}], ")"}]}]}], "\[IndentingNewLine]", 
  RowBox[{"Hgad", ":=", 
   RowBox[{
    RowBox[{
@@ -125,6 +132,13 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{"i", ",", "1", ",", 
         RowBox[{"k", "-", "1"}]}], "}"}]}], "]"}]}], "+", 
+   RowBox[{"\[Lambda]", "*", "signcorrection", "*", 
+    RowBox[{
+     SubscriptBox["\[ScriptCapitalZ]", 
+      OverscriptBox["1", "^"]], "\[CircleTimes]", 
+     SubscriptBox["\[ScriptCapitalX]", 
+      OverscriptBox[
+       RowBox[{"1", "+", "k"}], "^"]]}]}], "+", 
    RowBox[{"\[Lambda]", "*", 
     RowBox[{"Sum", "[", 
      RowBox[{
@@ -135,16 +149,15 @@ Cell[BoxData[{
         OverscriptBox[
          RowBox[{"j", "+", "k"}], "^"]]}], ",", 
       RowBox[{"{", 
-       RowBox[{"j", ",", "1", ",", "k"}], "}"}]}], "]"}]}]}]}]}], "Input",
+       RowBox[{"j", ",", "2", ",", "k"}], "}"}]}], "]"}]}]}]}]}], "Input",
  CellChangeTimes->{{3.863686680459318*^9, 3.8636867451729426`*^9}, {
   3.863686786715392*^9, 3.863686815599333*^9}, {3.8636868493659873`*^9, 
   3.8636870541173487`*^9}, {3.8636870881911345`*^9, 3.8636871804230075`*^9}, {
   3.863687249578287*^9, 3.863687255400361*^9}, {3.8636873067267513`*^9, 
   3.863687354631571*^9}, {3.8636874963714547`*^9, 3.863687509499304*^9}, {
   3.8636877157008667`*^9, 3.8636877200884104`*^9}, {3.8636877595356417`*^9, 
-  3.8636877962351475`*^9}},
- CellLabel->
-  "In[126]:=",ExpressionUUID->"fdf31db7-31ed-4a5e-837e-d3c9b7c3f747"],
+  3.8636877962351475`*^9}, {3.8649728112264147`*^9, 3.864972894224074*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"fdf31db7-31ed-4a5e-837e-d3c9b7c3f747"],
 
 Cell[CellGroupData[{
 
@@ -165,8 +178,7 @@ Cell[BoxData[{
   3.863687265222911*^9, 3.8636872659658723`*^9}, {3.8636876584433537`*^9, 
   3.863687660582196*^9}, {3.8636879575205903`*^9, 3.8636880376052876`*^9}, {
   3.863688151940586*^9, 3.8636881584440794`*^9}},
- CellLabel->
-  "In[138]:=",ExpressionUUID->"ac6a8428-6656-4250-bcc7-4a37a511d73d"],
+ CellLabel->"In[6]:=",ExpressionUUID->"ac6a8428-6656-4250-bcc7-4a37a511d73d"],
 
 Cell[BoxData[
  RowBox[{
@@ -176,20 +188,19 @@ Cell[BoxData[
     SubscriptBox["\[ScriptCapitalI]", 
      OverscriptBox["3", "^"]], "\[CenterDot]", 
     SubscriptBox["\[ScriptCapitalI]", 
-     OverscriptBox["4", "^"]]}]}], "+", 
+     OverscriptBox["4", "^"]]}]}], "-", 
   RowBox[{"\[Lambda]", " ", 
-   RowBox[{"(", 
-    RowBox[{
-     RowBox[{
-      SubscriptBox["\[ScriptCapitalZ]", 
-       OverscriptBox["1", "^"]], "\[CenterDot]", 
-      SubscriptBox["\[ScriptCapitalX]", 
-       OverscriptBox["3", "^"]]}], "+", 
-     RowBox[{
-      SubscriptBox["\[ScriptCapitalZ]", 
-       OverscriptBox["2", "^"]], "\[CenterDot]", 
-      SubscriptBox["\[ScriptCapitalX]", 
-       OverscriptBox["4", "^"]]}]}], ")"}]}], "-", 
+   RowBox[{
+    SubscriptBox["\[ScriptCapitalZ]", 
+     OverscriptBox["1", "^"]], "\[CenterDot]", 
+    SubscriptBox["\[ScriptCapitalX]", 
+     OverscriptBox["3", "^"]]}]}], "+", 
+  RowBox[{"\[Lambda]", " ", 
+   RowBox[{
+    SubscriptBox["\[ScriptCapitalZ]", 
+     OverscriptBox["2", "^"]], "\[CenterDot]", 
+    SubscriptBox["\[ScriptCapitalX]", 
+     OverscriptBox["4", "^"]]}]}], "-", 
   RowBox[{
    FractionBox["1", "2"], " ", 
    RowBox[{
@@ -202,50 +213,53 @@ Cell[BoxData[
    3.863687339923147*^9, 3.863687360579316*^9}, 3.8636875247316227`*^9, 
    3.863687661273094*^9, 3.8636877253884583`*^9, {3.8636877781068983`*^9, 
    3.863687800677638*^9}, {3.863688012687826*^9, 3.8636880394679623`*^9}, 
-   3.863688159411068*^9},
- CellLabel->
-  "Out[139]=",ExpressionUUID->"58967dac-c13f-486e-92fd-99757f725377"],
+   3.863688159411068*^9, 3.8649729139735584`*^9, 3.8649729704669333`*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"b8fd90e8-121e-4c72-b9b4-9a9919e78ae8"],
 
 Cell[BoxData[
  TagBox[
   RowBox[{"(", "\[NoBreak]", GridBox[{
-     {"0", "\[Lambda]", "\[Lambda]", "0", "0", "0", "0", "0", "0", "0", "0", 
-      "0", "0", "0", "0", "0"},
-     {"\[Lambda]", "1", "0", "\[Lambda]", "0", "0", "0", "0", "0", "0", "0", 
-      "0", "0", "0", "0", "0"},
-     {"\[Lambda]", "0", "1", "\[Lambda]", "0", "0", "0", "0", "0", "0", "0", 
-      "0", "0", "0", "0", "0"},
-     {"0", "\[Lambda]", "\[Lambda]", "0", "0", "0", "0", "0", "0", "0", "0", 
-      "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", 
+     {"0", "\[Lambda]", 
+      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0", "0",
+       "0", "0", "0", "0"},
+     {"\[Lambda]", "1", "0", 
+      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0", "0",
+       "0", "0", "0"},
+     {
+      RowBox[{"-", "\[Lambda]"}], "0", "1", "\[Lambda]", "0", "0", "0", "0", 
+      "0", "0", "0", "0", "0", "0", "0", "0"},
+     {"0", 
       RowBox[{"-", "\[Lambda]"}], "\[Lambda]", "0", "0", "0", "0", "0", "0", 
-      "0", "0", "0"},
-     {"0", "0", "0", "0", 
-      RowBox[{"-", "\[Lambda]"}], "1", "0", "\[Lambda]", "0", "0", "0", "0", 
-      "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "\[Lambda]", "0", "1", 
-      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "\[Lambda]", 
+      "0", "0", "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", 
+      RowBox[{"-", "\[Lambda]"}], 
       RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", 
-      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", "1", "0", 
-      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "\[Lambda]"}], "0", "1", "\[Lambda]", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "\[Lambda]"}], "\[Lambda]", "0", "0", "0", "0", "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "\[Lambda]"}], 
-      RowBox[{"-", "\[Lambda]"}], "0"},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
+     {"0", "0", "0", "0", 
       RowBox[{"-", "\[Lambda]"}], "1", "0", 
-      RowBox[{"-", "\[Lambda]"}]},
-     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
+      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", 
       RowBox[{"-", "\[Lambda]"}], "0", "1", 
+      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", 
+      RowBox[{"-", "\[Lambda]"}], 
+      RowBox[{"-", "\[Lambda]"}], "0", "0", "0", "0", "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", "\[Lambda]", 
+      "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", "1", "0", 
+      "\[Lambda]", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", "0", "1", 
+      "\[Lambda]", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]", "\[Lambda]", 
+      "0", "0", "0", "0", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
+      RowBox[{"-", "\[Lambda]"}], "\[Lambda]", "0"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
+      RowBox[{"-", "\[Lambda]"}], "1", "0", "\[Lambda]"},
+     {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "\[Lambda]",
+       "0", "1", 
       RowBox[{"-", "\[Lambda]"}]},
      {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", 
-      RowBox[{"-", "\[Lambda]"}], 
+      "\[Lambda]", 
       RowBox[{"-", "\[Lambda]"}], "0"}
     },
     GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
@@ -263,10 +277,10 @@ Cell[BoxData[
    3.863687339923147*^9, 3.863687360579316*^9}, 3.8636875247316227`*^9, 
    3.863687661273094*^9, 3.8636877253884583`*^9, {3.8636877781068983`*^9, 
    3.863687800677638*^9}, {3.863688012687826*^9, 3.8636880394679623`*^9}, 
-   3.8636881595832863`*^9},
+   3.863688159411068*^9, 3.8649729139735584`*^9, 3.8649729704848804`*^9},
  CellLabel->
-  "Out[140]//MatrixForm=",ExpressionUUID->"accde4db-08a3-43a3-b685-\
-c8a42fcc48a7"]
+  "Out[8]//MatrixForm=",ExpressionUUID->"cc9d446f-9d09-4d13-b50d-\
+ab30cddf882a"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -279,8 +293,7 @@ Cell[BoxData[
  CellChangeTimes->{{3.8636882800095778`*^9, 3.863688334962887*^9}, {
   3.8636883729963484`*^9, 3.8636884237471185`*^9}, {3.8636885121723547`*^9, 
   3.8636885173954945`*^9}},
- CellLabel->
-  "In[149]:=",ExpressionUUID->"9c964a81-aa39-4b2a-bf2f-c96f5b941aa6"],
+ CellLabel->"In[9]:=",ExpressionUUID->"9c964a81-aa39-4b2a-bf2f-c96f5b941aa6"],
 
 Cell[BoxData[
  FormBox[
@@ -294,30 +307,6 @@ Cell[BoxData[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-             "\[InvisibleSpace]", "0"}],
-            Quantum`Notation`zz080KetArgs,
-            BaseStyle->{ShowSyntaxStyles -> True},
-            Editable->True,
-            Selectable->True], "\[RightAngleBracket]"}],
-          Quantum`Notation`zz080Ket,
-          BaseStyle->{ShowSyntaxStyles -> False},
-          Editable->False,
-          Selectable->False],
-         Quantum`Notation`zz080Ket[
-          Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[1], 1], 
-          Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 1], 
-          Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[3], 1], 
-          Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]], "-", 
-        InterpretationBox[
-         TagBox[
-          RowBox[{"\[VerticalSeparator]", 
-           TagBox[
-            RowBox[{
             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
              "\[InvisibleSpace]", "1"}],
             Quantum`Notation`zz080KetArgs,
@@ -336,18 +325,14 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]]}], 
-       SqrtBox["2"]]},
-     {"1", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 1]]], "+", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-             "\[InvisibleSpace]", "1"}],
+            "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+             "\[InvisibleSpace]", "0"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
             Editable->True,
@@ -360,11 +345,15 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[1], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Operator[2], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]], "+", 
+           Quantum`Notation`zz080Operator[4], 0]]]}], 
+       SqrtBox["2"]]},
+     {"1", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -388,17 +377,13 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]]}], 
-       SqrtBox["2"]]},
-     {"1", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 0]]], "-", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+            "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
              "\[InvisibleSpace]", "1"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
@@ -410,13 +395,17 @@ Cell[BoxData[
           Selectable->False],
          Quantum`Notation`zz080Ket[
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Operator[1], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Operator[2], 0], 
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]], "+", 
+           Quantum`Notation`zz080Operator[4], 1]]]}], 
+       SqrtBox["2"]]},
+     {"1", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -440,18 +429,14 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]]}], 
-       SqrtBox["2"]]},
-     {"1", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 0]]], "-", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-             "\[InvisibleSpace]", "0"}],
+            "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+             "\[InvisibleSpace]", "1"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
             Editable->True,
@@ -464,11 +449,15 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[1], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Operator[2], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]], "-", 
+           Quantum`Notation`zz080Operator[4], 1]]]}], 
+       SqrtBox["2"]]},
+     {"1", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -492,18 +481,14 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]]}], 
-       SqrtBox["2"]]},
-     {"0", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 1]]], "+", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-             "\[InvisibleSpace]", "1"}],
+            "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+             "\[InvisibleSpace]", "0"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
             Editable->True,
@@ -514,13 +499,17 @@ Cell[BoxData[
           Selectable->False],
          Quantum`Notation`zz080Ket[
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Operator[1], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Operator[2], 0], 
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]], "-", 
+           Quantum`Notation`zz080Operator[4], 0]]]}], 
+       SqrtBox["2"]]},
+     {"0", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -544,18 +533,14 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]]}], 
-       SqrtBox["2"]]},
-     {"0", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 0]]], "+", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-             "\[InvisibleSpace]", "0"}],
+            "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+             "\[InvisibleSpace]", "1"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
             Editable->True,
@@ -568,11 +553,15 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[1], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Operator[2], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]], "+", 
+           Quantum`Notation`zz080Operator[4], 1]]]}], 
+       SqrtBox["2"]]},
+     {"0", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -596,17 +585,13 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]]}], 
-       SqrtBox["2"]]},
-     {"0", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 1]]], "-", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+            "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
              "\[InvisibleSpace]", "0"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
@@ -618,13 +603,17 @@ Cell[BoxData[
           Selectable->False],
          Quantum`Notation`zz080Ket[
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Operator[1], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Operator[2], 0], 
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]], "+", 
+           Quantum`Notation`zz080Operator[4], 0]]]}], 
+       SqrtBox["2"]]},
+     {"0", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -648,18 +637,14 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]]}], 
-       SqrtBox["2"]]},
-     {"0", 
-      FractionBox[
-       RowBox[{
+           Quantum`Notation`zz080Operator[4], 1]]], "-", 
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
            TagBox[
             RowBox[{
-            "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-             "\[InvisibleSpace]", "1"}],
+            "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+             "\[InvisibleSpace]", "0"}],
             Quantum`Notation`zz080KetArgs,
             BaseStyle->{ShowSyntaxStyles -> True},
             Editable->True,
@@ -672,11 +657,15 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[1], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Operator[2], 1], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 1]]], "-", 
+           Quantum`Notation`zz080Operator[4], 0]]]}], 
+       SqrtBox["2"]]},
+     {"0", 
+      FractionBox[
+       RowBox[{
         InterpretationBox[
          TagBox[
           RowBox[{"\[VerticalSeparator]", 
@@ -700,7 +689,31 @@ Cell[BoxData[
           Quantum`Notation`zz080Eigenstate[
            Quantum`Notation`zz080Operator[3], 0], 
           Quantum`Notation`zz080Eigenstate[
-           Quantum`Notation`zz080Operator[4], 0]]]}], 
+           Quantum`Notation`zz080Operator[4], 0]]], "+", 
+        InterpretationBox[
+         TagBox[
+          RowBox[{"\[VerticalSeparator]", 
+           TagBox[
+            RowBox[{
+            "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+             "\[InvisibleSpace]", "1"}],
+            Quantum`Notation`zz080KetArgs,
+            BaseStyle->{ShowSyntaxStyles -> True},
+            Editable->True,
+            Selectable->True], "\[RightAngleBracket]"}],
+          Quantum`Notation`zz080Ket,
+          BaseStyle->{ShowSyntaxStyles -> False},
+          Editable->False,
+          Selectable->False],
+         Quantum`Notation`zz080Ket[
+          Quantum`Notation`zz080Eigenstate[
+           Quantum`Notation`zz080Operator[1], 0], 
+          Quantum`Notation`zz080Eigenstate[
+           Quantum`Notation`zz080Operator[2], 0], 
+          Quantum`Notation`zz080Eigenstate[
+           Quantum`Notation`zz080Operator[3], 1], 
+          Quantum`Notation`zz080Eigenstate[
+           Quantum`Notation`zz080Operator[4], 1]]]}], 
        SqrtBox["2"]]},
      {
       RowBox[{
@@ -713,284 +726,6 @@ Cell[BoxData[
             SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
       FractionBox[
        RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}], "+", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
-       RowBox[{
-        SqrtBox["2"], " ", "\[Lambda]", " ", 
-        SqrtBox[
-         RowBox[{
-          SuperscriptBox[
-           TemplateBox[{
-             FractionBox[
-              RowBox[{"1", "-", 
-                SqrtBox[
-                 RowBox[{
-                   RowBox[{"16", " ", 
-                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
-              "\[Lambda]"]},
-            "Abs"], "2"], "+", "16"}]]}]]},
-     {
-      RowBox[{
-       FractionBox["1", "2"], " ", 
-       RowBox[{"(", 
-        RowBox[{"1", "-", 
-         SqrtBox[
-          RowBox[{
-           RowBox[{"16", " ", 
-            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
-      FractionBox[
-       RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}], "-", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
-       RowBox[{
-        SqrtBox["2"], " ", "\[Lambda]", " ", 
-        SqrtBox[
-         RowBox[{
-          SuperscriptBox[
-           TemplateBox[{
-             FractionBox[
-              RowBox[{"1", "-", 
-                SqrtBox[
-                 RowBox[{
-                   RowBox[{"16", " ", 
-                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
-              "\[Lambda]"]},
-            "Abs"], "2"], "+", "16"}]]}]]},
-     {
-      RowBox[{
-       FractionBox["1", "2"], " ", 
-       RowBox[{"(", 
-        RowBox[{"1", "-", 
-         SqrtBox[
-          RowBox[{
-           RowBox[{"16", " ", 
-            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
-      FractionBox[
-       RowBox[{
         RowBox[{"-", 
          RowBox[{
           RowBox[{"(", 
@@ -999,287 +734,6 @@ Cell[BoxData[
              RowBox[{
               RowBox[{"16", " ", 
                SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-           ")"}], " ", 
-          InterpretationBox[
-           TagBox[
-            RowBox[{"\[VerticalSeparator]", 
-             TagBox[
-              RowBox[{
-              "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
-               "\[InvisibleSpace]", "1"}],
-              Quantum`Notation`zz080KetArgs,
-              BaseStyle->{ShowSyntaxStyles -> True},
-              Editable->True,
-              Selectable->True], "\[RightAngleBracket]"}],
-            Quantum`Notation`zz080Ket,
-            BaseStyle->{ShowSyntaxStyles -> False},
-            Editable->False,
-            Selectable->False],
-           Quantum`Notation`zz080Ket[
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[1], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[2], 1], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[3], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[4], 1]]]}]}], "+", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
-       RowBox[{
-        SqrtBox["2"], " ", "\[Lambda]", " ", 
-        SqrtBox[
-         RowBox[{
-          SuperscriptBox[
-           TemplateBox[{
-             FractionBox[
-              RowBox[{"1", "-", 
-                SqrtBox[
-                 RowBox[{
-                   RowBox[{"16", " ", 
-                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
-              "\[Lambda]"]},
-            "Abs"], "2"], "+", "16"}]]}]]},
-     {
-      RowBox[{
-       FractionBox["1", "2"], " ", 
-       RowBox[{"(", 
-        RowBox[{"1", "-", 
-         SqrtBox[
-          RowBox[{
-           RowBox[{"16", " ", 
-            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
-      FractionBox[
-       RowBox[{
-        RowBox[{"-", 
-         RowBox[{
-          RowBox[{"(", 
-           RowBox[{
-            SqrtBox[
-             RowBox[{
-              RowBox[{"16", " ", 
-               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-           ")"}], " ", 
-          InterpretationBox[
-           TagBox[
-            RowBox[{"\[VerticalSeparator]", 
-             TagBox[
-              RowBox[{
-              "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-               "\[InvisibleSpace]", "1"}],
-              Quantum`Notation`zz080KetArgs,
-              BaseStyle->{ShowSyntaxStyles -> True},
-              Editable->True,
-              Selectable->True], "\[RightAngleBracket]"}],
-            Quantum`Notation`zz080Ket,
-            BaseStyle->{ShowSyntaxStyles -> False},
-            Editable->False,
-            Selectable->False],
-           Quantum`Notation`zz080Ket[
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[1], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[2], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[3], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[4], 1]]]}]}], "-", 
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "0"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
-        RowBox[{"4", " ", "\[Lambda]", " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
-             RowBox[{
-             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
-       RowBox[{
-        SqrtBox["2"], " ", "\[Lambda]", " ", 
-        SqrtBox[
-         RowBox[{
-          SuperscriptBox[
-           TemplateBox[{
-             FractionBox[
-              RowBox[{
-                SqrtBox[
-                 RowBox[{
-                   RowBox[{"16", " ", 
-                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", 
-                "1"}], "\[Lambda]"]},
-            "Abs"], "2"], "+", "16"}]]}]]},
-     {
-      RowBox[{
-       FractionBox["1", "2"], " ", 
-       RowBox[{"(", 
-        RowBox[{
-         SqrtBox[
-          RowBox[{
-           RowBox[{"16", " ", 
-            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
-        ")"}]}], 
-      FractionBox[
-       RowBox[{
-        RowBox[{"-", 
-         RowBox[{
-          RowBox[{"(", 
-           RowBox[{
-            SqrtBox[
-             RowBox[{
-              RowBox[{"16", " ", 
-               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
            ")"}], " ", 
           InterpretationBox[
            TagBox[
@@ -1304,7 +758,565 @@ Cell[BoxData[
             Quantum`Notation`zz080Eigenstate[
              Quantum`Notation`zz080Operator[3], 0], 
             Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[4], 1]]]}]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
+       RowBox[{
+        SqrtBox["2"], " ", "\[Lambda]", " ", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox[
+           TemplateBox[{
+             FractionBox[
+              RowBox[{"1", "-", 
+                SqrtBox[
+                 RowBox[{
+                   RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
+              "\[Lambda]"]},
+            "Abs"], "2"], "+", "16"}]]}]]},
+     {
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "-", 
+         SqrtBox[
+          RowBox[{
+           RowBox[{"16", " ", 
+            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
+      FractionBox[
+       RowBox[{
+        RowBox[{"-", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            SqrtBox[
+             RowBox[{
+              RowBox[{"16", " ", 
+               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+           ")"}], " ", 
+          InterpretationBox[
+           TagBox[
+            RowBox[{"\[VerticalSeparator]", 
+             TagBox[
+              RowBox[{
+              "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+               "\[InvisibleSpace]", "1"}],
+              Quantum`Notation`zz080KetArgs,
+              BaseStyle->{ShowSyntaxStyles -> True},
+              Editable->True,
+              Selectable->True], "\[RightAngleBracket]"}],
+            Quantum`Notation`zz080Ket,
+            BaseStyle->{ShowSyntaxStyles -> False},
+            Editable->False,
+            Selectable->False],
+           Quantum`Notation`zz080Ket[
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[1], 1], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[2], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[3], 0], 
+            Quantum`Notation`zz080Eigenstate[
              Quantum`Notation`zz080Operator[4], 1]]]}]}], "-", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
+       RowBox[{
+        SqrtBox["2"], " ", "\[Lambda]", " ", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox[
+           TemplateBox[{
+             FractionBox[
+              RowBox[{
+                SqrtBox[
+                 RowBox[{
+                   RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", 
+                "1"}], "\[Lambda]"]},
+            "Abs"], "2"], "+", "16"}]]}]]},
+     {
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "-", 
+         SqrtBox[
+          RowBox[{
+           RowBox[{"16", " ", 
+            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
+      FractionBox[
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
+       RowBox[{
+        SqrtBox["2"], " ", "\[Lambda]", " ", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox[
+           TemplateBox[{
+             FractionBox[
+              RowBox[{"1", "-", 
+                SqrtBox[
+                 RowBox[{
+                   RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
+              "\[Lambda]"]},
+            "Abs"], "2"], "+", "16"}]]}]]},
+     {
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{"1", "-", 
+         SqrtBox[
+          RowBox[{
+           RowBox[{"16", " ", 
+            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], ")"}]}], 
+      FractionBox[
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}], "-", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "0"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+        RowBox[{"4", " ", "\[Lambda]", " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "1", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}]}], 
+       RowBox[{
+        SqrtBox["2"], " ", "\[Lambda]", " ", 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox[
+           TemplateBox[{
+             FractionBox[
+              RowBox[{"1", "-", 
+                SqrtBox[
+                 RowBox[{
+                   RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
+              "\[Lambda]"]},
+            "Abs"], "2"], "+", "16"}]]}]]},
+     {
+      RowBox[{
+       FractionBox["1", "2"], " ", 
+       RowBox[{"(", 
+        RowBox[{
+         SqrtBox[
+          RowBox[{
+           RowBox[{"16", " ", 
+            SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
+        ")"}]}], 
+      FractionBox[
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
+             RowBox[{
+             "1", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}], "-", 
         RowBox[{
          RowBox[{"(", 
           RowBox[{
@@ -1336,7 +1348,7 @@ Cell[BoxData[
            Quantum`Notation`zz080Eigenstate[
             Quantum`Notation`zz080Operator[3], 1], 
            Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
         RowBox[{"4", " ", "\[Lambda]", " ", 
          InterpretationBox[
           TagBox[
@@ -1413,39 +1425,38 @@ Cell[BoxData[
         ")"}]}], 
       FractionBox[
        RowBox[{
-        RowBox[{"-", 
-         RowBox[{
-          RowBox[{"(", 
-           RowBox[{
-            SqrtBox[
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           SqrtBox[
+            RowBox[{
+             RowBox[{"16", " ", 
+              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
+          ")"}], " ", 
+         InterpretationBox[
+          TagBox[
+           RowBox[{"\[VerticalSeparator]", 
+            TagBox[
              RowBox[{
-              RowBox[{"16", " ", 
-               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
-           ")"}], " ", 
-          InterpretationBox[
-           TagBox[
-            RowBox[{"\[VerticalSeparator]", 
-             TagBox[
-              RowBox[{
-              "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-               "\[InvisibleSpace]", "1"}],
-              Quantum`Notation`zz080KetArgs,
-              BaseStyle->{ShowSyntaxStyles -> True},
-              Editable->True,
-              Selectable->True], "\[RightAngleBracket]"}],
-            Quantum`Notation`zz080Ket,
-            BaseStyle->{ShowSyntaxStyles -> False},
-            Editable->False,
-            Selectable->False],
-           Quantum`Notation`zz080Ket[
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[1], 1], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[2], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[3], 0], 
-            Quantum`Notation`zz080Eigenstate[
-             Quantum`Notation`zz080Operator[4], 1]]]}]}], "+", 
+             "1", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+              "\[InvisibleSpace]", "1"}],
+             Quantum`Notation`zz080KetArgs,
+             BaseStyle->{ShowSyntaxStyles -> True},
+             Editable->True,
+             Selectable->True], "\[RightAngleBracket]"}],
+           Quantum`Notation`zz080Ket,
+           BaseStyle->{ShowSyntaxStyles -> False},
+           Editable->False,
+           Selectable->False],
+          Quantum`Notation`zz080Ket[
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[1], 1], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[2], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[3], 0], 
+           Quantum`Notation`zz080Eigenstate[
+            Quantum`Notation`zz080Operator[4], 1]]]}], "+", 
         RowBox[{
          RowBox[{"(", 
           RowBox[{
@@ -1477,7 +1488,7 @@ Cell[BoxData[
            Quantum`Notation`zz080Eigenstate[
             Quantum`Notation`zz080Operator[3], 1], 
            Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
         RowBox[{"4", " ", "\[Lambda]", " ", 
          InterpretationBox[
           TagBox[
@@ -1554,38 +1565,39 @@ Cell[BoxData[
         ")"}]}], 
       FractionBox[
        RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
+        RowBox[{"-", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            SqrtBox[
              RowBox[{
-             "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 1], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}], "-", 
+              RowBox[{"16", " ", 
+               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
+           ")"}], " ", 
+          InterpretationBox[
+           TagBox[
+            RowBox[{"\[VerticalSeparator]", 
+             TagBox[
+              RowBox[{
+              "0", "\[InvisibleSpace]", "1", "\[InvisibleSpace]", "0", 
+               "\[InvisibleSpace]", "1"}],
+              Quantum`Notation`zz080KetArgs,
+              BaseStyle->{ShowSyntaxStyles -> True},
+              Editable->True,
+              Selectable->True], "\[RightAngleBracket]"}],
+            Quantum`Notation`zz080Ket,
+            BaseStyle->{ShowSyntaxStyles -> False},
+            Editable->False,
+            Selectable->False],
+           Quantum`Notation`zz080Ket[
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[1], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[2], 1], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[3], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[4], 1]]]}]}], "-", 
         RowBox[{
          RowBox[{"(", 
           RowBox[{
@@ -1617,7 +1629,7 @@ Cell[BoxData[
            Quantum`Notation`zz080Eigenstate[
             Quantum`Notation`zz080Operator[3], 1], 
            Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
+            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
         RowBox[{"4", " ", "\[Lambda]", " ", 
          InterpretationBox[
           TagBox[
@@ -1694,38 +1706,39 @@ Cell[BoxData[
         ")"}]}], 
       FractionBox[
        RowBox[{
-        RowBox[{
-         RowBox[{"(", 
-          RowBox[{
-           SqrtBox[
-            RowBox[{
-             RowBox[{"16", " ", 
-              SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
-          ")"}], " ", 
-         InterpretationBox[
-          TagBox[
-           RowBox[{"\[VerticalSeparator]", 
-            TagBox[
+        RowBox[{"-", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            SqrtBox[
              RowBox[{
-             "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
-              "\[InvisibleSpace]", "1"}],
-             Quantum`Notation`zz080KetArgs,
-             BaseStyle->{ShowSyntaxStyles -> True},
-             Editable->True,
-             Selectable->True], "\[RightAngleBracket]"}],
-           Quantum`Notation`zz080Ket,
-           BaseStyle->{ShowSyntaxStyles -> False},
-           Editable->False,
-           Selectable->False],
-          Quantum`Notation`zz080Ket[
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[1], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[2], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[3], 0], 
-           Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 1]]]}], "+", 
+              RowBox[{"16", " ", 
+               SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "+", "1"}], 
+           ")"}], " ", 
+          InterpretationBox[
+           TagBox[
+            RowBox[{"\[VerticalSeparator]", 
+             TagBox[
+              RowBox[{
+              "0", "\[InvisibleSpace]", "0", "\[InvisibleSpace]", "0", 
+               "\[InvisibleSpace]", "1"}],
+              Quantum`Notation`zz080KetArgs,
+              BaseStyle->{ShowSyntaxStyles -> True},
+              Editable->True,
+              Selectable->True], "\[RightAngleBracket]"}],
+            Quantum`Notation`zz080Ket,
+            BaseStyle->{ShowSyntaxStyles -> False},
+            Editable->False,
+            Selectable->False],
+           Quantum`Notation`zz080Ket[
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[1], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[2], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[3], 0], 
+            Quantum`Notation`zz080Eigenstate[
+             Quantum`Notation`zz080Operator[4], 1]]]}]}], "+", 
         RowBox[{
          RowBox[{"(", 
           RowBox[{
@@ -1757,7 +1770,7 @@ Cell[BoxData[
            Quantum`Notation`zz080Eigenstate[
             Quantum`Notation`zz080Operator[3], 1], 
            Quantum`Notation`zz080Eigenstate[
-            Quantum`Notation`zz080Operator[4], 0]]]}], "+", 
+            Quantum`Notation`zz080Operator[4], 0]]]}], "-", 
         RowBox[{"4", " ", "\[Lambda]", " ", 
          InterpretationBox[
           TagBox[
@@ -1827,10 +1840,81 @@ Cell[BoxData[
     GridBoxDividers->{"Columns" -> {{True}}, "Rows" -> {{True}}},
     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
    "Grid"], TraditionalForm]], "Output",
- CellChangeTimes->{3.8636884249717493`*^9, 3.8636885206918707`*^9},
+ CellChangeTimes->{3.8636884249717493`*^9, 3.8636885206918707`*^9, 
+  3.864973003019489*^9},
  CellLabel->
-  "Out[149]//TraditionalForm=",ExpressionUUID->"0d40ae56-d0ee-455b-8eb0-\
-32b91d799e66"]
+  "Out[9]//TraditionalForm=",ExpressionUUID->"7554d5e7-d8b1-4b22-8ac2-\
+b044a1ed5941"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Limit", "[", 
+  RowBox[{
+   FormBox[
+    FractionBox[
+     RowBox[{
+      SqrtBox[
+       RowBox[{
+        RowBox[{"16", " ", 
+         SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]], "-", "1"}], 
+     FormBox[
+      RowBox[{
+       SqrtBox["2"], " ", "\[Lambda]", " ", 
+       SqrtBox[
+        RowBox[{
+         SuperscriptBox[
+          TemplateBox[{
+            FractionBox[
+             RowBox[{"1", "-", 
+               SqrtBox[
+                RowBox[{
+                  RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
+             "\[Lambda]"]},
+           "Abs"], "2"], "+", "16"}]]}],
+      TraditionalForm]],
+    TraditionalForm], ",", 
+   RowBox[{"\[Lambda]", "\[Rule]", "0"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Limit", "[", 
+  RowBox[{
+   FormBox[
+    FractionBox[
+     RowBox[{"4", "\[Lambda]"}], 
+     FormBox[
+      RowBox[{
+       SqrtBox["2"], " ", "\[Lambda]", " ", 
+       SqrtBox[
+        RowBox[{
+         SuperscriptBox[
+          TemplateBox[{
+            FractionBox[
+             RowBox[{"1", "-", 
+               SqrtBox[
+                RowBox[{
+                  RowBox[{"16", " ", 
+                    SuperscriptBox["\[Lambda]", "2"]}], "+", "1"}]]}], 
+             "\[Lambda]"]},
+           "Abs"], "2"], "+", "16"}]]}],
+      TraditionalForm]],
+    TraditionalForm], ",", 
+   RowBox[{"\[Lambda]", "\[Rule]", "0"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.8649730562465134`*^9, 3.8649730668937764`*^9}, {
+  3.8649731068732705`*^9, 3.8649732225452023`*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"b43edcc7-2c3f-4185-936e-67394e274d8c"],
+
+Cell[BoxData["0"], "Output",
+ CellChangeTimes->{
+  3.8649730678933363`*^9, {3.864973171048949*^9, 3.8649732234540176`*^9}},
+ CellLabel->"Out[16]=",ExpressionUUID->"ea0a8d3e-b3ef-4038-a92d-879c7de754d5"],
+
+Cell[BoxData[
+ FractionBox["1", 
+  SqrtBox["2"]]], "Output",
+ CellChangeTimes->{
+  3.8649730678933363`*^9, {3.864973171048949*^9, 3.864973223580146*^9}},
+ CellLabel->"Out[17]=",ExpressionUUID->"bd7de124-27b1-4a5b-ba3c-42ee13d54d90"]
 }, Open  ]]
 }, Open  ]],
 
@@ -1858,19 +1942,20 @@ Cell[BoxData[{
      RowBox[{"(", "5", ")"}]}]}]}], "\[RightDoubleBracket]"}]}], "Input",
  CellChangeTimes->{{3.863687962783024*^9, 3.8636879661090612`*^9}, {
   3.863688595426095*^9, 3.863688602860171*^9}, {3.8636887821938257`*^9, 
-  3.863688787241789*^9}},ExpressionUUID->"033b3d50-a78d-45d0-af71-\
-5f007dd86aa3"],
+  3.863688787241789*^9}},
+ CellLabel->"In[18]:=",ExpressionUUID->"033b3d50-a78d-45d0-af71-5f007dd86aa3"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"\[Lambda]", " ", 
+   RowBox[{
+    SubscriptBox["\[ScriptCapitalZ]", 
+     OverscriptBox["1", "^"]], "\[CenterDot]", 
+    SubscriptBox["\[ScriptCapitalX]", 
+     OverscriptBox["4", "^"]]}]}], "+", 
+  RowBox[{"\[Lambda]", " ", 
    RowBox[{"(", 
     RowBox[{
-     RowBox[{
-      SubscriptBox["\[ScriptCapitalZ]", 
-       OverscriptBox["1", "^"]], "\[CenterDot]", 
-      SubscriptBox["\[ScriptCapitalX]", 
-       OverscriptBox["4", "^"]]}], "+", 
      RowBox[{
       SubscriptBox["\[ScriptCapitalZ]", 
        OverscriptBox["2", "^"]], "\[CenterDot]", 
@@ -1910,9 +1995,12 @@ Cell[BoxData[
      OverscriptBox["5", "^"]], "\[CenterDot]", 
     SubscriptBox["\[ScriptCapitalI]", 
      OverscriptBox["6", "^"]]}]}]}]], "Output",
- CellChangeTimes->{3.863688605649733*^9},
- CellLabel->
-  "Out[151]=",ExpressionUUID->"3484693e-3b56-4a75-9fdc-f4d45170101a"]
+ CellChangeTimes->{3.863688605649733*^9, 3.8649732495612497`*^9},
+ CellLabel->"Out[19]=",ExpressionUUID->"f131e106-3076-4b12-8748-602502876e39"],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.863688605649733*^9, 3.8649734406634507`*^9},
+ CellLabel->"Out[20]=",ExpressionUUID->"4530ab3b-b084-4b90-a046-b46d5c2458ce"]
 }, Open  ]]
 }, Open  ]],
 
@@ -6016,7 +6104,7 @@ Cell[BoxData[
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{1260., 732.75},
+WindowSize->{1260., 755.25},
 WindowMargins->{{1147.2, Automatic}, {Automatic, 7.199999999999999}},
 TaggingRules->{
  "WelcomeScreenSettings" -> {"FEStarting" -> False}, "TryRealOnly" -> False},
@@ -7180,81 +7268,87 @@ Cell[580, 22, 161, 3, 78, "Title",ExpressionUUID->"4332c2c5-07ba-4891-9aa4-a4124
 Cell[CellGroupData[{
 Cell[766, 29, 187, 3, 55, "Chapter",ExpressionUUID->"8ccb23f4-f4ac-4fc2-a207-ea699ebe5896"],
 Cell[956, 34, 184, 3, 43, "Subtitle",ExpressionUUID->"52ebabc2-cf06-440b-8512-e8dd2179f5bb"],
-Cell[1143, 39, 337, 7, 40, "Input",ExpressionUUID->"8e8f24ee-fd5a-467d-a382-728bdf101071"],
+Cell[1143, 39, 386, 8, 40, "Input",ExpressionUUID->"8e8f24ee-fd5a-467d-a382-728bdf101071"],
 Cell[CellGroupData[{
-Cell[1505, 50, 164, 3, 53, "Section",ExpressionUUID->"f2186f4b-2926-4490-96b0-b0f0b8ff72f9"],
-Cell[1672, 55, 3039, 91, 87, "Input",ExpressionUUID->"fdf31db7-31ed-4a5e-837e-d3c9b7c3f747"],
+Cell[1554, 51, 164, 3, 53, "Section",ExpressionUUID->"f2186f4b-2926-4490-96b0-b0f0b8ff72f9"],
+Cell[1721, 56, 3534, 103, 103, "Input",ExpressionUUID->"fdf31db7-31ed-4a5e-837e-d3c9b7c3f747"],
 Cell[CellGroupData[{
-Cell[4736, 150, 159, 3, 43, "Subsection",ExpressionUUID->"67f8a4ee-a36c-4123-b972-a9896189db58"],
+Cell[5280, 163, 159, 3, 43, "Subsection",ExpressionUUID->"67f8a4ee-a36c-4123-b972-a9896189db58"],
 Cell[CellGroupData[{
-Cell[4920, 157, 557, 11, 71, "Input",ExpressionUUID->"ac6a8428-6656-4250-bcc7-4a37a511d73d"],
-Cell[5480, 170, 1348, 36, 41, "Output",ExpressionUUID->"58967dac-c13f-486e-92fd-99757f725377"],
-Cell[6831, 208, 2936, 60, 264, "Output",ExpressionUUID->"accde4db-08a3-43a3-b685-c8a42fcc48a7"]
+Cell[5464, 170, 552, 10, 71, "Input",ExpressionUUID->"ac6a8428-6656-4250-bcc7-4a37a511d73d"],
+Cell[6019, 182, 1363, 34, 41, "Output",ExpressionUUID->"b8fd90e8-121e-4c72-b9b4-9a9919e78ae8"],
+Cell[7385, 218, 3008, 64, 264, "Output",ExpressionUUID->"cc9d446f-9d09-4d13-b50d-ab30cddf882a"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9804, 273, 416, 9, 23, "Input",ExpressionUUID->"9c964a81-aa39-4b2a-bf2f-c96f5b941aa6"],
-Cell[10223, 284, 59547, 1548, 683, "Output",ExpressionUUID->"0d40ae56-d0ee-455b-8eb0-32b91d799e66"]
+Cell[10430, 287, 411, 8, 23, "Input",ExpressionUUID->"9c964a81-aa39-4b2a-bf2f-c96f5b941aa6"],
+Cell[10844, 297, 59570, 1549, 683, "Output",ExpressionUUID->"7554d5e7-d8b1-4b22-8ac2-b044a1ed5941"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[70451, 1851, 1647, 53, 134, "Input",ExpressionUUID->"b43edcc7-2c3f-4185-936e-67394e274d8c"],
+Cell[72101, 1906, 202, 3, 26, "Output",ExpressionUUID->"ea0a8d3e-b3ef-4038-a92d-879c7de754d5"],
+Cell[72306, 1911, 232, 5, 44, "Output",ExpressionUUID->"bd7de124-27b1-4a5b-ba3c-42ee13d54d90"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[69819, 1838, 159, 3, 43, "Subsection",ExpressionUUID->"b0ce8caf-22aa-42a5-af3c-4cfc96f53d70"],
+Cell[72587, 1922, 159, 3, 43, "Subsection",ExpressionUUID->"b0ce8caf-22aa-42a5-af3c-4cfc96f53d70"],
 Cell[CellGroupData[{
-Cell[70003, 1845, 644, 16, 56, "Input",ExpressionUUID->"033b3d50-a78d-45d0-af71-5f007dd86aa3"],
-Cell[70650, 1863, 1766, 51, 41, "Output",ExpressionUUID->"3484693e-3b56-4a75-9fdc-f4d45170101a"]
+Cell[72771, 1929, 666, 16, 56, "Input",ExpressionUUID->"033b3d50-a78d-45d0-af71-5f007dd86aa3"],
+Cell[73440, 1947, 1807, 51, 41, "Output",ExpressionUUID->"f131e106-3076-4b12-8748-602502876e39"],
+Cell[75250, 2000, 180, 2, 585, "Output",ExpressionUUID->"4530ab3b-b084-4b90-a046-b46d5c2458ce"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[72465, 1920, 220, 4, 43, "Subsection",ExpressionUUID->"d727dadb-6cec-460b-b8f3-8a8516e4e5b2"],
-Cell[72688, 1926, 1908, 49, 40, "Input",ExpressionUUID->"c6a8886d-aaab-4620-a04b-65d898babe23"],
+Cell[75479, 2008, 220, 4, 43, "Subsection",ExpressionUUID->"d727dadb-6cec-460b-b8f3-8a8516e4e5b2"],
+Cell[75702, 2014, 1908, 49, 40, "Input",ExpressionUUID->"c6a8886d-aaab-4620-a04b-65d898babe23"],
 Cell[CellGroupData[{
-Cell[74621, 1979, 504, 14, 23, "Input",ExpressionUUID->"2dbf0d15-bab8-49b5-92a7-84155ec44657"],
-Cell[75128, 1995, 7850, 136, 507, "Output",ExpressionUUID->"7a3fd9b0-773c-4a7d-b966-3cf12b833c32"]
+Cell[77635, 2067, 504, 14, 23, "Input",ExpressionUUID->"2dbf0d15-bab8-49b5-92a7-84155ec44657"],
+Cell[78142, 2083, 7850, 136, 507, "Output",ExpressionUUID->"7a3fd9b0-773c-4a7d-b966-3cf12b833c32"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[83015, 2136, 146, 2, 23, "Input",ExpressionUUID->"8fe60469-0605-42c1-bcad-757b7afab914"],
-Cell[83164, 2140, 8001, 229, 121, "Output",ExpressionUUID->"4914787f-9b83-4066-b4d9-6e09240c4a71"]
+Cell[86029, 2224, 146, 2, 23, "Input",ExpressionUUID->"8fe60469-0605-42c1-bcad-757b7afab914"],
+Cell[86178, 2228, 8001, 229, 121, "Output",ExpressionUUID->"4914787f-9b83-4066-b4d9-6e09240c4a71"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[91214, 2375, 265, 4, 43, "Subsection",ExpressionUUID->"3d628c10-eb1a-4a61-bbea-6efaf7d16335"],
-Cell[91482, 2381, 3271, 77, 71, "Input",ExpressionUUID->"8ec10fe1-3f9c-4f21-a1cd-cc7337b02dbc"],
+Cell[94228, 2463, 265, 4, 43, "Subsection",ExpressionUUID->"3d628c10-eb1a-4a61-bbea-6efaf7d16335"],
+Cell[94496, 2469, 3271, 77, 71, "Input",ExpressionUUID->"8ec10fe1-3f9c-4f21-a1cd-cc7337b02dbc"],
 Cell[CellGroupData[{
-Cell[94778, 2462, 506, 14, 23, "Input",ExpressionUUID->"db23662c-1998-408f-976c-e9e3c9f43faa"],
-Cell[95287, 2478, 7876, 131, 507, "Output",ExpressionUUID->"a0dbb2d4-3be5-44bd-9780-b4235e1dd41c"]
+Cell[97792, 2550, 506, 14, 23, "Input",ExpressionUUID->"db23662c-1998-408f-976c-e9e3c9f43faa"],
+Cell[98301, 2566, 7876, 131, 507, "Output",ExpressionUUID->"a0dbb2d4-3be5-44bd-9780-b4235e1dd41c"]
 }, Open  ]],
-Cell[103178, 2612, 138, 3, 23, "Input",ExpressionUUID->"4666386e-b376-4a91-890c-f7c6d9f67a3a"]
+Cell[106192, 2700, 138, 3, 23, "Input",ExpressionUUID->"4666386e-b376-4a91-890c-f7c6d9f67a3a"]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[103365, 2621, 180, 3, 53, "Section",ExpressionUUID->"8946dda5-4a9c-48a6-b5be-b60d7bd85148"],
+Cell[106379, 2709, 180, 3, 53, "Section",ExpressionUUID->"8946dda5-4a9c-48a6-b5be-b60d7bd85148"],
 Cell[CellGroupData[{
-Cell[103570, 2628, 236, 4, 43, "Subsection",ExpressionUUID->"2706f95b-0754-4202-bfb7-c5dc8cf832da"],
-Cell[103809, 2634, 269, 6, 27, "Text",ExpressionUUID->"e5c73bb2-5b95-44f5-bf1f-c769818fff6c"],
-Cell[104081, 2642, 2233, 55, 56, "Input",ExpressionUUID->"ada925cb-6482-41ea-9b03-9ca5c2f7b794"],
+Cell[106584, 2716, 236, 4, 43, "Subsection",ExpressionUUID->"2706f95b-0754-4202-bfb7-c5dc8cf832da"],
+Cell[106823, 2722, 269, 6, 27, "Text",ExpressionUUID->"e5c73bb2-5b95-44f5-bf1f-c769818fff6c"],
+Cell[107095, 2730, 2233, 55, 56, "Input",ExpressionUUID->"ada925cb-6482-41ea-9b03-9ca5c2f7b794"],
 Cell[CellGroupData[{
-Cell[106339, 2701, 209, 3, 23, "Input",ExpressionUUID->"224c4358-0b8a-42d1-93fe-7b52eb07eeba"],
-Cell[106551, 2706, 27354, 417, 992, "Output",ExpressionUUID->"62464b50-8fec-4690-94c0-9e7d9f137ed3"]
+Cell[109353, 2789, 209, 3, 23, "Input",ExpressionUUID->"224c4358-0b8a-42d1-93fe-7b52eb07eeba"],
+Cell[109565, 2794, 27354, 417, 992, "Output",ExpressionUUID->"62464b50-8fec-4690-94c0-9e7d9f137ed3"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[133942, 3128, 490, 9, 23, "Input",ExpressionUUID->"88ca2bcf-9420-47ff-84bd-b6bbc95522bb"],
-Cell[134435, 3139, 95878, 2565, 1510, "Output",ExpressionUUID->"a2b8fefa-4ead-42b0-b5d8-849b8fdcb997"]
+Cell[136956, 3216, 490, 9, 23, "Input",ExpressionUUID->"88ca2bcf-9420-47ff-84bd-b6bbc95522bb"],
+Cell[137449, 3227, 95878, 2565, 1510, "Output",ExpressionUUID->"a2b8fefa-4ead-42b0-b5d8-849b8fdcb997"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[230350, 5709, 1674, 41, 103, "Input",ExpressionUUID->"3400ccb7-1d6f-497b-93c3-068f0f89725e"],
+Cell[233364, 5797, 1674, 41, 103, "Input",ExpressionUUID->"3400ccb7-1d6f-497b-93c3-068f0f89725e"],
 Cell[CellGroupData[{
-Cell[232049, 5754, 503, 10, 19, "Print",ExpressionUUID->"6e71e732-b469-48b8-b866-a587809f62f3"],
-Cell[232555, 5766, 544, 11, 19, "Print",ExpressionUUID->"808352a8-e3b5-4681-8439-0d13e6de9a13"]
+Cell[235063, 5842, 503, 10, 19, "Print",ExpressionUUID->"6e71e732-b469-48b8-b866-a587809f62f3"],
+Cell[235569, 5854, 544, 11, 19, "Print",ExpressionUUID->"808352a8-e3b5-4681-8439-0d13e6de9a13"]
 }, Open  ]],
-Cell[233114, 5780, 4823, 122, 264, "Output",ExpressionUUID->"2745d264-72c7-4ab9-acc0-4c47f6e0396b"]
+Cell[236128, 5868, 4823, 122, 264, "Output",ExpressionUUID->"2745d264-72c7-4ab9-acc0-4c47f6e0396b"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[237998, 5909, 594, 17, 53, "Section",ExpressionUUID->"af9a4565-7ded-418c-af40-efb25f7b468c"],
+Cell[241012, 5997, 594, 17, 53, "Section",ExpressionUUID->"af9a4565-7ded-418c-af40-efb25f7b468c"],
 Cell[CellGroupData[{
-Cell[238617, 5930, 1301, 32, 151, "Input",ExpressionUUID->"676ebdfb-6979-4e78-b664-75afa8edae5c"],
-Cell[239921, 5964, 380, 8, 26, "Output",ExpressionUUID->"5e683d54-9f2f-4861-a764-7d702ca067f6"],
-Cell[240304, 5974, 1335, 38, 26, "Output",ExpressionUUID->"dfa903ee-4825-4c14-8665-4ea66c76cf1d"]
+Cell[241631, 6018, 1301, 32, 151, "Input",ExpressionUUID->"676ebdfb-6979-4e78-b664-75afa8edae5c"],
+Cell[242935, 6052, 380, 8, 26, "Output",ExpressionUUID->"5e683d54-9f2f-4861-a764-7d702ca067f6"],
+Cell[243318, 6062, 1335, 38, 26, "Output",ExpressionUUID->"dfa903ee-4825-4c14-8665-4ea66c76cf1d"]
 }, Open  ]]
 }, Open  ]]
 }, Open  ]]
