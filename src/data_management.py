@@ -88,6 +88,34 @@ def save_training2(schedule, cost_lists, mode='new file', runtime=None):
         with open(filename + '.txt', 'a') as f:
             f.write('runtime: ' + str(runtime) + '\n')
 
+def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file'):
+    data_folder = '../results/data/'
+    data_folder += 'gradients/'
+    data_folder = create_todays_subfolder(data_folder, mode=mode)
+    filename = create_filename(data_folder, data_type='gradients', mode=mode)
+    np.savez(filename, 
+             computational_qubits = data_dict['computational qubits'],
+             widths_list = data_dict['widths'], 
+             variances_list = data_dict['variances'], 
+             norms_list = data_dict['norms'], 
+             all_gradients = data_dict['gradients'],
+             allow_pickle=False)
+    if mode == 'new file': 
+        with open(filename + '.txt', 'a') as f:
+            f.write(
+                'Gradient variance computation \n' + 
+                'Perturbation scaling: ' + str(perturbation_factor) + 
+                '*lambda_max'
+            )
+    elif mode == 'overwrite': 
+        with open(filename + '.txt', 'a') as f:
+            f.write(
+                'qubits :        ' + str(len(obs.wires)) + '\n' +
+                'Hamiltonian :   ' + str(obs.coeffs) + '\n' 
+                                   + str(obs.ops) + '\n'
+            )
+
+
 def create_todays_subfolder(data_folder, mode='new file'):
     data_folder += '{}'.format(datetime.datetime.now().strftime("%y%m%d"))
     if mode == 'new file':
@@ -99,16 +127,13 @@ def create_todays_subfolder(data_folder, mode='new file'):
     return data_folder + '/'
 
 def create_filename(data_folder, data_type, mode='new file'):
-    # filename = data_folder + data_type + '_nr' + "%04d"%1 + '.dat'
     filename = data_folder + data_type + '_nr' + "%04d"%1
     while os.path.isfile(filename+'.npz'):
         current_count = int(''.join([s for s in filename if s.isdigit()])[-4:]) + 1
-        # filename = data_folder + 'training_nr' + "%04d"%current_count + '.dat'
-        filename = data_folder + 'training_nr' + "%04d"%current_count
+        filename = data_folder + data_type + '_nr' + "%04d"%current_count
     if mode == 'overwrite':
         current_count -= 1
-        # filename = data_folder + 'training_nr' + "%04d"%current_count + '.dat'
-        filename = data_folder + 'training_nr' + "%04d"%current_count
+        filename = data_folder + data_type + '_nr' + "%04d"%current_count
     if mode == 'new file':
         print("Saving data in ", filename)
     return filename
@@ -137,7 +162,6 @@ def get_training_info(file):
         # print("  Observable ", o, " - coeffs:", obs[0])
         # print("  Observable ", o, " - ops:   ", 
         #       str(obs[1].ops)[8:-3].split(')), expval('))
-    
 
 def get_training_costs(file):
     data = np.load(file)
