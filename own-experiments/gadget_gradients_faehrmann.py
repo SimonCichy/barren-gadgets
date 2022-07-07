@@ -77,13 +77,12 @@ if __name__ == "__main__":
             gradients_lists_list[nl] += [gradients_list]
             variances_list[nl] += [np.var(gradients_list)]
             toc = time.perf_counter()
-            print(num_layers, 'layers, runtime:   ', toc-tic, ' seconds')
+            print('{:<4d} layers,       runtime: {:11.0f} seconds'.format(num_layers, toc-tic))
 
         tic = toc
         toc = time.perf_counter()
         runtimes_list += [toc-tic]
-        print(total_qubits, 'qubits, runtime: ', toc-tic, ' seconds')
-        print('Runtime:             ', total_qubits)
+        print('{:<4d} total qubits, runtime: {:11.0f} seconds'.format(total_qubits, toc-tic))
         data_dict = {
             'computational qubits': qubits_list,
             'widths': widths_list,
