@@ -65,6 +65,7 @@ class NewPerturbativeGadgets:
         return Hgad
 
     def get_params(self, Hamiltonian):
+        """ retrieving the parameters n, k and r from the given Hamiltonian"""
         # checking how many qubits the Hamiltonian acts on
         computational_qubits = len(Hamiltonian.wires)
         # getting the number of terms in the Hamiltonian

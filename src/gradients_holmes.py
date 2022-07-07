@@ -68,8 +68,9 @@ class GradientsHolmes:
                     of.write('\n{}\t{}'.format(num_layers, num_qubits))
 
                 for _ in range(self.num_samples):
-                    cost, params = self.get_cost(circuit, num_qubits, num_layers)
-                    gradient = qml.grad(cost)(params)
+                    # cost, params = self.get_cost(circuit, num_qubits, num_layers)
+                    # gradient = qml.grad(cost)(params)
+                    gradient = self.get_gradient(circuit, num_qubits, num_layers)
                     with open(file_name, 'a') as of:
                         of.write('\t{}'.format(gradient[0][0]))
         with open(file_name, 'a') as of:
@@ -107,8 +108,6 @@ class GradientsHolmes:
     def get_gradient(self, circuit, num_qubits, num_layers,  perturbation_factor=None):
         """Method to generate the cost function of which the gradients will be
         recorded.
-        TODO: transform to 'get_gradient(self, circuit, num_qubits, num_layers) 
-        -> float ' instead
         
         Args: 
             circuit (string): identifier of the circuit to be probed. should be
