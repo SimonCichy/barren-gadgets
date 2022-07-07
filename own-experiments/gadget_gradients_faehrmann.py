@@ -40,6 +40,7 @@ if __name__ == "__main__":
     runtimes_list = []
     data_dict = {
         'computational qubits': qubits_list,
+        'layers': layers_list,
         'widths': widths_list,
         'norms': norms_list,
         'variances': variances_list, 
