@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../src')
 sys.path.append('src')
+import time
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
@@ -8,14 +9,15 @@ from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from faehrmann_gadgets import NewPerturbativeGadgets
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz
+from data_management import save_gradients
 
 np.random.seed(42)
 
 # General parameters:
 num_samples = 200
-layers_list = [1, 2, 5]         # [1, 2, 5, 10, 20, 50]
+layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
 # layers_list = 'linear'
-qubits_list = [2, 4, 6]               # [2, 3, 4, 5, 6]
+qubits_list = [4, 6, 8, 10, 12]               # [2, 4, 6, 8, 10, 12]
 lambda_scaling = 1                        # w.r.t. λ_max
 gate_set = [qml.RX, qml.RY, qml.RZ]
 
@@ -27,23 +29,37 @@ colours = np.array([plt.cm.Purples(np.linspace(0, 1, 10)),          # global
                     plt.cm.Reds(np.linspace(0, 1, 10)),             # gadget3
                     plt.cm.Greys(np.linspace(0, 1, 10))]            # legends
                     ).numpy()[:, 3:]
-colours = colours[0]
+colours = colours[3]
 
 
 if __name__ == "__main__":
-    width_list = []
+    widths_list = []
     norms_list = []
     variances_list = [[] for _ in range(len(layers_list))]
+    gradients_lists_list = [[] for _ in range(len(layers_list))]
+    runtimes_list = []
+    data_dict = {
+        'computational qubits': qubits_list,
+        'widths': widths_list,
+        'norms': norms_list,
+        'variances': variances_list, 
+        'gradients': gradients_lists_list, 
+        'runtimes': runtimes_list
+    }
+    save_gradients(data_dict, perturbation_factor=lambda_scaling, mode='new file')
+
+    tic = time.perf_counter()
     for computational_qubits in qubits_list:
         term1 = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(computational_qubits)])
         # term2 = qml.operation.Tensor(*[qml.PauliX(q) for q in range(computational_qubits)])
         Hcomp = qml.Hamiltonian([1], [term1])
         Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
-        obs = Hcomp
-        total_qubits, _, _ = gadgetizer.get_params(obs)
-        print(total_qubits)
+        obs = Hgad
+        total_qubits = len(obs.wires)
+        print('Computational qubits:          ', computational_qubits)
+        print('Total qubits:                  ', total_qubits)
         width = total_qubits
-        width_list += [width]
+        widths_list += [width]
         norms_list += [np.sum(obs.coeffs)]
         for nl, num_layers in enumerate(layers_list):
             gradients_list = []
@@ -58,8 +74,26 @@ if __name__ == "__main__":
                 cost = qml.ExpvalCost(ansatz, obs, dev)
                 gradient = qml.grad(cost)(params)
                 gradients_list += [gradient[0][0]]
+            gradients_lists_list[nl] += [gradients_list]
             variances_list[nl] += [np.var(gradients_list)]
-    
+            toc = time.perf_counter()
+            print(num_layers, 'layers, runtime:   ', toc-tic, ' seconds')
+
+        tic = toc
+        toc = time.perf_counter()
+        runtimes_list += [toc-tic]
+        print(total_qubits, 'qubits, runtime: ', toc-tic, ' seconds')
+        print('Runtime:             ', total_qubits)
+        data_dict = {
+            'computational qubits': qubits_list,
+            'widths': widths_list,
+            'norms': norms_list,
+            'variances': variances_list, 
+            'gradients': gradients_lists_list, 
+            'runtimes': runtimes_list
+        }
+        save_gradients(data_dict, obs=obs, mode='overwrite')
+            
     fig, ax = plt.subplots()
     for line in range(len(variances_list)):
         normalized_variances = variances_list[line]/norms_list[line]**2
