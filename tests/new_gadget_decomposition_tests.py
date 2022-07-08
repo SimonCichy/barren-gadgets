@@ -11,7 +11,7 @@ from faehrmann_gadgets import NewPerturbativeGadgets
 np.random.seed(42)
 
 # Parameters of the tests
-computational_qubits = 4
+computational_qubits = 6
 perturbation_factor = 1
 locality = computational_qubits
 
@@ -25,8 +25,10 @@ def test1():
     """Inspecting the terms of the gadgetized Hamiltonian"""
     print("Target computational Hamoltonian: ")
     print(Hcomp)
-    print("Resulting gadgetized Hamiltonian: ")
+    print("Resulting gadgetized 3-local Hamiltonian: ")
     print(gadgetizer.gadgetize(Hcomp, target_locality=3))
+    print("Resulting gadgetized 4-local Hamiltonian: ")
+    print(gadgetizer.gadgetize(Hcomp, target_locality=4))
 
 def test2(): 
     """Inspecting the terms of the gadgetized Hamiltonian"""
@@ -38,7 +40,13 @@ def test2():
     print("Resulting gadgetized Hamiltonian: ")
     print(gadgetizer.gadgetize(Hcomp, target_locality=3))
 
+def test3():
+    """Exploring the norm of the gadget Hamiltonian"""
+    Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
+    print(np.sum(np.abs(Hgad.coeffs)))
+
 
 if __name__ == "__main__":
-    # test1()
-    test2()
+    test1()
+    # test2()
+    # test3()

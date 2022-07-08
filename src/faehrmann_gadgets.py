@@ -34,7 +34,8 @@ class NewPerturbativeGadgets:
         total_qubits = computational_qubits
         #TODO: check proper convergence guarantee
         gap = 1
-        perturbation_norm = np.sum(Hamiltonian.coeffs) + computational_terms * (computational_locality - 1)
+        perturbation_norm = np.sum(np.abs(Hamiltonian.coeffs)) \
+                          + computational_terms * (computational_locality - 1)
         lambda_max = gap / (4 * perturbation_norm)
         l = self.perturbation_factor * lambda_max
         sign_correction = (-1)**(computational_locality % 2 + 1)

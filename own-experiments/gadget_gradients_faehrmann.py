@@ -15,11 +15,12 @@ np.random.seed(42)
 
 # General parameters:
 num_samples = 200
-layers_list = [1, 2, 5, 10, 20, 50]         # [1, 2, 5, 10, 20, 50]
+layers_list = [2, 5, 10, 20]         # [1, 2, 5, 10, 20, 50]
 # layers_list = 'linear'
 qubits_list = [4, 6, 8, 10, 12]               # [2, 4, 6, 8, 10, 12]
 lambda_scaling = 1                        # w.r.t. λ_max
 gate_set = [qml.RX, qml.RY, qml.RZ]
+newk = 3
 
 gadgetizer = NewPerturbativeGadgets(perturbation_factor=lambda_scaling)
 
@@ -54,14 +55,14 @@ if __name__ == "__main__":
         term1 = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(computational_qubits)])
         # term2 = qml.operation.Tensor(*[qml.PauliX(q) for q in range(computational_qubits)])
         Hcomp = qml.Hamiltonian([1], [term1])
-        Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
+        Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
         obs = Hgad
         total_qubits = len(obs.wires)
         print('Computational qubits:          ', computational_qubits)
         print('Total qubits:                  ', total_qubits)
         width = total_qubits
         widths_list += [width]
-        norms_list += [np.sum(obs.coeffs)]
+        norms_list += [np.sum(np.abs(obs.coeffs))]
         for nl, num_layers in enumerate(layers_list):
             gradients_list = []
             for _ in range(num_samples):
