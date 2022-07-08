@@ -8,11 +8,10 @@ import matplotlib.pyplot as plt
 
 from trainings import scheduled_training, SchedulesOfInterest
 
-seed = 5
-np.random.seed(seed)
+seeds = [2, 3, 4, 5]
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
-plot_data = True
+plot_data = False
 save_data = True
 
 computational_qubits = 4
@@ -21,22 +20,25 @@ step = 0.3
 num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
-perturbation_factors = [5]
+perturbation_factors = [0.5, 1, 5]
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
 if __name__ == "__main__":
     print(" Computational qubits:   ", computational_qubits)
     # print(" Ancillary qubits:       ", ancillary_qubits)
-    print(" Random seed:            ", seed)
-    tic = time.perf_counter()
-    for pf in perturbation_factors:
-        print(" Perturbation factor:    ", pf)
-        soi = SchedulesOfInterest(computational_qubits, 
-                                  seed, num_shots)
-        schedule = soi.linear_ala_new_gad(pf, opt, max_iter)
-        scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
+    for seed in seeds:
+        np.random.seed(seed)
+        print(" Random seed:            ", seed)
+        tic = time.perf_counter()
+        for pf in perturbation_factors:
+            print(" Perturbation factor:    ", pf)
+            soi = SchedulesOfInterest(computational_qubits, 
+                                    seed, num_shots)
+            schedule = soi.linear_ala_new_gad(pf, opt, max_iter)
+            scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
-    toc = time.perf_counter()
-    print(f"Script run in {toc - tic:0.4f} seconds")
-    plt.show()
+        toc = time.perf_counter()
+        print(f"Script run in {toc - tic:0.4f} seconds")
+        if plot_data:
+            plt.show()
