@@ -95,7 +95,7 @@ def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file
     filename = create_filename(data_folder, data_type='gradients', mode=mode)
     np.savez(filename, 
              computational_qubits = data_dict['computational qubits'],
-             layers_list, data_dict['layers'],
+             layers_list = data_dict['layers'],
              widths_list = data_dict['widths'], 
              variances_list = data_dict['variances'], 
              norms_list = data_dict['norms'], 

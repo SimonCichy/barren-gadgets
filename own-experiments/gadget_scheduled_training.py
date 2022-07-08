@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from trainings import scheduled_training, SchedulesOfInterest
 
-seed = 11
+seed = 5
 np.random.seed(seed)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
@@ -21,7 +21,7 @@ step = 0.3
 num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
-perturbation_factors = [1]
+perturbation_factors = [5]
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         print(" Perturbation factor:    ", pf)
         soi = SchedulesOfInterest(computational_qubits, 
                                   seed, num_shots)
-        schedule = soi.linear_ala_gad_penalized(pf, opt, max_iter)
+        schedule = soi.linear_ala_new_gad(pf, opt, max_iter)
         scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
     toc = time.perf_counter()
