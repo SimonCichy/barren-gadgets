@@ -18,7 +18,7 @@ num_samples = 200
 layers_list = [2, 5, 10, 20]         # [1, 2, 5, 10, 20, 50]
 # layers_list = 'linear'
 qubits_list = [4, 6, 8, 10, 12]               # [2, 4, 6, 8, 10, 12]
-lambda_scaling = 1                        # w.r.t. λ_max
+lambda_scaling = 1                        # w.r.t. lambda_max
 gate_set = [qml.RX, qml.RY, qml.RZ]
 newk = 3
 
