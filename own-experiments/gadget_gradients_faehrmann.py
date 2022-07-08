@@ -87,6 +87,7 @@ if __name__ == "__main__":
         print('{:<4d} total qubits, runtime: {:11.0f} seconds'.format(total_qubits, toc-tic))
         data_dict = {
             'computational qubits': qubits_list,
+            'layers': layers_list,
             'widths': widths_list,
             'norms': norms_list,
             'variances': variances_list, 
