@@ -99,7 +99,7 @@ def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file
              widths_list = data_dict['widths'], 
              variances_list = data_dict['variances'], 
              norms_list = data_dict['norms'], 
-             all_gradients = data_dict['gradients'],
+             all_gradients = data_dict['all gradients'],
              allow_pickle=False)
     if mode == 'new file': 
         with open(filename + '.txt', 'a') as f:

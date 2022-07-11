@@ -37,7 +37,8 @@ if __name__ == "__main__":
     widths_list = []
     norms_list = []
     variances_list = [[] for _ in range(len(layers_list))]
-    gradients_lists_list = [[] for _ in range(len(layers_list))]
+    # gradients_lists_list = [[] for _ in range(len(layers_list))]
+    gradients_all = {} # see https://stackoverflow.com/questions/40219946/python-save-dictionaries-through-numpy-save
     runtimes_list = []
     data_dict = {
         'computational qubits': qubits_list,
@@ -45,7 +46,8 @@ if __name__ == "__main__":
         'widths': widths_list,
         'norms': norms_list,
         'variances': variances_list, 
-        'gradients': gradients_lists_list, 
+        # 'gradients': gradients_lists_list, 
+        'all gradients': gradients_all,
         'runtimes': runtimes_list
     }
     save_gradients(data_dict, perturbation_factor=lambda_scaling, mode='new file')
@@ -53,10 +55,9 @@ if __name__ == "__main__":
     tic = time.perf_counter()
     for computational_qubits in qubits_list:
         term1 = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(computational_qubits)])
-        # term2 = qml.operation.Tensor(*[qml.PauliX(q) for q in range(computational_qubits)])
         Hcomp = qml.Hamiltonian([1], [term1])
-        Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
-        obs = Hgad
+        # Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
+        obs = Hcomp
         total_qubits = len(obs.wires)
         print('Computational qubits:          ', computational_qubits)
         print('Total qubits:                  ', total_qubits)
@@ -76,8 +77,9 @@ if __name__ == "__main__":
                 cost = qml.ExpvalCost(ansatz, obs, dev)
                 gradient = qml.grad(cost)(params)
                 gradients_list += [gradient]
-            gradients_lists_list[nl] += [gradients_list]
-            variances_list[nl] += [np.var(gradients_list)]
+            # gradients_lists_list[nl] += [gradients_list]
+            gradients_all[(computational_qubits, num_layers)] = gradients_list
+            variances_list[nl] += [np.var(np.array(gradients_list)[:, 0, 0])]
             toc = time.perf_counter()
             print('{:<4d} layers,       runtime: {:11.0f} seconds'.format(num_layers, toc-tic))
 
@@ -91,7 +93,8 @@ if __name__ == "__main__":
             'widths': widths_list,
             'norms': norms_list,
             'variances': variances_list, 
-            'gradients': gradients_lists_list, 
+            # 'gradients': gradients_lists_list, 
+            'all gradients': gradients_all,
             'runtimes': runtimes_list
         }
         save_gradients(data_dict, obs=obs, mode='overwrite')
