@@ -14,10 +14,10 @@ from data_management import save_gradients
 np.random.seed(42)
 
 # General parameters:
-num_samples = 200
-layers_list = [2, 5, 10, 20]         # [1, 2, 5, 10, 20, 50]
+num_samples = 1000
+layers_list = [2, 5, 10, 20]
 # layers_list = 'linear'
-qubits_list = [4, 6, 8, 10, 12]               # [2, 4, 6, 8, 10, 12]
+qubits_list = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 lambda_scaling = 1                        # w.r.t. lambda_max
 gate_set = [qml.RX, qml.RY, qml.RZ]
 newk = 3
@@ -75,7 +75,7 @@ if __name__ == "__main__":
                 ansatz = ala.ansatz
                 cost = qml.ExpvalCost(ansatz, obs, dev)
                 gradient = qml.grad(cost)(params)
-                gradients_list += [gradient[0][0]]
+                gradients_list += [gradient]
             gradients_lists_list[nl] += [gradients_list]
             variances_list[nl] += [np.var(gradients_list)]
             toc = time.perf_counter()
