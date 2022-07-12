@@ -118,14 +118,23 @@ def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file
 
 
 def create_todays_subfolder(data_folder, mode='new file'):
-    data_folder += '{}'.format(datetime.datetime.now().strftime("%y%m%d"))
+    # define a folder with today's date
+    last_date = datetime.datetime.now()
+    target_folder = data_folder + '{}'.format(last_date.strftime("%y%m%d"))
     if mode == 'new file':
+    # create the folder if it does not exist
         try:
-            os.makedirs(data_folder) 
-            print("Directory      " , data_folder ,  " created ")
+            os.makedirs(target_folder) 
+            print("Directory      " , target_folder ,  " created ")
         except FileExistsError:
-            print("Directory      " , data_folder ,  " already exists")
-    return data_folder + '/'
+            print("Directory      " , target_folder ,  " already exists")
+    elif mode == 'overwrite':
+    # find the last existing folder
+    # (in case of change of day during run)
+        while not os.path.isdir(target_folder):
+            last_date = last_date - datetime.timedelta(days=1)
+            target_folder = data_folder + '{}'.format(last_date.strftime("%y%m%d"))
+    return target_folder + '/'
 
 def create_filename(data_folder, data_type, mode='new file'):
     filename = data_folder + data_type + '_nr' + "%04d"%1
