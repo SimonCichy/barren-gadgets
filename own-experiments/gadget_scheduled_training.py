@@ -29,9 +29,9 @@ if __name__ == "__main__":
     # print(" Ancillary qubits:       ", ancillary_qubits)
     for seed in seeds:
         np.random.seed(seed)
-        print(" Random seed:            ", seed)
         tic = time.perf_counter()
         for pf in perturbation_factors:
+            print(" Random seed:            ", seed)
             print(" Perturbation factor:    ", pf)
             soi = SchedulesOfInterest(computational_qubits, 
                                     seed, num_shots)
