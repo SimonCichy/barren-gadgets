@@ -14,23 +14,22 @@ use_exact_ground_energy = False
 plot_data = False
 save_data = True
 
-computational_qubits = 4
+computational_qubits = 8
 max_iter = 500
 step = 0.3
 num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
-perturbation_factors = [0.5, 1, 5]
+perturbation_factors = [0.1, 0.5, 1, 5, 10]
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
 if __name__ == "__main__":
-    print(" Computational qubits:   ", computational_qubits)
-    # print(" Ancillary qubits:       ", ancillary_qubits)
     for seed in seeds:
         np.random.seed(seed)
         tic = time.perf_counter()
         for pf in perturbation_factors:
+            print(" Computational qubits:   ", computational_qubits)
             print(" Random seed:            ", seed)
             print(" Perturbation factor:    ", pf)
             soi = SchedulesOfInterest(computational_qubits, 
