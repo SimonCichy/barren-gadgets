@@ -11,16 +11,19 @@ from faehrmann_gadgets import NewPerturbativeGadgets
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz
 from data_management import save_gradients
 
-np.random.seed(42)
-
 # General parameters:
 num_samples = 1000
 layers_list = [2, 5, 10, 20]
 # layers_list = 'linear'
-qubits_list = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+qubits_list = [4, 5, 6, 7, 8, 9]
+# qubits_list = [4, 6, 8, 10, 12]
 lambda_scaling = 1                        # w.r.t. lambda_max
 gate_set = [qml.RX, qml.RY, qml.RZ]
 newk = 3
+# newk = 4
+seed = 43
+
+np.random.seed(seed)
 
 gadgetizer = NewPerturbativeGadgets(perturbation_factor=lambda_scaling)
 
@@ -38,7 +41,7 @@ if __name__ == "__main__":
     norms_list = []
     variances_list = [[] for _ in range(len(layers_list))]
     # gradients_lists_list = [[] for _ in range(len(layers_list))]
-    gradients_all = {} # see https://stackoverflow.com/questions/40219946/python-save-dictionaries-through-numpy-save
+    gradients_all = {}
     runtimes_list = []
     data_dict = {
         'computational qubits': qubits_list,
@@ -50,10 +53,11 @@ if __name__ == "__main__":
         'all gradients': gradients_all,
         'runtimes': runtimes_list
     }
-    save_gradients(data_dict, perturbation_factor=lambda_scaling, mode='new file')
+    save_gradients(data_dict, perturbation_factor=lambda_scaling, 
+                   random_seed=seed, mode='new file')
 
-    tic = time.perf_counter()
     for computational_qubits in qubits_list:
+        tic = time.perf_counter()
         term1 = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(computational_qubits)])
         Hcomp = qml.Hamiltonian([1], [term1])
         # Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
@@ -81,12 +85,14 @@ if __name__ == "__main__":
             gradients_all[(computational_qubits, num_layers)] = gradients_list
             variances_list[nl] += [np.var(np.array(gradients_list)[:, 0, 0])]
             toc = time.perf_counter()
-            print('{:<4d} layers,       runtime: {:11.0f} seconds'.format(num_layers, toc-tic))
+            print_statement = '{:<4d} layers,       runtime: {:11.0f} seconds'.format(num_layers, toc-tic)
+            print(print_statement)
+            save_gradients(update=print_statement, mode='overwrite')
 
-        tic = toc
         toc = time.perf_counter()
         runtimes_list += [toc-tic]
-        print('{:<4d} total qubits, runtime: {:11.0f} seconds'.format(total_qubits, toc-tic))
+        print_statement = '{:<4d} total qubits, runtime: {:11.0f} seconds'.format(total_qubits, toc-tic)
+        print(print_statement)
         data_dict = {
             'computational qubits': qubits_list,
             'layers': layers_list,
@@ -97,7 +103,8 @@ if __name__ == "__main__":
             'all gradients': gradients_all,
             'runtimes': runtimes_list
         }
-        save_gradients(data_dict, obs=obs, mode='overwrite')
+        save_gradients(data_dict, obs=obs, mode='overwrite', 
+                       update=print_statement)
             
     fig, ax = plt.subplots()
     for line in range(len(variances_list)):
