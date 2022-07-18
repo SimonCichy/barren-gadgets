@@ -23,12 +23,13 @@ abstract_formatter = CustomFormatter(
     columnwidth=347.12354 * 0.01389,
     wide_columnwidth=347.12354 * 0.01389,
     fontsizes=11,
-    pgf_preamble=r"\usepackage[T1]{fontenc}",
+    pgf_preamble=r"\usepackage[T1]{fontenc}\usepackage{dsfont}",
 )
 
 def training_plots(): 
     lambdas = [0.1, 1, 10]
-    file_list = ['220708_euler/training_nr00{}'.format(count) for count in [18, 20, 22]]
+    # file_list = ['220708_euler/training_nr00{}'.format(count) for count in [18, 20, 22]]
+    file_list = ['220713_qmio/training_nr{:0>4}'.format(count) for count in [5, 7, 9]]
     palette_choice = [palette[0][2], palette[2][0]]
 
     fig = abstract_formatter.figure(aspect_ratio=.4, wide=True)
@@ -47,8 +48,10 @@ def training_plots():
     axs[1].set_xlabel('Number of iterations')
     custom_lines = [Line2D([0], [0], color=palette_choice[nl], lw=2) for nl in range(2)]
     lgd = fig.legend(handles=custom_lines,
-                    labels=labels[1:3], loc='lower center',
-                    bbox_to_anchor=(0.1, -0.12, 0.8, 0.5),
+                    labels=[r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| (H^{comp}\otimes\mathds{1}^{anc})]$', 
+                            r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{gad}]$'], 
+                    loc='lower center',
+                    bbox_to_anchor=(0.1, -0.12, 0.83, 0.5),
                     mode='expand',
                     ncol=4)
     plt.tight_layout()
@@ -120,5 +123,5 @@ def variances_plots():
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_abstract.pdf')
 
 if __name__ == "__main__":
-    # training_plots()
-    variances_plots()
+    training_plots()
+    # variances_plots()
