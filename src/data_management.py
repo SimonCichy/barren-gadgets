@@ -88,7 +88,8 @@ def save_training2(schedule, cost_lists, mode='new file', runtime=None):
         with open(filename + '.txt', 'a') as f:
             f.write('runtime: ' + str(runtime) + '\n')
 
-def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file'):
+def save_gradients(data_dict, obs=None, perturbation_factor=None, 
+                   random_seed=None, mode='new file'):
     data_folder = '../results/data/'
     data_folder += 'gradients/'
     data_folder = create_todays_subfolder(data_folder, mode=mode)
@@ -106,14 +107,15 @@ def save_gradients(data_dict, obs=None, perturbation_factor=None, mode='new file
             f.write(
                 'Gradient variance computation \n' + 
                 'Perturbation scaling: ' + str(perturbation_factor) + 
-                '*lambda_max \n'
+                '*lambda_max \n' +
+                'Random seed         : ' + str(random_seed)
             )
     elif mode == 'overwrite': 
         with open(filename + '.txt', 'a') as f:
             f.write(
-                'qubits :        ' + str(len(obs.wires)) + '\n' +
-                'Hamiltonian :   ' + str(obs.coeffs) + '\n' 
-                                   + str(obs.ops) + '\n'
+                'qubits              : ' + str(len(obs.wires)) + '\n' +
+                'Hamiltonian         : \n' + str(obs.coeffs) + '\n' 
+                                           + str(obs.ops) + '\n'
             )
 
 
