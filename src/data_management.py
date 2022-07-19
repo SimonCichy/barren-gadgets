@@ -115,7 +115,7 @@ def save_gradients(data_dict=None, obs=None, perturbation_factor=None,
     elif mode == 'overwrite': 
         with open(filename + '.txt', 'a') as f:
             if update is not None:
-                f.write(update)
+                f.write(update + '\n')
             if obs is not None:
                 f.write(
                     'qubits              : ' + str(len(obs.wires)) + '\n' +

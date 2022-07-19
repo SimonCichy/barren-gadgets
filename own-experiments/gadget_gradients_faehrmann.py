@@ -60,8 +60,9 @@ if __name__ == "__main__":
         tic = time.perf_counter()
         term1 = qml.operation.Tensor(*[qml.PauliZ(q) for q in range(computational_qubits)])
         Hcomp = qml.Hamiltonian([1], [term1])
-        # Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
-        obs = Hcomp
+        # obs = Hcomp
+        Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
+        obs = Hgad
         total_qubits = len(obs.wires)
         print('Computational qubits:          ', computational_qubits)
         print('Total qubits:                  ', total_qubits)
