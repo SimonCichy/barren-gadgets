@@ -90,21 +90,12 @@ def save_training2(schedule, cost_lists, mode='new file', runtime=None):
 
 def save_gradients(data_dict=None, obs=None, perturbation_factor=None, 
                    random_seed=None, mode='new file', 
-                   update=None):
-    data_folder = '../results/data/'
-    data_folder += 'gradients/'
-    data_folder = create_todays_subfolder(data_folder, mode=mode)
-    filename = create_filename(data_folder, data_type='gradients', mode=mode)
-    if data_dict is not None:
-        np.savez(filename, 
-                computational_qubits = data_dict['computational qubits'],
-                layers_list = data_dict['layers'],
-                widths_list = data_dict['widths'], 
-                variances_list = data_dict['variances'], 
-                norms_list = data_dict['norms'], 
-                all_gradients = data_dict['all gradients'],
-                allow_pickle=False)
+                   filename=None, update=None):
     if mode == 'new file': 
+        data_folder = '../results/data/'
+        data_folder += 'gradients/'
+        data_folder = create_todays_subfolder(data_folder, mode=mode)
+        filename = create_filename(data_folder, data_type='gradients', mode=mode)
         with open(filename + '.txt', 'a') as f:
             f.write(
                 'Gradient variance computation \n' + 
@@ -122,6 +113,18 @@ def save_gradients(data_dict=None, obs=None, perturbation_factor=None,
                     'Hamiltonian         : \n' + str(obs.coeffs) + '\n' 
                                             + str(obs.ops) + '\n'
                 )
+    if data_dict is not None:
+        np.savez(filename, 
+                computational_qubits = data_dict['computational qubits'],
+                layers_list = data_dict['layers'],
+                widths_list = data_dict['widths'], 
+                variances_list = data_dict['variances'], 
+                norms_list = data_dict['norms'], 
+                all_gradients = data_dict['all gradients'],
+                allow_pickle=False)
+    if mode == 'new file': 
+        return filename
+
 
 
 def create_todays_subfolder(data_folder, mode='new file'):

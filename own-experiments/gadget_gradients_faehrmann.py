@@ -53,8 +53,8 @@ if __name__ == "__main__":
         'all gradients': gradients_all,
         'runtimes': runtimes_list
     }
-    save_gradients(data_dict, perturbation_factor=lambda_scaling, 
-                   random_seed=seed, mode='new file')
+    filename = save_gradients(data_dict, perturbation_factor=lambda_scaling, 
+                              random_seed=seed, mode='new file')
 
     for computational_qubits in qubits_list:
         tic = time.perf_counter()
@@ -69,6 +69,7 @@ if __name__ == "__main__":
         width = total_qubits
         widths_list += [width]
         norms_list += [np.sum(np.abs(obs.coeffs))]
+        save_gradients(obs=obs, mode='overwrite', filename=filename)
         for nl, num_layers in enumerate(layers_list):
             gradients_list = []
             for _ in range(num_samples):
@@ -88,7 +89,7 @@ if __name__ == "__main__":
             toc = time.perf_counter()
             print_statement = '{:<4d} layers,       runtime: {:11.0f} seconds'.format(num_layers, toc-tic)
             print(print_statement)
-            save_gradients(update=print_statement, mode='overwrite')
+            save_gradients(update=print_statement, mode='overwrite', filename=filename)
 
         toc = time.perf_counter()
         runtimes_list += [toc-tic]
@@ -104,8 +105,8 @@ if __name__ == "__main__":
             'all gradients': gradients_all,
             'runtimes': runtimes_list
         }
-        save_gradients(data_dict, obs=obs, mode='overwrite', 
-                       update=print_statement)
+        save_gradients(data_dict, mode='overwrite', 
+                       update=print_statement, filename=filename)
             
     fig, ax = plt.subplots()
     for line in range(len(variances_list)):
