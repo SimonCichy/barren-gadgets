@@ -55,7 +55,7 @@ def training_plots():
                     mode='expand',
                     ncol=4)
     plt.tight_layout()
-    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_abstract.pdf', 
+    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
 def get_vars_for_plot(file, max_qubit=np.inf):
@@ -85,7 +85,7 @@ def variances_plots():
     file_gad3 = data_folder + 'gradients/220713_euler/gradients_merge_nr0001.npz'
     file_gad4 = data_folder + 'gradients/220716_euler/gradients_nr0001.npz'
 
-    fig = abstract_formatter.figure(aspect_ratio=7/16, wide=True)
+    fig = abstract_formatter.figure(aspect_ratio=1.3, wide=False)
     ax = fig.subplots()
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_comp)
@@ -114,11 +114,16 @@ def variances_plots():
                     Line2D([0], [0], ls='-', marker='o', c=palette[2][2], lw=1)]
     custom_lines += [Line2D([0], [0], ls='', c='k', lw=1)]
     custom_lines += [Line2D([0], [0], c=palette[-1][nl], lw=2) for nl in range(len(layers_list))]
-    ax.legend(custom_lines, 
-              ['comp', '4-local', '3-local'] + [''] + 
-              ['{} layers'.format(num_layers) for num_layers in layers_list], 
-              ncol=2)
-    
+    ax.legend(handles=custom_lines, 
+              labels=['comp', '4-local', '3-local'] + [''] + 
+                     ['{} layers'.format(num_layers) for num_layers in layers_list], 
+              loc='lower left', 
+              bbox_to_anchor=(0.02, 1., 0.92, 0),
+              mode='expand',
+              ncol=2, 
+              handletextpad=1.5, 
+              handlelength=2, 
+              frameon=False)
     plt.tight_layout()
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_paper.pdf')
 
