@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from gadget_plots import *
 from data_management import get_training_costs, get_training_labels2
-from rsmf import CustomFormatter
+import rsmf
 
 data_folder = '../results/data/'
 
@@ -19,12 +19,14 @@ palette = [['#e65e71', '#d64055', '#ba182e', '#851919'],
            ['#b0b0b0', '#727272', '#606060', '#393939']]
 
 
-abstract_formatter = CustomFormatter(
-    columnwidth=246.0 * 0.01389,
-    wide_columnwidth=510.0 * 0.01389,
-    fontsizes=11,
-    pgf_preamble=r"\usepackage[T1]{fontenc}\usepackage{dsfont}",
-)
+paper_formatter = rsmf.setup(r"\usepackage{dsfont}\documentclass[aps,prx,twocolumn,superscriptaddress,nofootinbib,9pt,floatfix,a4paper]{revtex4-2}")
+# paper_formatter.pgf_preamble = r"\usepackage{dsfont}"
+# CustomFormatter(
+#     columnwidth=246.0 * 0.01389,
+#     wide_columnwidth=510.0 * 0.01389,
+#     fontsizes=11,
+#     pgf_preamble=r"\usepackage[T1]{fontenc}\usepackage{dsfont}",
+# )
 
 def training_plots(): 
     lambdas = [0.1, 1, 10]
@@ -32,7 +34,13 @@ def training_plots():
     file_list = ['220713_qmio/training_nr{:0>4}'.format(count) for count in [5, 7, 9]]
     palette_choice = [palette[0][2], palette[2][0]]
 
-    fig = abstract_formatter.figure(aspect_ratio=.4, wide=True)
+    fig = paper_formatter.figure(aspect_ratio=.3, wide=True)
+    plt.rcParams.update({
+        "pgf.preamble": "\n".join([
+            r"\usepackage{dsfont}", 
+            r"\usepackage{amsmath}", 
+        ])
+    })
     axs = fig.subplots(1, 3)
     for f, file in enumerate(file_list):
         file = data_folder + 'training/' + file
@@ -43,17 +51,26 @@ def training_plots():
         axs[f].plot(np.zeros(len(costs[0])), ':', c='gainsboro')
         for i in range(1, 3):
             axs[f].plot(costs[i],'-', c=palette_choice[i-1], label=labels[i])
-        axs[f].set_title(r'$\lambda = {}$'.format(lambdas[f]) + r'$\lambda_{max}$')
+        axs[f].set_title(r'$\lambda = {}$'.format(lambdas[f]) + r'$\lambda_{max}$', 
+                         fontsize=9)
+        axs[f].set_ylim(top=2)
     axs[0].set_ylabel('Cost')
     axs[1].set_xlabel('Number of iterations')
-    custom_lines = [Line2D([0], [0], color=palette_choice[nl], lw=2) for nl in range(2)]
-    lgd = fig.legend(handles=custom_lines,
-                    labels=[r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| (H^{comp}\otimes\mathds{1}^{anc})]$', 
-                            r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{gad}]$'], 
-                    loc='lower center',
-                    bbox_to_anchor=(0.1, -0.12, 0.83, 0.5),
-                    mode='expand',
-                    ncol=4)
+    custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
+    # lgd = fig.legend(handles=custom_lines,
+    #                 labels=[r'$\mathrm{Tr} \Big[| \psi(\boldsymbol{\theta})\rangle \! \langle \psi(\boldsymbol{\theta})| \big( H^{comp}\otimes\mathds{1}^{anc} \big) \Big]$', 
+    #                         r'$\mathrm{Tr} \Big[| \psi(\boldsymbol{\theta})\rangle \! \langle \psi(\boldsymbol{\theta})| H^{gad} \Big]$'], 
+    #                 loc='upper right',
+    #                 bbox_to_anchor=(1, 0.2),
+    #                 frameon=False)
+    lgd = axs[2].legend(handles=custom_lines,
+                    labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $', 
+                            r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
+                    handlelength=.8, 
+                    loc='upper right',
+                    bbox_to_anchor=(1, 0.96),
+                    edgecolor='1', 
+                    borderpad=0)
     plt.tight_layout()
     plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
@@ -82,10 +99,17 @@ def get_vars_for_plot(file, max_qubit=np.inf):
 
 def variances_plots():
     file_comp = data_folder + 'gradients/220711_qmio/gradients_nr0002.npz'
-    file_gad3 = data_folder + 'gradients/220713_euler/gradients_merge_nr0001.npz'
+    file_gad3 = data_folder + 'gradients/220721_euler/gradients_nr0001_merge.npz'
     file_gad4 = data_folder + 'gradients/220716_euler/gradients_nr0001.npz'
 
-    fig = abstract_formatter.figure(aspect_ratio=1.3, wide=False)
+    fig = paper_formatter.figure(aspect_ratio=.8, wide=False)
+    plt.rcParams.update({
+        "pgf.preamble": "\n".join([
+            r"\usepackage{dsfont}", 
+            r"\usepackage{amsmath}", 
+            r"\usepackage{xcolor}"
+        ])
+    })
     ax = fig.subplots()
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_comp)
@@ -104,7 +128,7 @@ def variances_plots():
         ax.semilogy(qubits_list, normalized_variances, "--o", c=palette[1][line])
 
     ax.set_xlabel(r"Number of computational qubits")
-    ax.set_ylabel(r"$\mathrm{Var} \left[\partial \theta_{\nu} C \right]$")
+    ax.set_ylabel(r"$\mathrm{Var} \left[\partial C / \partial \boldsymbol{\theta}_{\nu} \right]$")
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
 
     layers_list = np.load(file_comp)['layers_list']
@@ -115,18 +139,22 @@ def variances_plots():
     custom_lines += [Line2D([0], [0], ls='', c='k', lw=1)]
     custom_lines += [Line2D([0], [0], c=palette[-1][nl], lw=2) for nl in range(len(layers_list))]
     ax.legend(handles=custom_lines, 
-              labels=['comp', '4-local', '3-local'] + [''] + 
-                     ['{} layers'.format(num_layers) for num_layers in layers_list], 
-              loc='lower left', 
+              labels=[r'$H^\mathrm{comp}$', '4-local ' + r'$H^\mathrm{gad}$', '3-local ' + r'$H^\mathrm{gad}$'] + [''] + 
+                    #  [r'$\textcolor{white}{0}$' + '{} layers'.format(num_layers) for num_layers in layers_list[:2]] + 
+                    [r'$\ \,$' + '{} layers'.format(num_layers) for num_layers in layers_list[:2]] + 
+                     ['{} layers'.format(num_layers) for num_layers in layers_list[2:]], 
+                    # ['{:2} layers'.format(num_layers) for num_layers in layers_list], 
+              loc='lower left',
               bbox_to_anchor=(0.02, 1., 0.92, 0),
               mode='expand',
               ncol=2, 
-              handletextpad=1.5, 
+              handletextpad=1, 
               handlelength=2, 
+              labelspacing=.26, 
               frameon=False)
     plt.tight_layout()
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_paper.pdf')
 
 if __name__ == "__main__":
-    # training_plots()
-    variances_plots()
+    training_plots()
+    # variances_plots()

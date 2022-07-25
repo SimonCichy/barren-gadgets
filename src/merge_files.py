@@ -5,8 +5,8 @@ import numpy as np
 from data_management import save_gradients
 
 data_folder = '../results/data/'
-file1 = data_folder + 'gradients/220716_euler/gradients_nr0001.npz'
-file2 = data_folder + 'gradients/220718_euler/gradients_nr0001.npz'
+file1 = data_folder + 'gradients/220719_euler/gradients_nr0002.npz'
+file2 = data_folder + 'gradients/220721_euler/gradients_nr0001.npz'
 
 data1 = np.load(file1, allow_pickle=True)
 data2 = np.load(file2, allow_pickle=True)
@@ -29,7 +29,14 @@ gradients2 = data2['all_gradients'].item()
 comp_qubits1 = comp_qubits1[:len(total_qubits1)]
 comp_qubits2 = comp_qubits2[:len(total_qubits2)]
 
-def merge_in_depth():
+def check_shapes():
+    print(gradients1.keys())
+    print(gradients2.keys())
+    print(np.shape(gradients1[(7, 2)]))
+    print(np.shape(gradients2[(9, 2)]))
+    # print(np.shape(np.append(gradients1[(12, 2)], gradients2[(12, 2)], axis=0)))
+
+def merge_in_width():
     comp_qubitst = np.append(comp_qubits1, comp_qubits2)
     layerst = layers1
     total_qubitst = np.append(total_qubits1, total_qubits2) 
@@ -71,10 +78,8 @@ def merge_in_samples():
     }
     save_gradients(data_dict, perturbation_factor=1, mode='new file')
 
-    # print(np.shape(gradients1[(12, 2)]))
-    # print(np.shape(gradients1[(12, 2)]))
-    # print(np.shape(np.append(gradients1[(12, 2)], gradients2[(12, 2)], axis=0)))
 
 if __name__ == "__main__":
-    # merge_in_depth()
-    merge_in_samples()
+    # check_shapes()
+    merge_in_width()
+    # merge_in_samples()
