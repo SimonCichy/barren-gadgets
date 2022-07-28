@@ -5,8 +5,8 @@ import numpy as np
 from data_management import save_gradients
 
 data_folder = '../results/data/'
-file1 = data_folder + 'gradients/220719_euler/gradients_nr0002.npz'
-file2 = data_folder + 'gradients/220721_euler/gradients_nr0001.npz'
+file1 = data_folder + 'gradients/220728/gradients_nr0001.npz'
+file2 = data_folder + 'gradients/220727_euler/gradients_nr0001.npz'
 
 data1 = np.load(file1, allow_pickle=True)
 data2 = np.load(file2, allow_pickle=True)
@@ -32,8 +32,8 @@ comp_qubits2 = comp_qubits2[:len(total_qubits2)]
 def check_shapes():
     print(gradients1.keys())
     print(gradients2.keys())
-    print(np.shape(gradients1[(7, 2)]))
-    print(np.shape(gradients2[(9, 2)]))
+    print(np.shape(gradients1[(8, 2)]))
+    print(np.shape(gradients2[(8, 2)]))
     # print(np.shape(np.append(gradients1[(12, 2)], gradients2[(12, 2)], axis=0)))
 
 def merge_in_width():
@@ -80,6 +80,6 @@ def merge_in_samples():
 
 
 if __name__ == "__main__":
-    # check_shapes()
-    merge_in_width()
-    # merge_in_samples()
+    check_shapes()
+    # merge_in_width()
+    merge_in_samples()
