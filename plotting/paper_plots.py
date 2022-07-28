@@ -19,14 +19,7 @@ palette = [['#e65e71', '#d64055', '#ba182e', '#851919'],
            ['#b0b0b0', '#727272', '#606060', '#393939']]
 
 
-paper_formatter = rsmf.setup(r"\usepackage{dsfont}\documentclass[aps,prx,twocolumn,superscriptaddress,nofootinbib,9pt,floatfix,a4paper]{revtex4-2}")
-# paper_formatter.pgf_preamble = r"\usepackage{dsfont}"
-# CustomFormatter(
-#     columnwidth=246.0 * 0.01389,
-#     wide_columnwidth=510.0 * 0.01389,
-#     fontsizes=11,
-#     pgf_preamble=r"\usepackage[T1]{fontenc}\usepackage{dsfont}",
-# )
+paper_formatter = rsmf.setup(r"\documentclass[aps,prx,twocolumn,superscriptaddress,nofootinbib,9pt,floatfix,a4paper]{revtex4-2}")
 
 def training_plots(): 
     lambdas = [0.1, 1, 10]
@@ -73,6 +66,76 @@ def training_plots():
                     borderpad=0)
     plt.tight_layout()
     plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper.pdf', 
+                bbox_extra_artists = (lgd,), bbox_inches='tight')
+
+def training_plots_with_statistics(): 
+    lambdas = [0.1, 1, 10]
+    file_list = {}
+    file_list[0.1]  = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
+    file_list[0.1] += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
+    file_list[0.1] += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 21, 3)]
+    file_list[0.1] += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 31, 3)]
+    file_list[0.1] += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 33, 3)]
+    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 19, 3)]
+
+    file_list[1]    = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
+    file_list[1]   += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
+    file_list[1]   += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 21, 3)]
+    file_list[1]   += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 31, 3)]
+    file_list[1]   += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 33, 3)]
+    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 19, 3)]
+
+    file_list[10]   = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+    file_list[10]  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+    file_list[10]  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
+    file_list[10]  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
+    file_list[10]  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
+    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 19, 3)]
+    palette_choice = [palette[0][2], palette[2][0]]
+
+    fig = paper_formatter.figure(aspect_ratio=.3, wide=True)
+    plt.rcParams.update({
+        "pgf.preamble": "\n".join([
+            r"\usepackage{dsfont}", 
+            r"\usepackage{amsmath}", 
+        ])
+    })
+    axs = fig.subplots(1, 3)
+
+    iterations = 500
+    for l, lamb in enumerate(lambdas):
+        runs = len(file_list[lamb])
+        print("perturbation factor: {:>6.1f}, number of trainings: {:>4}".format(lamb, runs))
+        axs[l].plot(np.ones(iterations), ':', c='gainsboro')
+        axs[l].plot(-np.ones(iterations), ':', c='gainsboro')
+        axs[l].plot(np.zeros(iterations), ':', c='gainsboro')
+        axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_{max}$', 
+                         fontsize=9)
+        axs[l].set_ylim(top=2)
+        axs[0].set_ylabel('Cost')
+        axs[1].set_xlabel('Number of iterations')
+        costs_sum = 0
+        for f, file in enumerate(file_list[lamb]):
+            file = data_folder + 'training/' + file
+            costs = get_training_costs(file + '.npz')
+            labels = get_training_labels2(file + '.txt')
+            costs_sum += costs
+            for i in range(1, 3):
+                axs[l].plot(costs[i],'-', c=palette_choice[i-1], label=labels[i], alpha=1.5/runs)
+        costs_mean = costs_sum / f
+        for i in range(1, 3):
+            axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
+        custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
+        lgd = axs[2].legend(handles=custom_lines,
+                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $', 
+                                r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
+                        handlelength=.8, 
+                        loc='upper right',
+                        bbox_to_anchor=(1, 0.96),
+                        edgecolor='1', 
+                        borderpad=0)
+    plt.tight_layout()
+    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_stats.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
 def get_vars_for_plot(file, max_qubit=np.inf):
@@ -156,5 +219,6 @@ def variances_plots():
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_paper.pdf')
 
 if __name__ == "__main__":
-    training_plots()
+    # training_plots()
+    training_plots_with_statistics()
     # variances_plots()
