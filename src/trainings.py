@@ -353,7 +353,8 @@ class SchedulesOfInterest:
         }
         return schedule
     
-    def linear_ala_new_gad(self, perturbation, optimizer, iterations, target_locality=3):
+    def linear_ala_new_gad(self, perturbation, optimizer, iterations, 
+                                 target_locality=3, initialize=False):
         oH = ObservablesHolmes(self.n_comp, 0, perturbation)
         Hcomp = oH.computational()
         gadgetizer = NewPerturbativeGadgets(perturbation_factor=perturbation)
@@ -368,6 +369,8 @@ class SchedulesOfInterest:
         initial_weights = np.random.uniform(0, np.pi, 
                             size=(num_layers, self.n_comp + n_anc), 
                             requires_grad=True)
+        if initialize:
+            initial_weights[:, self.n_comp:] *= 0.02
         schedule = {
             'name': 'linear_ala_new_gad',
             'device': qml.device("default.qubit", 

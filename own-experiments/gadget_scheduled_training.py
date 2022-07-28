@@ -35,7 +35,7 @@ if __name__ == "__main__":
             print(" Perturbation factor:    ", pf)
             soi = SchedulesOfInterest(computational_qubits, 
                                       seed, num_shots)
-            schedule = soi.linear_ala_new_gad(pf, opt, max_iter, newk)
+            schedule = soi.linear_ala_new_gad(pf, opt, max_iter, newk, False)
             scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
         toc = time.perf_counter()
