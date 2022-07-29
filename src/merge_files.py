@@ -5,8 +5,8 @@ import numpy as np
 from data_management import save_gradients
 
 data_folder = '../results/data/'
-file1 = data_folder + 'gradients/220728/gradients_nr0001.npz'
-file2 = data_folder + 'gradients/220727_euler/gradients_nr0001.npz'
+file1 = data_folder + 'gradients/220727_euler/gradients_nr0001_merge.npz'
+file2 = data_folder + 'gradients/220728/gradients_nr0001.npz'
 
 data1 = np.load(file1, allow_pickle=True)
 data2 = np.load(file2, allow_pickle=True)

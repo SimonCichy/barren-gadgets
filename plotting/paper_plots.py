@@ -2,6 +2,7 @@ import sys
 sys.path.append('../src')
 sys.path.append('src')
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 from gadget_plots import *
 from data_management import get_training_costs, get_training_labels2
@@ -76,21 +77,21 @@ def training_plots_with_statistics():
     file_list[0.1] += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 21, 3)]
     file_list[0.1] += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 31, 3)]
     file_list[0.1] += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 33, 3)]
-    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 19, 3)]
+    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 19, 3)]
 
     file_list[1]    = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
     file_list[1]   += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
     file_list[1]   += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 21, 3)]
     file_list[1]   += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 31, 3)]
     file_list[1]   += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 33, 3)]
-    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 19, 3)]
+    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 19, 3)]
 
     file_list[10]   = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
     file_list[10]  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
     file_list[10]  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
     file_list[10]  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
     file_list[10]  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
-    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 19, 3)]
+    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 19, 3)]
     palette_choice = [palette[0][2], palette[2][0]]
 
     fig = paper_formatter.figure(aspect_ratio=.3, wide=True)
@@ -122,6 +123,10 @@ def training_plots_with_statistics():
             costs_sum += costs
             for i in range(1, 3):
                 axs[l].plot(costs[i],'-', c=palette_choice[i-1], label=labels[i], alpha=1.5/runs)
+            # with open(file + '.txt', 'r') as fi:
+            #     t = fi.read()
+            #     ind = t.find('tensor')
+            #     print(t[ind+7:ind+15])
         costs_mean = costs_sum / f
         for i in range(1, 3):
             axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
@@ -162,8 +167,8 @@ def get_vars_for_plot(file, max_qubit=np.inf):
 
 def variances_plots():
     file_comp = data_folder + 'gradients/220711_qmio/gradients_nr0002.npz'
-    file_gad3 = data_folder + 'gradients/220721_euler/gradients_nr0001_merge.npz'
-    file_gad4 = data_folder + 'gradients/220716_euler/gradients_nr0001.npz'
+    file_gad3 = data_folder + 'gradients/220725_euler/gradients_nr0002_merge.npz'
+    file_gad4 = data_folder + 'gradients/220728_euler/gradients_nr0001_merge.npz'
 
     fig = paper_formatter.figure(aspect_ratio=.8, wide=False)
     plt.rcParams.update({
@@ -174,28 +179,29 @@ def variances_plots():
         ])
     })
     ax = fig.subplots()
+    ax.set_xlabel(r"Number of computational qubits", labelpad=0)
+    ax.set_ylabel(r"$\mathrm{Var} \left[\partial C / \partial \boldsymbol{\theta}_{\nu} \right]$")
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_comp)
     for line in range(len(variances_list)):
         normalized_variances = variances_list[line]/norms_list**2
-        ax.semilogy(qubits_list, normalized_variances, ":s", c=palette[0][line])
+        ax.loglog(qubits_list, normalized_variances, ":s", c=palette[0][line])
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_gad3)
     for line in range(len(variances_list)):
         normalized_variances = variances_list[line]/norms_list**2
-        ax.semilogy(qubits_list, normalized_variances, "-o", c=palette[2][line])
+        ax.loglog(qubits_list, normalized_variances, "-o", c=palette[2][line])
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_gad4)
     for line in range(len(variances_list)):
         normalized_variances = variances_list[line]/norms_list**2
-        ax.semilogy(qubits_list, normalized_variances, "--o", c=palette[1][line])
+        ax.loglog(qubits_list, normalized_variances, "--o", c=palette[1][line])
 
-    ax.set_xlabel(r"Number of computational qubits")
-    ax.set_ylabel(r"$\mathrm{Var} \left[\partial C / \partial \boldsymbol{\theta}_{\nu} \right]$")
-    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(2))
+    ax.xaxis.set_major_formatter(ticker.ScalarFormatter())
+    ax.ticklabel_format(axis="x", style='plain')
 
     layers_list = np.load(file_comp)['layers_list']
-
     custom_lines = [Line2D([0], [0], ls=':', marker='s', c=palette[0][1], lw=1), 
                     Line2D([0], [0], ls='--', marker='o', c=palette[1][1], lw=1), 
                     Line2D([0], [0], ls='-', marker='o', c=palette[2][2], lw=1)]
@@ -208,17 +214,19 @@ def variances_plots():
                      ['{} layers'.format(num_layers) for num_layers in layers_list[2:]], 
                     # ['{:2} layers'.format(num_layers) for num_layers in layers_list], 
               loc='lower left',
-              bbox_to_anchor=(0.02, 1., 0.92, 0),
+              bbox_to_anchor=(0.02, 0.94, 0.92, 0),
               mode='expand',
               ncol=2, 
               handletextpad=1, 
               handlelength=2, 
-              labelspacing=.26, 
+              labelspacing=.18, 
               frameon=False)
+    ax.spines.right.set_visible(True)
+    ax.spines.top.set_visible(True)
     plt.tight_layout()
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_paper.pdf')
 
 if __name__ == "__main__":
     # training_plots()
-    training_plots_with_statistics()
-    # variances_plots()
+    # training_plots_with_statistics()
+    variances_plots()
