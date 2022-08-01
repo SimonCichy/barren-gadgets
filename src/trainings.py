@@ -46,7 +46,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     monitoring_obs = schedule['monitoring observables']
     label_list = ['Training cost'] + schedule['labels']
     max_iter_list = [int(i) for i in schedule['iterations']]
-    print_frequency = 10
+    print_frequency = 100
     
     # ==========   Sanity checks   ==========
     # same number phases for all parameters
