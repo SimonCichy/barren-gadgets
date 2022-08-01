@@ -77,21 +77,36 @@ def training_plots_with_statistics():
     file_list[0.1] += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 21, 3)]
     file_list[0.1] += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 31, 3)]
     file_list[0.1] += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 33, 3)]
-    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 19, 3)]
+    file_list[0.1] += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
+    file_list[0.1] += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
+    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 40, 3)]
+    file_list[0.1] += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
+    file_list[0.1] += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
+    file_list[0.1] += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 10, 3)]
 
     file_list[1]    = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
     file_list[1]   += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
     file_list[1]   += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 21, 3)]
     file_list[1]   += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 31, 3)]
     file_list[1]   += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 33, 3)]
-    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 19, 3)]
+    file_list[1]   += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
+    file_list[1]   += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
+    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 40, 3)]
+    file_list[1]   += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
+    file_list[1]   += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
+    file_list[1]   += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 10, 3)]
 
     file_list[10]   = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
     file_list[10]  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
     file_list[10]  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
     file_list[10]  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
     file_list[10]  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
-    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 19, 3)]
+    file_list[10]  += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+    file_list[10]  += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 40, 3)]
+    file_list[10]  += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+    file_list[10]  += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+    file_list[10]  += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 10, 3)]
     palette_choice = [palette[0][2], palette[2][0]]
 
     fig = paper_formatter.figure(aspect_ratio=.3, wide=True)
@@ -131,8 +146,8 @@ def training_plots_with_statistics():
         for i in range(1, 3):
             axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
         custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
-        lgd = axs[2].legend(handles=custom_lines,
-                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $', 
+        lgd = axs[1].legend(handles=custom_lines,
+                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} \mathcal{O}$', 
                                 r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
                         handlelength=.8, 
                         loc='upper right',
@@ -140,7 +155,7 @@ def training_plots_with_statistics():
                         edgecolor='1', 
                         borderpad=0)
     plt.tight_layout()
-    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_stats.pdf', 
+    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_statst.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
 def get_vars_for_plot(file, max_qubit=np.inf):
@@ -228,5 +243,5 @@ def variances_plots():
 
 if __name__ == "__main__":
     # training_plots()
-    # training_plots_with_statistics()
-    variances_plots()
+    training_plots_with_statistics()
+    # variances_plots()
