@@ -101,7 +101,7 @@ class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
 
     name = "Simplified Alternating Layered Ansatz"
 
-    def __init__(self, width, depth, initial_y_rot=True, cat_range=None):
+    def __init__(self, width, depth, initial_y_rot=False, cat_range=None):
         super().__init__(initial_y_rot=initial_y_rot, cat_range=cat_range)
         self.gate_sequence = [[qml.RY for _ in range(width)] 
                                       for _ in range(depth)]

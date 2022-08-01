@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from faehrmann_gadgets import NewPerturbativeGadgets
-from hardware_efficient_ansatz import AlternatingLayeredAnsatz
+from hardware_efficient_ansatz import AlternatingLayeredAnsatz, SimplifiedAlternatingLayeredAnsatz
 from data_management import save_gradients
 
 # General parameters:
@@ -62,7 +62,8 @@ if __name__ == "__main__":
         Hcomp = qml.Hamiltonian([1], [term1])
         # obs = Hcomp
         Hgad = gadgetizer.gadgetize(Hcomp, target_locality=newk)
-        obs = Hgad
+        # obs = Hgad
+        obs = Hcomp
         total_qubits = len(obs.wires)
         print('Computational qubits:          ', computational_qubits)
         print('Total qubits:                  ', total_qubits)
@@ -78,7 +79,8 @@ if __name__ == "__main__":
                                         for _ in range(width)] 
                                         for _ in range(num_layers)]
                 dev = qml.device("default.qubit", wires=range(width))
-                ala = AlternatingLayeredAnsatz(random_gate_sequence)
+                # ala = AlternatingLayeredAnsatz(random_gate_sequence)
+                ala = SimplifiedAlternatingLayeredAnsatz(width, num_layers)
                 ansatz = ala.ansatz
                 cost = qml.ExpvalCost(ansatz, obs, dev)
                 gradient = qml.grad(cost)(params)
