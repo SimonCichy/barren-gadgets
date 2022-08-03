@@ -36,7 +36,7 @@ def save_training(schedule, cost_lists, mode='new file', runtime=None):
 
 def save_training2(schedule, cost_lists, mode='new file', runtime=None):
     data_folder = '../results/data/'
-    data_folder += 'training/'
+    data_folder += 'training11-2/'
     data_folder = create_todays_subfolder(data_folder, mode=mode)
     filename = create_filename(data_folder, data_type='training', mode=mode)
     np.savez(filename, 

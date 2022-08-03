@@ -8,20 +8,20 @@ import matplotlib.pyplot as plt
 
 from trainings import scheduled_training, SchedulesOfInterest
 
-seeds = [2, 3, 4, 5]
+seeds = range(71, 81)
 data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = False
 save_data = True
 
-computational_qubits = 8
-newk = 4
+computational_qubits = 5
+newk = 3
 max_iter = 500
 step = 0.3
 num_shots = None
 
 # perturbation_factors = np.linspace(0, 1, 6)
-perturbation_factors = [0.1, 0.5, 1, 5, 10]
+perturbation_factors = [0.1, 1, 10]
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 
