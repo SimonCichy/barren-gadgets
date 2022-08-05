@@ -3,8 +3,8 @@ sys.path.append('../src')
 sys.path.append('src')
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from matplotlib.lines import Line2D
 import numpy as np
-from gadget_plots import *
 from data_management import get_training_costs, get_training_labels2
 import rsmf
 
@@ -95,7 +95,7 @@ def training_plots():
             #     t = fi.read()
             #     ind = t.find('tensor')
             #     print(t[ind+7:ind+15])
-        costs_mean = costs_sum / f
+        costs_mean = costs_sum / runs
         for i in range(1, 3):
             axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
         custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
