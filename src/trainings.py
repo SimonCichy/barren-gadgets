@@ -46,7 +46,7 @@ def scheduled_training(schedule, plot_data=True, save_data=False):
     monitoring_obs = schedule['monitoring observables']
     label_list = ['Training cost'] + schedule['labels']
     max_iter_list = [int(i) for i in schedule['iterations']]
-    print_frequency = 100
+    print_frequency = 20
     
     # ==========   Sanity checks   ==========
     # same number phases for all parameters
@@ -397,6 +397,54 @@ class SchedulesOfInterest:
         }
         return schedule
     
+    def linear_ala_new_gad_lambda_scheduled(self, optimizer, iterations, 
+                                            target_locality=3, 
+                                            initialize=False):
+        Hcomp = qml.Hamiltonian([1], [qml.operation.Tensor(*[qml.PauliZ(q) for q in range(self.n_comp)])])
+        perturbations = [10, 3, 1, 0.3, 0.1]
+        num_phases = len(perturbations)
+        training_observables = []
+        for perturbation in perturbations:
+            gadgetizer = NewPerturbativeGadgets(perturbation_factor=perturbation)
+            training_observables.append(gadgetizer.gadgetize(Hcomp, target_locality))
+        _, k, r = gadgetizer.get_params(Hcomp)
+        n_anc = r * int(k / (target_locality - 2))
+        num_layers = self.n_comp + n_anc
+        random_gate_sequence = [[np.random.choice(self.gate_set) 
+                                for _ in range(self.n_comp + n_anc)] 
+                                for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_comp + n_anc), 
+                            requires_grad=True)
+        if initialize:
+            initial_weights[:, self.n_comp:] *= 0.02
+        schedule = {
+            'name': 'linear_ala_new_gad_lambda_scheduled',
+            'device': qml.device("default.qubit", 
+                                 wires=range(self.n_comp + n_anc), 
+                                 shots=self.num_shots),
+            'optimizers': [optimizer] * num_phases, 
+            'seed': self.np_rdm_seed,
+            'ansaetze': [ala] * num_phases,
+            'initial weights': initial_weights, 
+            'training observables': training_observables,
+            'monitoring observables': [Hcomp, 
+                                    #    oH.computational_ground_projector(), 
+                                       gadgetizer.zero_projector(Hcomp, target_locality), 
+                                       gadgetizer.all_zero_projector(Hcomp, target_locality)],
+            'labels': [r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{comp}]$', 
+                    #    r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{gad}]$', 
+                    #    r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| P_{gs}^{comp}|] $',
+                       r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| ' + 
+                       r'\frac{1}{n_{anc}}\sum_{gad} | 0 \rangle\langle 0|] $',
+                       r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| ' + 
+                       r'| 00\dots \rangle\langle 00\dots|] $'
+                       ], 
+            'iterations': [iterations] * num_phases
+        }
+        return schedule
+    
     def linear_sala_new_gad(self, perturbation, optimizer, iterations, 
                                  target_locality=3, initialize=False):
         oH = ObservablesHolmes(self.n_comp, 0, perturbation)
@@ -491,73 +539,6 @@ class SchedulesOfInterest:
                                        oH.computational_ground_projector()],
             'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$',
                        r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
-            'iterations': [iterations]
-        }
-        return schedule
-
-    def shallow_sala_comp(self, perturbation, optimizer, iterations):
-        num_layers = 2
-        sala = SimplifiedAlternatingLayeredAnsatz(self.n_comp, num_layers)
-        initial_weights = np.random.uniform(0, np.pi, 
-                            size=(num_layers, self.n_comp), 
-                            requires_grad=True)
-        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
-        schedule = {
-            'name': 'shallow_sala_comp',
-            'device': qml.device("default.qubit", 
-                                 wires=range(self.n_comp), 
-                                 shots=self.num_shots),
-            'optimizers': [optimizer],  
-            'seed': self.np_rdm_seed,
-            'ansaetze': [sala],
-            'initial weights': initial_weights, 
-            'training observables': [oH.computational()],
-            'monitoring observables': [oH.computational(), 
-                                       oH.computational_ground_projector()],
-            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$',
-                       r'$|\langle \psi_{ALA}| P_{gs}^{comp}| \psi_{ALA} \rangle |^2 $'], 
-            'iterations': [iterations]
-        }
-        return schedule
-
-    def shallow_ala_gad(self, perturbation, optimizer, iterations, target_locality=2):
-        oH = ObservablesHolmes(self.n_comp, 0, perturbation)
-        Hcomp = oH.computational()
-        gadgetizer = PerturbativeGadgets(method='Jordan', 
-                                         perturbation_factor=perturbation)
-        Hgad = gadgetizer.gadgetize(Hcomp, target_locality)
-        _, k, r = gadgetizer.get_params(Hcomp)
-        n_anc = r * int(k / (target_locality - 1))
-        num_layers = 2
-        random_gate_sequence = [[np.random.choice(self.gate_set) 
-                                for _ in range(self.n_comp + n_anc)] 
-                                for _ in range(num_layers)]
-        ala = AlternatingLayeredAnsatz(random_gate_sequence)
-        initial_weights = np.random.uniform(0, np.pi, 
-                            size=(num_layers, self.n_comp + n_anc), 
-                            requires_grad=True)
-        schedule = {
-            'name': 'shallow_ala_gad',
-            'device': qml.device("default.qubit", 
-                                 wires=range(self.n_comp + n_anc), 
-                                 shots=self.num_shots),
-            'optimizers': [optimizer], 
-            'seed': self.np_rdm_seed,
-            'ansaetze': [ala],
-            'initial weights': initial_weights, 
-            'training observables': [Hgad],
-            'monitoring observables': [Hcomp, 
-                                    #    oH.ancillary(), 
-                                    #    oH.perturbation(), 
-                                       Hgad, 
-                                       gadgetizer.cat_projector(Hcomp, target_locality), 
-                                       oH.computational_ground_projector()],
-            'labels': [r'$\langle \psi_{ALA}| H^{comp} |\psi_{ALA} \rangle$', 
-                    #    r'$\langle \psi_{ALA}| H^{anc} |\psi_{ALA} \rangle$', 
-                    #    r'$\langle \psi_{ALA}| \lambda V |\psi_{ALA} \rangle$', 
-                       r'$\langle \psi_{ALA}| H^{gad} |\psi_{ALA} \rangle$', 
-                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| GHZ\rangle\langle GHZ|] $', 
-                       r'$Tr[| \psi_{ALA}\rangle\langle \psi_{ALA}| P_{gs}^{comp}] $'], 
             'iterations': [iterations]
         }
         return schedule
