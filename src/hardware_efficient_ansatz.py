@@ -6,12 +6,14 @@ class AlternatingLayeredAnsatz:
 
     name = "Alternating Layered Ansatz"
 
-    def __init__(self, gate_sequence=None, initial_y_rot=True, cat_range=None, 
-                       undo_cat=False):
+    def __init__(self, gate_sequence=None, initial_y_rot=True, 
+                #  cat_range=None, undo_cat=False, 
+                 coupling_pattern = "ladder"
+                 ):
         self.gate_sequence = gate_sequence
         self.do_y = initial_y_rot
-        self.cat_range = cat_range
-        self.undo_cat = undo_cat
+        # self.cat_range = cat_range
+        # self.undo_cat = undo_cat
     
     def generate_sequence(self, n_qubits, n_layers):
         """Generation of a random sequence of Pauli gate rotations to be used in the Alternating Layered Ansatz
@@ -29,36 +31,36 @@ class AlternatingLayeredAnsatz:
                                                             for _ in range(n_layers)]
         self.gate_sequence = random_gate_sequence
     
-    def cat_state_preparation(self, wires):
-        """Generating a cat state on the specified qubits (e.g. the ancillary qubits for the perturbative gadget implementation)
-        Resulting state: (|00...0> + |11...1>)/sqrt(2) 
+    # def cat_state_preparation(self, wires):
+    #     """Generating a cat state on the specified qubits (e.g. the ancillary qubits for the perturbative gadget implementation)
+    #     Resulting state: (|00...0> + |11...1>)/sqrt(2) 
 
-        Args:
-            wires (list)                : list of wires to apply the rotations on
+    #     Args:
+    #         wires (list)                : list of wires to apply the rotations on
 
-        Returns:
-            (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
-        """
-        # leave the computational qubits in the |0> state
-        # create a cat state |+> in the ancillary register
-        # /!\ inefficient in depth
-        qml.Hadamard(wires=wires[0])
-        for qubit in wires[1:]:
-            qml.CNOT(wires=[wires[0], qubit])
+    #     Returns:
+    #         (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
+    #     """
+    #     # leave the computational qubits in the |0> state
+    #     # create a cat state |+> in the ancillary register
+    #     # /!\ inefficient in depth
+    #     qml.Hadamard(wires=wires[0])
+    #     for qubit in wires[1:]:
+    #         qml.CNOT(wires=[wires[0], qubit])
     
-    def cat_state_undoing(self, wires):
-        """Unduing a cat state on the specified qubits 
-        (e.g. the ancillary qubits for the perturbative gadget implementation)
+    # def cat_state_undoing(self, wires):
+    #     """Unduing a cat state on the specified qubits 
+    #     (e.g. the ancillary qubits for the perturbative gadget implementation)
 
-        Args:
-            wires (list)                : list of wires to apply the rotations on
+    #     Args:
+    #         wires (list)                : list of wires to apply the rotations on
 
-        Returns:
-            (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
-        """
-        for qubit in wires[1:]:
-            qml.CNOT(wires=[wires[0], qubit])
-        qml.Hadamard(wires=wires[0])
+    #     Returns:
+    #         (callable) quantum function preparing the said state to be used in some other quantum function (e.g. self.ansatz)
+    #     """
+    #     for qubit in wires[1:]:
+    #         qml.CNOT(wires=[wires[0], qubit])
+    #     qml.Hadamard(wires=wires[0])
     
     def ansatz(self, params, wires):
         """Generating the circuit corresponding to an Alternating Layerd Ansatz (McClean2018, Cerezo2021 and Holmes2021)
@@ -81,8 +83,8 @@ class AlternatingLayeredAnsatz:
         if self.do_y:
             for i in wires:
                 qml.RY(np.pi/4, wires=i)
-        if self.cat_range is not None:
-            self.cat_state_preparation(self.cat_range)
+        # if self.cat_range is not None:
+        #     self.cat_state_preparation(self.cat_range)
         for l in range(num_layers):
             # Single random gate layer (single qubit rotations)
             for i in wires:
@@ -92,17 +94,24 @@ class AlternatingLayeredAnsatz:
                 # qml.broadcast(qml.CZ, wires=wires, pattern="ring")
                 qml.broadcast(qml.CZ, wires=wires, pattern="double")
                 qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
-        if self.cat_range is not None:
-            if self.undo_cat:
-                self.cat_state_undoing(self.cat_range)
+                if self.coupling_pattern == "alternating":
+                    parity = l % 2
+                    if parity == 0:                        # even layers
+        # if self.cat_range is not None:
+        #     if self.undo_cat:
+        #         self.cat_state_undoing(self.cat_range)
 
 
 class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
 
     name = "Simplified Alternating Layered Ansatz"
 
-    def __init__(self, width, depth, initial_y_rot=False, cat_range=None):
-        super().__init__(initial_y_rot=initial_y_rot, cat_range=cat_range)
+    def __init__(self, width, depth, initial_y_rot=False
+                #  , cat_range=None
+                 ):
+        super().__init__(initial_y_rot=initial_y_rot
+                        #  , cat_range=cat_range
+                         )
         self.gate_sequence = [[qml.RY for _ in range(width)] 
                                       for _ in range(depth)]
     
@@ -126,8 +135,8 @@ class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
         if self.do_y:
             for i in wires:
                 qml.RY(np.pi/4, wires=i)
-        if self.cat_range is not None:
-            self.cat_state_preparation(self.cat_range)
+        # if self.cat_range is not None:
+        #     self.cat_state_preparation(self.cat_range)
         for l in range(num_layers):
             parity = l % 2
             # Nearest neighbour controlled phase gates
