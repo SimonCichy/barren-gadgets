@@ -139,15 +139,15 @@ class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
         #     self.cat_state_preparation(self.cat_range)
         for l in range(num_layers):
             parity = l % 2
+            # Single random gate layer (single qubit Y rotations)
+            target_wires = wires[parity: int(2*np.floor((num_qubits-parity)/2))+1] 
+            for i in target_wires:
+                self.gate_sequence[l][i](params[l][i], wires=i)
             # Nearest neighbour controlled phase gates
             if parity == 0:                          # even layers
                 qml.broadcast(qml.CZ, wires=wires, pattern="double")
             else:                                   # odd layers
                 qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
-            # Single random gate layer (single qubit Y rotations)
-            target_wires = wires[parity: int(2*np.floor((num_qubits-parity)/2))] 
-            for i in target_wires:
-                self.gate_sequence[l][i](params[l][i], wires=i)
 
 
 class HardwareEfficientAnsatz:
