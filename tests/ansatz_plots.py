@@ -13,10 +13,10 @@ qml.drawer.use_style('black_white')
 
 
 def test1():
-    width = 4
-    num_layers = 3
+    width = 6
+    num_layers = 5
     dev = qml.device("default.qubit", wires=range(width))
-    ala = AlternatingLayeredAnsatz()
+    ala = AlternatingLayeredAnsatz(coupling_pattern = "alternating")
     params = np.random.uniform(0, np.pi, size=(num_layers, width))
     @qml.qnode(dev)
     def circuit(params):
@@ -29,7 +29,7 @@ def test1():
     print(drawer(params))
 
 def test2():
-    width = 4
+    width = 5
     num_layers = 5
     dev = qml.device("default.qubit", wires=range(width))
     ala = SimplifiedAlternatingLayeredAnsatz(width, num_layers)
@@ -46,6 +46,6 @@ def test2():
 
 
 if __name__ == "__main__":
-    # test1()
-    test2()
+    test1()
+    # test2()
     # test3()

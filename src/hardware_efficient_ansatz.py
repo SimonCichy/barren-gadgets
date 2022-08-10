@@ -14,6 +14,7 @@ class AlternatingLayeredAnsatz:
         self.do_y = initial_y_rot
         # self.cat_range = cat_range
         # self.undo_cat = undo_cat
+        self.coupling_pattern = coupling_pattern
     
     def generate_sequence(self, n_qubits, n_layers):
         """Generation of a random sequence of Pauli gate rotations to be used in the Alternating Layered Ansatz
@@ -92,11 +93,17 @@ class AlternatingLayeredAnsatz:
             # Nearest neighbour controlled phase gates
             if num_qubits > 1:                          # no entangling gates if using a single qubit
                 # qml.broadcast(qml.CZ, wires=wires, pattern="ring")
-                qml.broadcast(qml.CZ, wires=wires, pattern="double")
-                qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
+                if self.coupling_pattern == "ladder": 
+                    qml.broadcast(qml.CZ, wires=wires, pattern="double")
+                    qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
                 if self.coupling_pattern == "alternating":
                     parity = l % 2
                     if parity == 0:                        # even layers
+                        qml.broadcast(qml.CZ, wires=wires, pattern="double")
+                    else:                                  # odd layers
+                        qml.broadcast(qml.CZ, wires=wires, pattern="double_odd")
+                        if num_qubits % 2 == 0:            # even number of qubits 
+                            qml.CZ(wires = [0, num_qubits-1])
         # if self.cat_range is not None:
         #     if self.undo_cat:
         #         self.cat_state_undoing(self.cat_range)
@@ -140,7 +147,7 @@ class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
         for l in range(num_layers):
             parity = l % 2
             # Single random gate layer (single qubit Y rotations)
-            target_wires = wires[parity: int(2*np.floor((num_qubits-parity)/2))+1] 
+            target_wires = wires[parity: parity+int(2*np.floor((num_qubits-parity)/2))] 
             for i in target_wires:
                 self.gate_sequence[l][i](params[l][i], wires=i)
             # Nearest neighbour controlled phase gates
