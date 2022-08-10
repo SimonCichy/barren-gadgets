@@ -9,19 +9,18 @@ class NewPerturbativeGadgets:
     
     Args: 
         perturbation_factor (float) : parameter controlling the magnitude of the
-                                      perturbation (should be in [0, 1] and is a
-                                      pre-factor to \lambda_max as in 
-                                      Jordan2012"""
+                                      perturbation (aa pre-factor to \lambda_max)
+    """
     def __init__(self, perturbation_factor=1):
         self.perturbation_factor = perturbation_factor
     
     def gadgetize(self, Hamiltonian, target_locality=3):
         """Generation of the perturbative gadget equivalent of the given 
-        Hamiltonian according to the proceedure in Jordan2012
+        Hamiltonian according to the proceedure in Cichy, Fährmann et al.
         Args:
             Hamiltonian (qml.Hamiltonian)   : target Hamiltonian to decompose
                                               into more local terms
-            target_locality (int)           : locality of the resulting 
+            target_locality (int > 2)       : desired locality of the resulting 
                                               gadget Hamiltonian
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
@@ -66,7 +65,18 @@ class NewPerturbativeGadgets:
         return Hgad
 
     def get_params(self, Hamiltonian):
-        """ retrieving the parameters n, k and r from the given Hamiltonian"""
+        """ retrieving the parameters n, k and r from the given Hamiltonian
+        Args:
+            Hamiltonian (qml.Hamiltonian) : Hamiltonian from which to get the
+                                            relevant parameters
+        Returns:
+            computational_qubits (int)    : total number of qubits acted upon by 
+                                            the Hamiltonian
+            computational_locality (int)  : maximum number of qubits acted upon
+                                            by a single term of the Hamiltonian
+            computational_terms (int)     : number of terms in the sum 
+                                            composing the Hamiltonian
+        """
         # checking how many qubits the Hamiltonian acts on
         computational_qubits = len(Hamiltonian.wires)
         # getting the number of terms in the Hamiltonian
@@ -77,6 +87,15 @@ class NewPerturbativeGadgets:
         return computational_qubits, computational_locality, computational_terms
     
     def run_checks(self, Hamiltonian, target_locality):
+        """ method to check a few conditions for the correct application of 
+        the methods
+        Args:
+            Hamiltonian (qml.Hamiltonian) : Hamiltonian of interest
+            target_locality (int > 2)     : desired locality of the resulting 
+                                            gadget Hamiltonian
+        Returns:
+            None
+        """
         computational_qubits, computational_locality, _ = self.get_params(Hamiltonian)
         computational_qubits = len(Hamiltonian.wires)
         if computational_qubits != Hamiltonian.wires[-1] + 1:
@@ -107,9 +126,10 @@ class NewPerturbativeGadgets:
         as a sum of projectors |0><0| on each qubit
         to be used as a cost function with qml.ExpvalCost
         Args: 
-            Hamiltonian (qml.Hamiltonian)   : Hamiltonian to be gadgetized
+            Hamiltonian (qml.Hamiltonian) : Hamiltonian to be gadgetized
         Returns:
-            observable (qml.Hamiltonian)    : projector
+            projector (qml.Hamiltonian)   : projector that can be used as 
+                                            an observable to measure
         """
         n_comp, k, r = self.get_params(Hamiltonian)
         ktilde = int(k/(target_locality-2))
@@ -125,12 +145,13 @@ class NewPerturbativeGadgets:
         return projector
     
     def all_zero_projector(self, Hamiltonian, target_locality=3):
-        """Generation of a projector on the zero state |00...0>
+        """Generation of a rank 1 projector on the zero state |00...0>
         to be used as a cost function with qml.ExpvalCost
         Args: 
-            Hamiltonian (qml.Hamiltonian)   : Hamiltonian to be gadgetized
+            Hamiltonian (qml.Hamiltonian) : Hamiltonian to be gadgetized
         Returns:
-            observable (qml.Hamiltonian)    : projector
+            projector (qml.Hamiltonian)   : projector that can be used as 
+                                            an observable to measure
         """
         n_comp, k, r = self.get_params(Hamiltonian)
         ktilde = int(k/(target_locality-2))

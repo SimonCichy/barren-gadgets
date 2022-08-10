@@ -3,6 +3,20 @@ from pennylane import numpy as np
 
 
 class AlternatingLayeredAnsatz:
+    """
+    Class to generate an ansatz circuit which can be used with qml.ExpvalCost.
+    Args:
+        gate_sequence (np.array[qml.operation]): array of single qubit gates to
+                        be applied in the circuit. Should have dimentions
+                        (number of layers, number of qubits)
+        initial_y_rot (bool)                  : whether to apply a pi/4 Y-rotation
+                                                to all qubits at the beginning
+        coupling_pattern (string)             : what kind of CZ coupling gate
+                                                patter to use. Should be "ladder"
+                                                or "alternating".
+    Returns:
+        (object)
+    """
 
     name = "Alternating Layered Ansatz"
 
@@ -64,15 +78,20 @@ class AlternatingLayeredAnsatz:
     #     qml.Hadamard(wires=wires[0])
     
     def ansatz(self, params, wires):
-        """Generating the circuit corresponding to an Alternating Layerd Ansatz (McClean2018, Cerezo2021 and Holmes2021)
+        """Generating the circuit corresponding to an Alternating Layerd Ansatz 
+        (McClean2018, and Holmes2021)
 
         Args:
-            params (array[array[float]]): array of parameters of dimension (num_layers, num_qubits) containing the rotation angles
-                                          should have the same dimentions as self.gate_sequence as they are used pairwise
-            wires (list)                : list of wires to apply the rotations on
+            params (array[float]) : array of parameters of dimension 
+                                    (num_layers, num_qubits) containing the 
+                                    rotation angles. Should have the same 
+                                    dimentions as self.gate_sequence as they are 
+                                    used pairwise
+            wires (list)          : list of wires to apply the rotations on
 
         Returns:
-            (callable) quantum function representing the ansatz (to be used e.g. with qml.ExpvalCost)
+            (callable) quantum function representing the ansatz 
+                        (to be used e.g. with qml.ExpvalCost)
         """
         
         assert(len(np.shape(params)) == 2)      # check proper dimensions of params
@@ -110,6 +129,20 @@ class AlternatingLayeredAnsatz:
 
 
 class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
+    """Generating the circuit corresponding to an Alternating Layerd Ansatz 
+        with only Y rotations and CZ coupling gates
+        (Cerezo2021)
+
+        Args:
+            params (array[float]) : array of parameters of dimension 
+                                    (num_layers, num_qubits) containing the 
+                                    rotation angles. 
+            wires (list)          : list of wires to apply the rotations on
+
+        Returns:
+            (callable) quantum function representing the ansatz 
+                        (to be used e.g. with qml.ExpvalCost)
+        """
 
     name = "Simplified Alternating Layered Ansatz"
 
@@ -127,12 +160,14 @@ class SimplifiedAlternatingLayeredAnsatz(AlternatingLayeredAnsatz):
         Alternating Layerd Ansatz (FIG.4. Cerezo2021)
 
         Args:
-            params (array[array[float]]): array of parameters of dimension (num_layers, num_qubits) containing the rotation angles
-                                          should have the same dimentions as self.gate_sequence as they are used pairwise
-            wires (list)                : list of wires to apply the rotations on
+            params (array[float]) : array of parameters of dimension 
+                                    (num_layers, num_qubits) containing the 
+                                    rotation angles. 
+            wires (list)          : list of wires to apply the rotations on
 
         Returns:
-            (callable) quantum function representing the ansatz (to be used e.g. with qml.ExpvalCost)
+            (callable) quantum function representing the ansatz 
+                        (to be used e.g. with qml.ExpvalCost)
         """
         
         assert(len(np.shape(params)) == 2)      # check proper dimensions of params
