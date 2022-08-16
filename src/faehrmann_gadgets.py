@@ -12,19 +12,75 @@ class NewPerturbativeGadgets:
                                       perturbation (aa pre-factor to \lambda_max)
     """
     def __init__(self, perturbation_factor=1):
+        #TODO: move perturbation factor to gadgetize and eliminate class?
         self.perturbation_factor = perturbation_factor
+    
+    def reorder_qubits(self, Hcomp, Hgad, ordering="rotating"):
+        """Generating a new Hamiltonian object corresponding to the gadgetiized
+        Hamiltonian but changing the order of the different qubits in the 
+        register to help the optimization
+        Args:
+            Hcomp (qml.Hamiltonian)   : original gadgetized Hamiltonian 
+            Hgad (qml.Hamiltonian)    : gadgetized Hamiltonian to be 
+                                        reordered
+            ordering (str)            : how to order the qubits from the 
+                                        different registers. Should be 
+                                        "comp-aux" or "rotating"
+        Returns:
+            Hgad (qml.Hamiltonian)    : gadget Hamiltonian
+        """
+        if ordering == "comp-aux":
+            return Hgad
+        elif ordering == "rotating":
+            # extracting all relevant parameters from the two Hamiltonians
+            computational_qubits, computational_locality, computational_terms = self.get_params(Hcomp)
+            total_qubits, target_locality, _ = self.get_params(Hcomp)
+            # more compact notation
+            n_comp = computational_qubits
+            k = computational_locality
+            r = computational_terms
+            n_tot = total_qubits
+            k_prime = target_locality
+            # Starting with the n_comp computational qubits
+            new_order = range(n_comp)
+            for string in Hgad.ops:
+                if len(string.non_identity_obs) > 1:
+                    affected_qubits = np.array(string.wires)
+                    computational_target = int(min(affected_qubits))
+                    computational_target_index = int(np.where(affected_qubits==0)[0])
+                    # Selecting all qubits except the computational one
+                    auxiliary_targets = np.append(affected_qubits[:computational_target_index], 
+                                                  affected_qubits[computational_target_index+1:])
+                    # assuming no duplicates in new_order, which should be the case
+                    target_index = np.where(new_order == computational_target)[0] + 1
+                    new_order = np.insert(new_order, target_index, auxiliary_targets)
+            # Generating the new Hamiltonian
+            obs = []
+            coeffs = Hgad.coeffs
+            for term in Hgad.ops:
+                list_of_gates = []
+                #TODO: resolve how to extract the gates from a string without the applied qubit
+                new_term = qml.operation.Tensor(*list_of_gates)
+                obs.append(new_term)
+            pass
+        else:
+            print("Requested reordering scheme not implemented."
+                  "Returning the Hamiltonian unchanged")
+            return Hgad
+
     
     def gadgetize(self, Hamiltonian, target_locality=3):
         """Generation of the perturbative gadget equivalent of the given 
         Hamiltonian according to the proceedure in Cichy, Fährmann et al.
         Args:
-            Hamiltonian (qml.Hamiltonian)   : target Hamiltonian to decompose
-                                              into more local terms
-            target_locality (int > 2)       : desired locality of the resulting 
-                                              gadget Hamiltonian
+            Hamiltonian (qml.Hamiltonian) : target Hamiltonian to decompose
+                                            into more local terms
+            target_locality (int > 2)     : desired locality of the resulting 
+                                            gadget Hamiltonian
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
         """
+        #TODO: add reordering scheme
         # checking for unaccounted for situations
         self.run_checks(Hamiltonian, target_locality)
         computational_qubits, computational_locality, computational_terms = self.get_params(Hamiltonian)
@@ -81,7 +137,7 @@ class NewPerturbativeGadgets:
         computational_qubits = len(Hamiltonian.wires)
         # getting the number of terms in the Hamiltonian
         computational_terms = len(Hamiltonian.ops)
-        # getting the locality, assuming all terms have the same
+        # getting the locality
         computational_locality = max([len(Hamiltonian.ops[s].non_identity_obs) 
                                       for s in range(computational_terms)])
         return computational_qubits, computational_locality, computational_terms
