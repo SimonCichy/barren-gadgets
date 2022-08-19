@@ -45,8 +45,14 @@ def test3():
     Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
     print(np.sum(np.abs(Hgad.coeffs)))
 
+def test4():
+    """Testing the reordering"""
+    Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
+    gadgetizer.reorder_qubits(Hcomp, Hgad)
+
 
 if __name__ == "__main__":
-    test1()
+    # test1()
     # test2()
     # test3()
+    test4()

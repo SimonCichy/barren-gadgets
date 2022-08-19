@@ -42,27 +42,32 @@ class NewPerturbativeGadgets:
             n_tot = total_qubits
             k_prime = target_locality
             # Starting with the n_comp computational qubits
-            new_order = range(n_comp)
+            new_order = np.arange(n_comp)
             for string in Hgad.ops:
-                if len(string.non_identity_obs) > 1:
-                    affected_qubits = np.array(string.wires)
+                if type(string) is not qml.Identity:
+                    print(string)
+                    affected_qubits = string.wires.toarray()
+                    print(affected_qubits)
                     computational_target = int(min(affected_qubits))
-                    computational_target_index = int(np.where(affected_qubits==0)[0])
+                    print(computational_target)
+                    computational_target_index = int(np.where(affected_qubits==computational_target)[0])
+                    print(computational_target_index)
                     # Selecting all qubits except the computational one
                     auxiliary_targets = np.append(affected_qubits[:computational_target_index], 
                                                   affected_qubits[computational_target_index+1:])
                     # assuming no duplicates in new_order, which should be the case
                     target_index = np.where(new_order == computational_target)[0] + 1
                     new_order = np.insert(new_order, target_index, auxiliary_targets)
+                    print(new_order)
             # Generating the new Hamiltonian
-            obs = []
-            coeffs = Hgad.coeffs
-            for term in Hgad.ops:
-                list_of_gates = []
-                #TODO: resolve how to extract the gates from a string without the applied qubit
-                new_term = qml.operation.Tensor(*list_of_gates)
-                obs.append(new_term)
-            pass
+            # obs = []
+            # coeffs = Hgad.coeffs
+            # for term in Hgad.ops:
+            #     list_of_gates = []
+            #     #TODO: resolve how to extract the gates from a string without the applied qubit
+            #     new_term = qml.operation.Tensor(*list_of_gates)
+            #     obs.append(new_term)
+            # return qml.Hamiltonian(coeffs, obs)
         else:
             print("Requested reordering scheme not implemented."
                   "Returning the Hamiltonian unchanged")
