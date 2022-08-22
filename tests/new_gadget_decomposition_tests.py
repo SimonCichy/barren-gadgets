@@ -51,6 +51,7 @@ def test4():
     term2 = qml.operation.Tensor(*[qml.PauliX(q) for q in range(computational_qubits)])
     Hcomp = qml.Hamiltonian([1,1], [term1, term2])
     Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
+    print(Hgad)
     gadgetizer.reorder_qubits(Hcomp, Hgad)
 
 

@@ -61,11 +61,15 @@ class NewPerturbativeGadgets:
                             else:
                                 new_order = np.insert(new_order, target_index, min(auxiliary_qubits))
                                 added = True
-                    print(new_order)
+                    # print(new_order)
             # Generating the new Hamiltonian
-            # obs = []
-            # coeffs = Hgad.coeffs
-            # for term in Hgad.ops:
+            obs = []
+            coeffs = Hgad.coeffs
+            for term in Hgad.ops:
+                if type(term) is qml.Identity:
+                    pass
+                else:
+                    print(type(term))
             #     list_of_gates = []
             #     #TODO: resolve how to extract the gates from a string without the applied qubit
             #     new_term = qml.operation.Tensor(*list_of_gates)
@@ -88,7 +92,6 @@ class NewPerturbativeGadgets:
         Returns:
             Hgad (qml.Hamiltonian)          : gadget Hamiltonian
         """
-        #TODO: add reordering scheme
         # checking for unaccounted for situations
         self.run_checks(Hamiltonian, target_locality)
         computational_qubits, computational_locality, computational_terms = self.get_params(Hamiltonian)
