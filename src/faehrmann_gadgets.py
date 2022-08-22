@@ -45,19 +45,22 @@ class NewPerturbativeGadgets:
             new_order = np.arange(n_comp)
             for string in Hgad.ops:
                 if type(string) is not qml.Identity:
-                    print(string)
+                    # print(string)
                     affected_qubits = string.wires.toarray()
-                    print(affected_qubits)
-                    computational_target = int(min(affected_qubits))
-                    print(computational_target)
-                    computational_target_index = int(np.where(affected_qubits==computational_target)[0])
-                    print(computational_target_index)
-                    # Selecting all qubits except the computational one
-                    auxiliary_targets = np.append(affected_qubits[:computational_target_index], 
-                                                  affected_qubits[computational_target_index+1:])
-                    # assuming no duplicates in new_order, which should be the case
-                    target_index = np.where(new_order == computational_target)[0] + 1
-                    new_order = np.insert(new_order, target_index, auxiliary_targets)
+                    # print(affected_qubits)
+                    if len(affected_qubits) > 1:
+                        computational_target = int(min(affected_qubits))
+                        # print(computational_target)
+                        auxiliary_qubits = np.setdiff1d(affected_qubits, computational_target)
+                        # print(auxiliary_qubits)
+                        added = False
+                        target_index = np.where(new_order == computational_target)[0] + 1
+                        while added is False:
+                            if min(auxiliary_qubits) in new_order:
+                                auxiliary_qubits = np.delete(auxiliary_qubits, np.argmin(auxiliary_qubits))
+                            else:
+                                new_order = np.insert(new_order, target_index, min(auxiliary_qubits))
+                                added = True
                     print(new_order)
             # Generating the new Hamiltonian
             # obs = []
