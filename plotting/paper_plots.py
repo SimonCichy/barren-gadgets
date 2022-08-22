@@ -148,14 +148,14 @@ def training_plots_with_statistics():
         custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
         lgd = axs[1].legend(handles=custom_lines,
                         labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle}$', 
-                                r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
+                                r'$ \big \langle H^\mathrm{target}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
                         handlelength=.8, 
                         loc='upper right',
                         bbox_to_anchor=(1, 0.96),
                         edgecolor='1', 
                         borderpad=0)
     plt.tight_layout()
-    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_statst.pdf', 
+    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_stats.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
 def get_vars_for_plot(file, max_qubit=np.inf):
@@ -194,7 +194,7 @@ def variances_plots():
         ])
     })
     ax = fig.subplots()
-    ax.set_xlabel(r"Number of computational qubits", labelpad=0)
+    ax.set_xlabel(r"Number of qubits in $H^\mathrm{target}", labelpad=0)
     ax.set_ylabel(r"$\mathrm{Var} \left[\partial C / \partial \boldsymbol{\theta}_{\nu} \right]$")
 
     qubits_list, norms_list, variances_list = get_vars_for_plot(file_comp)
@@ -223,7 +223,7 @@ def variances_plots():
     custom_lines += [Line2D([0], [0], ls='', c='k', lw=1)]
     custom_lines += [Line2D([0], [0], c=palette[-1][nl], lw=2) for nl in range(len(layers_list))]
     ax.legend(handles=custom_lines, 
-              labels=[r'$H^\mathrm{comp}$', '4-local ' + r'$H^\mathrm{gad}$', '3-local ' + r'$H^\mathrm{gad}$'] + [''] + 
+              labels=[r'$H^\mathrm{target}$', '4-local ' + r'$H^\mathrm{gad}$', '3-local ' + r'$H^\mathrm{gad}$'] + [''] + 
                     #  [r'$\textcolor{white}{0}$' + '{} layers'.format(num_layers) for num_layers in layers_list[:2]] + 
                     [r'$\ \,$' + '{} layers'.format(num_layers) for num_layers in layers_list[:2]] + 
                      ['{} layers'.format(num_layers) for num_layers in layers_list[2:]], 
@@ -244,4 +244,4 @@ def variances_plots():
 if __name__ == "__main__":
     # training_plots()
     training_plots_with_statistics()
-    # variances_plots()
+    variances_plots()
