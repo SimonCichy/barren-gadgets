@@ -13,9 +13,9 @@ use_exact_ground_energy = False
 plot_data = True
 save_data = True
 
-computational_qubits = 4
+computational_qubits = 5
 newk = 3
-max_iter = 200
+max_iter = 500
 step = 0.3
 num_shots = None
 
@@ -60,5 +60,5 @@ def decreasing_lambda():
 
 
 if __name__ == "__main__":
-    # repeated_training()
-    decreasing_lambda()
+    repeated_training()
+    # decreasing_lambda()

@@ -38,7 +38,7 @@ class NewPerturbativeGadgets:
             
         return new_H
     
-    def reorder_qubits(self, Hcomp, Hgad, ordering="rotating"):
+    def get_qubit_mapping(self, Hcomp, Hgad, ordering="rotating"):
         """Generating a new Hamiltonian object corresponding to the gadgetiized
         Hamiltonian but changing the order of the different qubits in the 
         register to help the optimization
@@ -53,7 +53,9 @@ class NewPerturbativeGadgets:
             Hgad (qml.Hamiltonian)    : gadget Hamiltonian
         """
         if ordering == "comp-aux":
-            new_Hgad = Hgad
+            wires_map = {}
+            for i in range(len(Hgad.wires)):
+                wires_map[i] = i
         elif ordering == "rotating":
             # extracting all relevant parameters from the two Hamiltonians
             computational_qubits, computational_locality, computational_terms = self.get_params(Hcomp)
@@ -89,11 +91,10 @@ class NewPerturbativeGadgets:
             wires_map = {}
             for i in range(len(new_order)):
                 wires_map[int(new_order[i])] = i
-            new_Hgad = self.map_wires(Hgad, wires_map)
         else:
             print("Requested reordering scheme not implemented."
                   "Returning the Hamiltonian unchanged")
-        return new_Hgad
+        return wires_map
 
     
     def gadgetize(self, Hamiltonian, target_locality=3):
