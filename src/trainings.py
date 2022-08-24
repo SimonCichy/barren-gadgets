@@ -486,6 +486,58 @@ class SchedulesOfInterest:
         }
         return schedule
     
+    def linear_ala_reordered_gad(self, perturbation, optimizer, iterations, 
+                                 target_locality=3, initialize=False):
+        # oH = ObservablesHolmes(self.n_comp, 0, perturbation)
+        # Hcomp = oH.computational()
+        terms = [qml.operation.Tensor(*[qml.PauliZ(q) for q in range(self.n_comp)])]
+        Hcomp = qml.Hamiltonian([1], terms)
+        gadgetizer = NewPerturbativeGadgets(perturbation_factor=perturbation)
+        Hgad = gadgetizer.gadgetize(Hcomp, target_locality)
+        wires_map = gadgetizer.get_qubit_mapping(Hcomp, Hgad)
+        reordered_Hgad = gadgetizer.map_wires(Hgad, wires_map)
+        _, k, r = gadgetizer.get_params(Hcomp)
+        n_anc = r * int(k / (target_locality - 2))
+        num_layers = self.n_comp + n_anc
+        random_gate_sequence = [[np.random.choice(self.gate_set) 
+                                for _ in range(self.n_comp + n_anc)] 
+                                for _ in range(num_layers)]
+        ala = AlternatingLayeredAnsatz(random_gate_sequence)
+        initial_weights = np.random.uniform(0, np.pi, 
+                            size=(num_layers, self.n_comp + n_anc), 
+                            requires_grad=True)
+        if initialize:
+            initial_weights[:, self.n_comp:] *= 0.02
+        schedule = {
+            'name': 'linear_ala_reordered_gad',
+            'device': qml.device("default.qubit", 
+                                 wires=range(self.n_comp + n_anc), 
+                                 shots=self.num_shots),
+            'optimizers': [optimizer], 
+            'seed': self.np_rdm_seed,
+            'ansaetze': [ala],
+            'initial weights': initial_weights, 
+            'training observables': [reordered_Hgad],
+            'monitoring observables': [Hcomp, 
+                                       Hgad,  
+                                    #    oH.computational_ground_projector(), 
+                                       gadgetizer.zero_projector(Hcomp, target_locality), 
+                                       gadgetizer.all_zero_projector(Hcomp, target_locality)],
+            'labels': [r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{comp}]$', 
+                       r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| H^{gad}]$', 
+                    #    r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| P_{gs}^{comp}|] $',
+                       r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| ' + 
+                       r'\frac{1}{n_{anc}}\sum_{gad} | 0 \rangle\langle 0|] $',
+                       r'$Tr[| \psi(\theta)\rangle\langle \psi(\theta)| ' + 
+                       r'| 00\dots \rangle\langle 00\dots|] $'], 
+            'iterations': [iterations]
+        }
+        reordered_monitoring_obs = []
+        for H in schedule['monitoring observables']:
+            reordered_monitoring_obs.append(gadgetizer.map_wires(H, wires_map))
+        schedule['monitoring observables'] = reordered_monitoring_obs
+        return schedule
+    
     def linear_ala_comp(self, perturbation, optimizer, iterations):
         num_layers = self.n_comp
         random_gate_sequence = [[np.random.choice(self.gate_set) 
