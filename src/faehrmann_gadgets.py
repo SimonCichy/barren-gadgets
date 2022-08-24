@@ -1,5 +1,6 @@
 import pennylane as qml
 from pennylane import numpy as np
+import copy
 
 
 class NewPerturbativeGadgets:
@@ -14,6 +15,28 @@ class NewPerturbativeGadgets:
     def __init__(self, perturbation_factor=1):
         #TODO: move perturbation factor to gadgetize and eliminate class?
         self.perturbation_factor = perturbation_factor
+    
+    def map_wires(self, H, wires_map):
+        """Map the wires of an Observable according to a wires map.
+        
+        Args:
+            H (Hamiltonian or Tensor or Observable): Hamiltonian to remap the wires of.
+            wires_map (dict): Wires map with `(origin, destination)` pairs as key-value pairs.
+        
+        Returns:
+            Hamiltonian or Tensor or Observable: A copy of the original Hamiltonian with remapped wires.
+        """
+        if isinstance(H, qml.Hamiltonian):
+            new_ops = [self.map_wires(op, wires_map) for op in H.ops]
+            new_H = qml.Hamiltonian(H.coeffs, new_ops)
+        elif isinstance(H, qml.operation.Tensor):
+            new_obs = [self.map_wires(ob, wires_map) for ob in H.obs]
+            new_H = qml.operation.Tensor(*new_obs)
+        elif isinstance(H, qml.operation.Observable):
+            new_H = copy.copy(H)
+            new_H._wires = new_H.wires.map(wires_map)
+            
+        return new_H
     
     def reorder_qubits(self, Hcomp, Hgad, ordering="rotating"):
         """Generating a new Hamiltonian object corresponding to the gadgetiized
@@ -30,7 +53,7 @@ class NewPerturbativeGadgets:
             Hgad (qml.Hamiltonian)    : gadget Hamiltonian
         """
         if ordering == "comp-aux":
-            return Hgad
+            new_Hgad = Hgad
         elif ordering == "rotating":
             # extracting all relevant parameters from the two Hamiltonians
             computational_qubits, computational_locality, computational_terms = self.get_params(Hcomp)
@@ -61,24 +84,16 @@ class NewPerturbativeGadgets:
                             else:
                                 new_order = np.insert(new_order, target_index, min(auxiliary_qubits))
                                 added = True
-                    # print(new_order)
+            print(new_order)
             # Generating the new Hamiltonian
-            obs = []
-            coeffs = Hgad.coeffs
-            for term in Hgad.ops:
-                if type(term) is qml.Identity:
-                    pass
-                else:
-                    print(type(term))
-            #     list_of_gates = []
-            #     #TODO: resolve how to extract the gates from a string without the applied qubit
-            #     new_term = qml.operation.Tensor(*list_of_gates)
-            #     obs.append(new_term)
-            # return qml.Hamiltonian(coeffs, obs)
+            wires_map = {}
+            for i in range(len(new_order)):
+                wires_map[i] = int(new_order[i])
+            new_Hgad = self.map_wires(Hgad, wires_map)
         else:
             print("Requested reordering scheme not implemented."
                   "Returning the Hamiltonian unchanged")
-            return Hgad
+        return new_Hgad
 
     
     def gadgetize(self, Hamiltonian, target_locality=3):
