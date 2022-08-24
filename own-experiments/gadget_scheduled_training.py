@@ -22,7 +22,7 @@ num_shots = None
 opt = qml.GradientDescentOptimizer(stepsize=step)
 
 def repeated_training():
-    seeds = range(71, 81)
+    seeds = range(1, 31)
     # perturbation_factors = np.linspace(0, 1, 6)
     perturbation_factors = [0.1, 1, 10] 
     for seed in seeds:
@@ -34,7 +34,7 @@ def repeated_training():
             print(" Perturbation factor:    ", pf)
             soi = SchedulesOfInterest(computational_qubits, 
                                       seed, num_shots)
-            schedule = soi.linear_ala_new_gad(pf, opt, max_iter, newk, False)
+            schedule = soi.linear_ala_reordered_gad(pf, opt, max_iter, newk, False)
             scheduled_training(schedule, plot_data=plot_data, save_data=save_data)
 
         toc = time.perf_counter()

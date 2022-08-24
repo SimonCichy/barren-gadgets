@@ -76,7 +76,8 @@ def test5():
     Hcomp = qml.Hamiltonian([1,1], [term1, term2])
     Hgad = gadgetizer.gadgetize(Hcomp, target_locality=3)
     print(Hgad)
-    ordered_Hgad = gadgetizer.reorder_qubits(Hcomp, Hgad)
+    wires_map = gadgetizer.get_qubit_mapping(Hcomp, Hgad)
+    ordered_Hgad = gadgetizer.map_wires(Hgad, wires_map)
     print(ordered_Hgad)
 
 

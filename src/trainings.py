@@ -496,7 +496,6 @@ class SchedulesOfInterest:
         Hgad = gadgetizer.gadgetize(Hcomp, target_locality)
         wires_map = gadgetizer.get_qubit_mapping(Hcomp, Hgad)
         reordered_Hgad = gadgetizer.map_wires(Hgad, wires_map)
-        reordered_Hcomp = gadgetizer.map_wires(Hcomp, wires_map)
         _, k, r = gadgetizer.get_params(Hcomp)
         n_anc = r * int(k / (target_locality - 2))
         num_layers = self.n_comp + n_anc
