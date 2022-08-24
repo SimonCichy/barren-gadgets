@@ -88,7 +88,7 @@ class NewPerturbativeGadgets:
             # Generating the new Hamiltonian
             wires_map = {}
             for i in range(len(new_order)):
-                wires_map[i] = int(new_order[i])
+                wires_map[int(new_order[i])] = i
             new_Hgad = self.map_wires(Hgad, wires_map)
         else:
             print("Requested reordering scheme not implemented."
