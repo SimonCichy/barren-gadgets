@@ -1,12 +1,14 @@
 import sys
-sys.path.append('../src')
+# sys.path.append('../src')
 sys.path.append('src')
+sys.path.append('Pennylane-tutorial')
 import pennylane as qml
 from pennylane import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator, MultipleLocator
 
 from hardware_efficient_ansatz import AlternatingLayeredAnsatz, SimplifiedAlternatingLayeredAnsatz
+from layered_ansatz import RandomizedSimplifiedTwoDesign
 
 np.random.seed(42)
 qml.drawer.use_style('black_white')
@@ -45,17 +47,19 @@ def test2():
     print(drawer(params))
 
 def test3():
-    width = 4
+    width = 5
     depth = 4
     target_wires = range(width)
     dev = qml.device("default.qubit", wires=target_wires)
-    shapes = qml.SimplifiedTwoDesign.shape(n_layers=depth, n_wires=width)
+    # shapes = qml.SimplifiedTwoDesign.shape(n_layers=depth, n_wires=width)
+    shapes = RandomizedSimplifiedTwoDesign.shape(n_layers=depth, n_wires=width)
     initial_layer_weights = [np.pi] * shapes[0][0] 
     weights = np.zeros(shapes[1])
 
     @qml.qnode(dev)
     def circuit(weights):
-        qml.SimplifiedTwoDesign.compute_decomposition(initial_layer_weights, weights, wires=target_wires)
+        # qml.SimplifiedTwoDesign.compute_decomposition(initial_layer_weights, weights, wires=target_wires)
+        RandomizedSimplifiedTwoDesign.compute_decomposition(initial_layer_weights, weights, wires=target_wires)
         return qml.probs(wires=target_wires)
 
     drawer = qml.draw(circuit)
