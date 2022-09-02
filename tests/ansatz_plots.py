@@ -44,8 +44,25 @@ def test2():
     drawer = qml.draw(circuit)
     print(drawer(params))
 
+def test3():
+    width = 4
+    depth = 4
+    target_wires = range(width)
+    dev = qml.device("default.qubit", wires=target_wires)
+    shapes = qml.SimplifiedTwoDesign.shape(n_layers=depth, n_wires=width)
+    initial_layer_weights = [np.pi] * shapes[0][0] 
+    weights = np.zeros(shapes[1])
+
+    @qml.qnode(dev)
+    def circuit(weights):
+        qml.SimplifiedTwoDesign.compute_decomposition(initial_layer_weights, weights, wires=target_wires)
+        return qml.probs(wires=target_wires)
+
+    drawer = qml.draw(circuit)
+    print(drawer(weights))
+
 
 if __name__ == "__main__":
-    test1()
+    # test1()
     # test2()
-    # test3()
+    test3()
