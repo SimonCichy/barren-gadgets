@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from trainings import scheduled_training, SchedulesOfInterest
 
-data_folder = '../results/data/training/'
+# data_folder = '../results/data/training/'
 use_exact_ground_energy = False
 plot_data = True
 save_data = True
