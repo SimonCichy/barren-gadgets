@@ -45,7 +45,7 @@ def training_plots():
         axs[f].plot(np.zeros(len(costs[0])), ':', c='gainsboro')
         for i in range(1, 3):
             axs[f].plot(costs[i],'-', c=palette_choice[i-1], label=labels[i])
-        axs[f].set_title(r'$\lambda = {}$'.format(lambdas[f]) + r'$\lambda_{max}$', 
+        axs[f].set_title(r'$\lambda = {}$'.format(lambdas[f]) + r'$\lambda_\mathrm{max}$', 
                          fontsize=9)
         axs[f].set_ylim(top=2)
     axs[0].set_ylabel('Cost')
@@ -114,6 +114,8 @@ def training_plots_with_statistics():
         "pgf.preamble": "\n".join([
             r"\usepackage{dsfont}", 
             r"\usepackage{amsmath}", 
+            r"\usepackage{newtxtext}", 
+            r"\usepackage{newtxmath}" 
         ])
     })
     axs = fig.subplots(1, 3)
@@ -125,7 +127,7 @@ def training_plots_with_statistics():
         axs[l].plot(np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(-np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(np.zeros(iterations), ':', c='gainsboro')
-        axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_{max}$', 
+        axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_\mathrm{max}$', 
                          fontsize=9)
         axs[l].set_ylim(top=2)
         axs[0].set_ylabel('Cost')
@@ -190,7 +192,9 @@ def variances_plots():
         "pgf.preamble": "\n".join([
             r"\usepackage{dsfont}", 
             r"\usepackage{amsmath}", 
-            r"\usepackage{xcolor}"
+            r"\usepackage{xcolor}", 
+            r"\usepackage{newtxtext}", 
+            r"\usepackage{newtxmath}" 
         ])
     })
     ax = fig.subplots()

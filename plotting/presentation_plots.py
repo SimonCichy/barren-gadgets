@@ -19,25 +19,32 @@ plt.rc('font', family='serif')
 plt.rcParams.update({
     "pgf.preamble": "\n".join([
         r"\usepackage{amsmath}", 
-        r"\usepackage{dsfont}", 
+        r"\usepackage{amssymb}", 
+        # r"\usepackage{dsfont}", 
         r"\usepackage{xcolor}"
     ])
 })
 plt.rcParams["figure.figsize"] = 23 * 0.3937, 23 * 0.7 * 0.3937
 
-def training_plots(): 
+def training_plots(training='plain'): 
     file_list = []
-    file_list  += ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
-    file_list  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
-    file_list  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
-    file_list  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
-    file_list  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
-    file_list  += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
-    file_list  += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
-    file_list  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 40, 3)]
-    file_list  += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
-    file_list  += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
-    file_list  += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 10, 3)]
+    if training == 'plain':
+        file_list  += ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+        file_list  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+        file_list  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
+        file_list  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
+        file_list  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
+        file_list  += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+        file_list  += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+        file_list  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 40, 3)]
+        file_list  += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+        file_list  += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+        file_list  += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 10, 3)]
+    elif training == 'reordered':
+        file_list  = ['220831/training_nr{:0>4}'.format(nr) for nr in range(3, 17, 3)]
+        file_list += ['220901/training_nr{:0>4}'.format(nr) for nr in range(2, 47, 3)]
+        file_list += ['220902/training_nr{:0>4}'.format(nr) for nr in range(1, 29, 3)]
+    
     palette_choice = [palette[0][2], palette[2][0]]
 
     fig = plt.figure()
@@ -52,24 +59,24 @@ def training_plots():
     # plt.set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_{max}$', 
     #                  fontsize=9)
     ax.set_ylim(top=2)
-    ax.set_ylabel('Cost', fontsize = 16)
-    ax.set_xlabel('Number of iterations', fontsize = 16)
+    ax.set_ylabel('Cost', fontsize = 20)
+    ax.set_xlabel('Number of iterations', fontsize = 20)
     costs_sum = 0
     for f, file in enumerate(file_list):
         file = data_folder + 'training/' + file
         costs = get_training_costs(file + '.npz')
-        labels = get_training_labels2(file + '.txt')
+        # labels = get_training_labels2(file + '.txt')
         costs_sum += costs
         for i in range(1, 3):
-            ax.plot(costs[i],'-', c=palette_choice[i-1], label=labels[i], alpha=1.5/runs)
+            ax.plot(costs[i],'-', c=palette_choice[i-1], alpha=1.5/runs)
     costs_mean = costs_sum / runs
     for i in range(1, 3):
-        ax.plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
+        ax.plot(costs_mean[i],'-', c=palette_choice[i-1])
     custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
     ax.legend(handles=custom_lines,
                 labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\mathbf{\theta})\rangle}$', 
-                        r'$ \big \langle H^\mathrm{comp}\otimes{1}^{anc} \big\rangle_{| \psi(\mathbf{\theta})\rangle} $'], 
-                fontsize = 16, 
+                        r'$ \big \langle H^\mathrm{comp}\otimes{1}\!\mathrm{I}^\mathrm{anc} \big\rangle_{| \psi(\mathbf{\theta})\rangle} $'], 
+                fontsize = 20, 
                 handlelength=.8, 
                 loc='upper right',
                 bbox_to_anchor=(1, 0.96),
@@ -153,5 +160,5 @@ def variances_plots():
     plt.show()
 
 if __name__ == "__main__":
-    training_plots()
+    training_plots('plain')
     # variances_plots()
