@@ -69,44 +69,56 @@ def training_plots():
     plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
-def training_plots_with_statistics(): 
+def training_plots_with_statistics(training='plain'): 
     lambdas = [0.1, 1, 10]
     file_list = {}
-    file_list[0.1]  = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
-    file_list[0.1] += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
-    file_list[0.1] += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 21, 3)]
-    file_list[0.1] += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 31, 3)]
-    file_list[0.1] += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 33, 3)]
-    file_list[0.1] += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
-    file_list[0.1] += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
-    file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 40, 3)]
-    file_list[0.1] += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
-    file_list[0.1] += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
-    file_list[0.1] += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 10, 3)]
+    if training == 'plain':
+        file_list[0.1]  = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
+        file_list[0.1] += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 11, 3)]
+        file_list[0.1] += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 21, 3)]
+        file_list[0.1] += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 31, 3)]
+        file_list[0.1] += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 33, 3)]
+        file_list[0.1] += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
+        file_list[0.1] += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 20, 3)]
+        file_list[0.1] += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 40, 3)]
+        file_list[0.1] += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
+        file_list[0.1] += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 12, 3)]
+        file_list[0.1] += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 10, 3)]
 
-    file_list[1]    = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
-    file_list[1]   += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
-    file_list[1]   += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 21, 3)]
-    file_list[1]   += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 31, 3)]
-    file_list[1]   += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 33, 3)]
-    file_list[1]   += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
-    file_list[1]   += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
-    file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 40, 3)]
-    file_list[1]   += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
-    file_list[1]   += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
-    file_list[1]   += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 10, 3)]
+        file_list[1]    = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
+        file_list[1]   += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 11, 3)]
+        file_list[1]   += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 21, 3)]
+        file_list[1]   += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 31, 3)]
+        file_list[1]   += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(1, 33, 3)]
+        file_list[1]   += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
+        file_list[1]   += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 20, 3)]
+        file_list[1]   += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 40, 3)]
+        file_list[1]   += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
+        file_list[1]   += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(1, 12, 3)]
+        file_list[1]   += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 10, 3)]
 
-    file_list[10]   = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
-    file_list[10]  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
-    file_list[10]  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
-    file_list[10]  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
-    file_list[10]  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
-    file_list[10]  += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
-    file_list[10]  += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
-    file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 40, 3)]
-    file_list[10]  += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
-    file_list[10]  += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
-    file_list[10]  += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 10, 3)]
+        file_list[10]   = ['220726_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+        file_list[10]  += ['220726_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 11, 3)]
+        file_list[10]  += ['220727_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 21, 3)]
+        file_list[10]  += ['220727_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 31, 3)]
+        file_list[10]  += ['220727_qmio14/training_nr{:0>4}'.format(nr) for nr in range(2, 33, 3)]
+        file_list[10]  += ['220728_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+        file_list[10]  += ['220728_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(3, 20, 3)]
+        file_list[10]  += ['220728_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 40, 3)]
+        file_list[10]  += ['220729_qmio11-1/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+        file_list[10]  += ['220729_qmio11-2/training_nr{:0>4}'.format(nr) for nr in range(2, 12, 3)]
+        file_list[10]  += ['220729_qmio14/training_nr{:0>4}'.format(nr) for nr in range(3, 10, 3)]
+    elif training == 'reordered':
+        file_list[0.1]  = ['220831/training_nr{:0>4}'.format(nr) for nr in range(1, 17, 3)]
+        file_list[1]    = ['220831/training_nr{:0>4}'.format(nr) for nr in range(2, 17, 3)]
+        file_list[10]   = ['220831/training_nr{:0>4}'.format(nr) for nr in range(3, 17, 3)]
+        file_list[0.1] += ['220901/training_nr{:0>4}'.format(nr) for nr in range(3, 47, 3)]
+        file_list[1]   += ['220901/training_nr{:0>4}'.format(nr) for nr in range(1, 47, 3)]
+        file_list[10]  += ['220901/training_nr{:0>4}'.format(nr) for nr in range(2, 47, 3)]
+        file_list[0.1] += ['220902/training_nr{:0>4}'.format(nr) for nr in range(2, 29, 3)]
+        file_list[1]   += ['220902/training_nr{:0>4}'.format(nr) for nr in range(3, 29, 3)]
+        file_list[10]  += ['220902/training_nr{:0>4}'.format(nr) for nr in range(1, 29, 3)]
+    
     palette_choice = [palette[0][2], palette[2][0]]
 
     fig = paper_formatter.figure(aspect_ratio=.3, wide=True)
@@ -127,8 +139,11 @@ def training_plots_with_statistics():
         axs[l].plot(np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(-np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(np.zeros(iterations), ':', c='gainsboro')
-        axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_\mathrm{max}$', 
-                         fontsize=9)
+        if lambdas[l] != 1:
+            axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + 
+                             r'$\lambda_\mathrm{max}$', fontsize=9)
+        else:
+            axs[l].set_title(r'$\lambda = \lambda_\mathrm{max}$', fontsize=9)
         axs[l].set_ylim(top=2)
         axs[0].set_ylabel('Cost')
         axs[1].set_xlabel('Number of iterations')
@@ -149,15 +164,16 @@ def training_plots_with_statistics():
             axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
         custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
         lgd = axs[1].legend(handles=custom_lines,
-                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle}$', 
-                                r'$ \big \langle H^\mathrm{target}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
+                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{\psi(\boldsymbol{\theta})}$', 
+                                r'$ \big \langle H^\mathrm{target}\otimes\mathds{1}^\mathrm{aux} \big\rangle_{\psi(\boldsymbol{\theta})} $'], 
                         handlelength=.8, 
                         loc='upper right',
                         bbox_to_anchor=(1, 0.96),
                         edgecolor='1', 
                         borderpad=0)
     plt.tight_layout()
-    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper_with_stats.pdf', 
+    plt.savefig(data_folder + '../plots/training_new_gadget/trainings_for_paper'
+                + '_with_stats-' + training + '.pdf', 
                 bbox_extra_artists = (lgd,), bbox_inches='tight')
 
 def get_vars_for_plot(file, max_qubit=np.inf):
@@ -247,5 +263,5 @@ def variances_plots():
 
 if __name__ == "__main__":
     # training_plots()
-    training_plots_with_statistics()
-    variances_plots()
+    training_plots_with_statistics('plain')
+    # variances_plots()
