@@ -1,7 +1,8 @@
 # Barren gadgets
 
 Implementation of perturbative gadgets for the mitigation of Barren plateaus in 
-variational quantum algorithms  
+variational quantum algorithms as presented in 
+<a href="http://arxiv.org">Cichy et al.</a>.  
 
 ## Main idea
 Using a perturbation theory to create a perturbative gadget (inspired from 
@@ -35,7 +36,13 @@ the gadget Hamiltonian
 ```python
 gadgetizer = NewPerturbativeGadgets(perturbation_factor=1)
 Hgad = gadgetizer.gadgetize(Hamiltonian=Hcomp, target_locality=3)
-```
+```  
+
+/!\ WARNING: The automatic gadgetization using our scripts will work for most simple cases and for the numerical examples presented from the paper, but does
+not cover all the extensions and edge cases presented there. 
+Please check the gadgetized Hamiltonian (e.g. like done in 
+```/barren-gadgets/tests/new_gadget_decomposition_tests.py``` ) 
+before running simulations with it.  
 
 ## Tutorial on how to use our gadgets
 For those interested in the topic for whom it is new, we prepared a tutorial 
