@@ -140,10 +140,6 @@ You will find the file under
 ```data_folder + '../plots/training_new_gadget/trainings_for_paper_with_stats.pdf'```
 
 # Repository structure:
-- analytic: some Mathematica scripts that were used to understand the theory of 
-perturbative gadgets
-- obsolete: old versions of scripts that are not up to date anymore (and neither
-maintained), kept for the sake of verification if needed. To be eliminated. 
 - *own-experiments:* compilation of scripts and notebooks corresponding to 
 experiments on perturbative gadgets that have been re-written using more 
 abstraction
