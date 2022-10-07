@@ -48,9 +48,7 @@ before running simulations with it.
 For those interested in the topic for whom it is new, we prepared a tutorial 
 based on the <a href="https://pennylane.ai/">Pennylane library</a>. 
 It can be found under
-```
-barren-gadgets/Pennylane-tutorial/perturbative_gadgets_for_VQE.ipynb
-```
+```/barren-gadgets/Pennylane-tutorial/perturbative_gadgets_for_VQE.ipynb```.
 Just open the notebook and follow the tutorial!
 
 ## Reproduction of the plots from the paper
