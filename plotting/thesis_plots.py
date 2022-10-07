@@ -24,8 +24,7 @@ palette = [['#e65e71', '#d64055', '#ba182e', '#851919'],
 formatter = CustomFormatter(
     columnwidth=370 * 0.01389,
     wide_columnwidth=370 * 0.01389,
-    fontsizes=10,
-    pgf_preamble=r"\usepackage[T1]{fontenc}\usepackage{dsfont}",
+    fontsizes=10
 )
 
 plt.rc('text', usetex=True)
@@ -88,7 +87,11 @@ def training_plots_with_statistics(training='plain'):
     plt.rcParams.update({
         "pgf.preamble": "\n".join([
             r"\usepackage{dsfont}", 
-            r"\usepackage{amsmath}", 
+            r"\usepackage{amsmath}",
+            r"\usepackage{tgpagella}",
+            r"\usepackage{mathpazo}",
+            r"\usepackage[T1]{fontenc}",
+            r"\usepackage{aesupp}"
         ])
     })
 
@@ -105,8 +108,11 @@ def training_plots_with_statistics(training='plain'):
         axs[l].plot(np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(-np.ones(iterations), ':', c='gainsboro')
         axs[l].plot(np.zeros(iterations), ':', c='gainsboro')
-        axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_{max}$', 
-                         fontsize=9)
+        if lambdas[l] == 1:
+            axs[l].set_title(r'$\lambda = \lambda_\text{max}$', fontsize=9)
+        else:
+            axs[l].set_title(r'$\lambda = {}$'.format(lambdas[l]) + r'$\lambda_\text{max}$', 
+                            fontsize=9)
         axs[l].set_ylim(top=2)
         axs[2].set_ylabel('Cost')
         axs[2].set_xlabel('Number of iterations')
@@ -127,8 +133,8 @@ def training_plots_with_statistics(training='plain'):
             axs[l].plot(costs_mean[i],'-', c=palette_choice[i-1], label=labels[i])
         custom_lines = [Line2D([0], [0], color=palette_choice[1-nl], lw=1) for nl in range(2)]
         lgd = axs[1].legend(handles=custom_lines,
-                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle}$', 
-                                r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{| \psi(\boldsymbol{\theta})\rangle} $'], 
+                        labels=[r'$ \big \langle H^\mathrm{gad} \big\rangle_{ \psi(\boldsymbol{\theta})}$', 
+                                r'$ \big \langle H^\mathrm{comp}\otimes\mathds{1}^{anc} \big\rangle_{ \psi(\boldsymbol{\theta})} $'], 
                         handlelength=.8, 
                         loc='upper right',
                         bbox_to_anchor=(1, 0.96),
@@ -171,7 +177,11 @@ def variances_plots():
         "pgf.preamble": "\n".join([
             r"\usepackage{dsfont}", 
             r"\usepackage{amsmath}", 
-            r"\usepackage{xcolor}"
+            r"\usepackage{xcolor}",
+            r"\usepackage{tgpagella}",
+            r"\usepackage{mathpazo}",
+            r"\usepackage[T1]{fontenc}",
+            r"\usepackage{aesupp}"
         ])
     })
     ax = fig.subplots()
@@ -232,5 +242,5 @@ def variances_plots():
     plt.savefig(data_folder + '../plots/variances_new_gadget/variances_for_thesis.pdf')
 
 if __name__ == "__main__":
-    training_plots_with_statistics('reordered')
+    training_plots_with_statistics('plain')
     # variances_plots()
