@@ -2,7 +2,7 @@
 
 Implementation of perturbative gadgets for the mitigation of Barren plateaus in 
 variational quantum algorithms as presented in 
-<a href="http://arxiv.org">Cichy et al.</a>.  
+<a href="https://arxiv.org/abs/2210.03099">this paper</a>.  
 
 ## Main idea
 Using a perturbation theory to create a perturbative gadget (inspired from 
